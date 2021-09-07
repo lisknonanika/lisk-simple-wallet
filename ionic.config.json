@@ -1,0 +1,7 @@
+{
+  "name": "lisk-simple-wallet",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
