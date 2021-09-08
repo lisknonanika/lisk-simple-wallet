@@ -9,18 +9,22 @@ import { StorageService } from '../../service/storage.service';
 export class SignInPage {
   constructor(private storageService: StorageService) {}
 
-  public set(key: string, value: any) {
-    this.storageService?.set(key, value);
-  }
-  
-  public async get(key: string) {
-    const val = await this.storageService?.get(key);
+  public async getAccounts() {
+    const val = await this.storageService?.getAccounts();
     console.log(val);
     return val;
   }
+
+  public async setAccount(address:string) {
+    await this.storageService?.setAccount(address);
+  }
   
-  public async remove(key: string) {
-    await this.storageService?.remove(key);
+  public async removeAccount(address:string) {
+    await this.storageService?.removeAccount(address);
+  }
+  
+  public async remove() {
+    await this.storageService?.remove("accounts");
   }
 
 }
