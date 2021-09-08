@@ -17,23 +17,23 @@ export class StorageService {
     this._storage = storage;
   }
   
-  public async get(key:string):Promise<any> {
+  async get(key:string):Promise<any> {
     return await this._storage?.get(key);
   }
 
-  public async set(key:string, value:any) {
+  async set(key:string, value:any) {
     await this._storage?.set(key, value);
   }
   
-  public async remove(key:string) {
+  async remove(key:string) {
     await this._storage?.remove(key);
   }
 
-  public async getAccounts():Promise<Account[]> {
+  async getAccounts():Promise<Account[]> {
     return await this._storage?.get("accounts")||[];
   }
 
-  public async setAccount(address:string, name?:string, sortNo?:number) {
+  async setAccount(address:string, name?:string, sortNo?:number) {
     const accounts = await this.getAccounts();
     if (accounts.length > 0) {
       const account = accounts.find((account) => {return account.address === address});
@@ -57,7 +57,7 @@ export class StorageService {
     await this._storage?.set("accounts", accounts);
   }
 
-  public async removeAccount(address:string) {
+  async removeAccount(address:string) {
     const accounts = await this.getAccounts();
     if (!accounts) return;
     const newAccounts = accounts.filter((account) => {return account.address !== address})||[];

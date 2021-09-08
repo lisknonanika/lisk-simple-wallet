@@ -16,11 +16,11 @@ export class HistoryPage {
     this.accounts = this.storageService?.getAccounts();
   }
 
-  public async setAccount(address:string, name?:string, sortNo?:number) {
+  async setAccount(address:string, name?:string, sortNo?:number) {
     await this.storageService?.setAccount(address, name, sortNo);
   }
   
-  public async removeAccount(address:string) {
+  async removeAccount(address:string) {
     await this.storageService?.removeAccount(address);
   }
 }
