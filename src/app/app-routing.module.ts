@@ -9,7 +9,7 @@ const routes: Routes = [
     component: HomeTabsComponent,
     children: [
       {path: 'signin', children: [{path: '', loadChildren: () => import('./home/signin/signin.module').then(m => m.SignInPageModule)}]},
-      {path: 'accounts', children: [{path: '', loadChildren: () => import('./home/accounts/accounts.module').then(m => m.AccountsPageModule)}]},
+      {path: 'history', children: [{path: '', loadChildren: () => import('./home/history/history.module').then(m => m.HistoryPageModule)}]},
       {path: '', pathMatch: 'full', redirectTo: 'signin'}
     ]
   },

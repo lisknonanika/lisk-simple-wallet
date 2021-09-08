@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { AccountsPage } from './accounts.page';
+import { HistoryPage } from './history.page';
 
-import { AccountsPageRoutingModule } from './accounts-routing.module';
+import { HistoryPageRoutingModule } from './history-routing.module';
 
 
 @NgModule({
@@ -12,8 +12,8 @@ import { AccountsPageRoutingModule } from './accounts-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    AccountsPageRoutingModule
+    HistoryPageRoutingModule
   ],
-  declarations: [AccountsPage]
+  declarations: [HistoryPage]
 })
-export class AccountsPageModule {}
+export class HistoryPageModule {}

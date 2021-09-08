@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StorageService } from '../../service/storage.service';
 
 @Component({
   selector: 'app-signin',
@@ -6,7 +7,20 @@ import { Component } from '@angular/core';
   styleUrls: ['../../app.component.scss'],
 })
 export class SignInPage {
+  constructor(private storageService: StorageService) {}
 
-  constructor() {}
+  public set(key: string, value: any) {
+    this.storageService?.set(key, value);
+  }
+  
+  public async get(key: string) {
+    const val = await this.storageService?.get(key);
+    console.log(val);
+    return val;
+  }
+  
+  public async remove(key: string) {
+    await this.storageService?.remove(key);
+  }
 
 }

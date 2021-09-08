@@ -8,5 +8,8 @@
   <div id="container">
     SignIn
     <div><a routerLink="/action">サインイン</a></div>
+    <div><button (click)="set('test','123')">setStorage</button></div>
+    <div><button (click)="get('test')">getStorage</button></div>
+    <div><button (click)="remove('test')">removeStorage</button></div>
   </div>
 </ion-content>

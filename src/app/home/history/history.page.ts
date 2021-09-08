@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-accounts',
-  templateUrl: 'accounts.page.html',
+  selector: 'app-history',
+  templateUrl: 'history.page.html',
   styleUrls: ['../../app.component.scss'],
 })
-export class AccountsPage {
+export class HistoryPage {
 
   constructor() {}
 
