@@ -6,6 +6,8 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    History
+    <ng-container *ngFor="let account of accounts | async">
+      <div>{{account.address}} name:{{account.name}} sortNo:{{account.sortNo}}</div>
+    </ng-container>
   </div>
 </ion-content>
