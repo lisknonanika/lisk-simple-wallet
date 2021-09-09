@@ -12,7 +12,7 @@
           <div style="font-size:1.1rem; width:30px; height: 75px; border-radius:5px 0 0 5px; background-color: #284f92; display:flex; align-items:center; justify-content: center;">
             <ion-icon name="settings-outline"></ion-icon>
           </div>
-          <div style="width:calc(100vw - 100px); padding: 5px 10px; text-align: left;">
+          <div style="width:calc(100vw - 100px); padding: 5px 10px; text-align: left;" (click)="signIn(account.address)">
             <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">{{account.address}}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
             <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem;">misc: {{account.name}}</div>
           </div>

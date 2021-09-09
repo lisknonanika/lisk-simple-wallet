@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LiskService } from '../../service/lisk.service';
 
 @Component({
   selector: 'app-info',
@@ -7,6 +8,9 @@ import { Component } from '@angular/core';
 })
 export class InfoPage {
 
-  constructor() {}
+  constructor(private liskService: LiskService) {}
 
+  getSignInAddress() {
+    return this.liskService.getSignInAddress();
+  }
 }

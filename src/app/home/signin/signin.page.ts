@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { StorageService } from '../../service/storage.service';
+import { LiskService } from '../../service/lisk.service';
+
+import { cryptography, passphrase } from '@liskhq/lisk-client';
 
 @Component({
   selector: 'app-signin',
@@ -10,8 +13,9 @@ import { StorageService } from '../../service/storage.service';
 export class SignInPage {
   model:SignInModel;
   
-  constructor(private storageService: StorageService, private router: Router) {
+  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
     this.model = new SignInModel("");
+    this.liskService.init();
   }
 
   ionViewWillLeave(){
@@ -21,13 +25,15 @@ export class SignInPage {
   async setAccount(address:string) {
     await this.storageService?.setAccount(address);
   }
-  
-  async remove() {
-    await this.storageService?.remove("accounts");
-  }
 
   async signIn() {
-    console.log(this.model.passphrase);
+    if (!this.model.passphrase) return;
+    if (!passphrase.Mnemonic.validateMnemonic(this.model.passphrase)) return;
+    const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
+    this.liskService.setSignInAddress(address);
+    if (!this.liskService.getSignInAddress) return;
+    await this.setAccount(address);
+
     this.router.navigateByUrl('/action', {replaceUrl: true});
   }
 }

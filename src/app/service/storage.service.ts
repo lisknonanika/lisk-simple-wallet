@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
-import { Account } from '../types';
+import { Account } from '../common/types';
 
 @Injectable({
   providedIn: 'root'
@@ -32,11 +32,11 @@ export class StorageService {
   }
 
   async getAccounts():Promise<Account[]> {
-    return await this._storage?.get("accounts")||[];
+    return await this.get("accounts")||[];
   }
 
   async getAccount(address:string):Promise<Account> {
-    const accounts:Account[] = await this._storage?.get("accounts")||[];
+    const accounts:Account[] = await this.get("accounts")||[];
     return accounts.find((account) => {return account.address === address})||new Account("");
   }
 
@@ -53,7 +53,7 @@ export class StorageService {
         const newAccounts = accounts.filter((account) => {return account.address !== address})||[];
         newAccounts.push(account);
         newAccounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
-        await this._storage?.set("accounts", newAccounts);
+        await this.set("accounts", newAccounts);
         return;
       }
     }
@@ -61,15 +61,23 @@ export class StorageService {
     // insert account
     accounts.push(new Account(address, "", accounts.length));
     accounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
-    await this._storage?.set("accounts", accounts);
+    await this.set("accounts", accounts);
   }
 
-  async removeAccount(address:string) {
+  async removeAccount(address:string):Promise<Account[]> {
     const accounts = await this.getAccounts();
     if (!accounts) return;
     const newAccounts = accounts.filter((account) => {return account.address !== address})||[];
     newAccounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
     for (const [index, newAccount] of newAccounts.entries()) {newAccount.sortNo = index}
-    await this._storage?.set("accounts", newAccounts);
+    await this.set("accounts", newAccounts);
+  }
+
+  async setNetwork(network:number) {
+    await this.set("network", network);
+  }
+
+  async getNetwork():Promise<number> {
+    return await this.get("network")||0;
   }
 }

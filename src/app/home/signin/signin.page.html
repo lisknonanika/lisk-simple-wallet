@@ -6,15 +6,6 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    SignIn
-    <div><a routerLink="/action">サインイン</a></div>
-    <div><button (click)="setAccount('test1')">setAccount</button></div>
-    <div><button (click)="setAccount('test2')">setAccount</button></div>
-    <div><button (click)="setAccount('test3')">setAccount</button></div>
-    <div><button (click)="setAccount('test4')">setAccount</button></div>
-    <div><button (click)="setAccount('test5')">setAccount</button></div>
-    <div><button (click)="remove()">remove</button></div>
-
     <input placeholder="Enter Passphrase" type="password" id="passphrase" [(ngModel)]="model.passphrase"> 
     <div><button (click)="signIn()">SingIn</button></div>
   </div>

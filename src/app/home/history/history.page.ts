@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { Router } from "@angular/router";
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { StorageService } from '../../service/storage.service';
+import { LiskService } from '../../service/lisk.service';
 
-import { Account } from '../../types';
+import { Account } from '../../common/types';
 
 @Component({
   selector: 'app-history',
@@ -12,7 +14,8 @@ import { Account } from '../../types';
 export class HistoryPage {
   accounts:Promise<Account[]>;
 
-  constructor(private storageService: StorageService) {
+  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
+    this.liskService.init();
   }
 
   ionViewWillEnter(){
@@ -33,5 +36,10 @@ export class HistoryPage {
     for(const [index, account] of event.container.data.entries()) {
       await this.storageService?.setAccount(account.address, account.misc, index);
     }
+  }
+
+  signIn(address:string) {
+    this.liskService.setSignInAddress(address);
+    this.router.navigateByUrl('/action', {replaceUrl: true});
   }
 }
