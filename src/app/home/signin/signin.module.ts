@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { SignInPage } from './signin.page';
+import { IonicModule } from '@ionic/angular';
 
+import { SignInPage } from './signin.page';
 import { SignInPageRoutingModule } from './signin-routing.module';
 
 

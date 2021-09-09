@@ -6,8 +6,19 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <ng-container *ngFor="let account of accounts | async">
-      <div>{{account.address}} name:{{account.name}} sortNo:{{account.sortNo}}</div>
-    </ng-container>
+    <div cdkDropList [cdkDropListData]="accounts | async" (cdkDropListDropped)="drop($event)">
+      <div cdkDrag *ngFor="let account of accounts | async">
+        <div style="border:1px solid #091e42; margin:5px 0px; border-radius:5px; background-color:#3b6ec0; display:flex; align-items:center;">
+          <div style="font-size:1.1rem; width:30px; height: 75px; border-radius:5px 0 0 5px; background-color: #284f92; display:flex; align-items:center; justify-content: center;">
+            <ion-icon name="settings-outline"></ion-icon>
+          </div>
+          <div style="width:calc(100vw - 100px); padding: 5px 10px; text-align: left;">
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">{{account.address}}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem;">misc: {{account.name}}</div>
+          </div>
+          <ion-icon style="font-size:1.5rem; width:30px;" name="reorder-three-outline"></ion-icon>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
+import { Account } from '../types';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,15 +35,20 @@ export class StorageService {
     return await this._storage?.get("accounts")||[];
   }
 
-  async setAccount(address:string, name?:string, sortNo?:number) {
+  async getAccount(address:string):Promise<Account> {
+    const accounts:Account[] = await this._storage?.get("accounts")||[];
+    return accounts.find((account) => {return account.address === address})||new Account("");
+  }
+
+  async setAccount(address:string, misc?:string, sortNo?:number) {
     const accounts = await this.getAccounts();
     if (accounts.length > 0) {
       const account = accounts.find((account) => {return account.address === address});
 
       // update account
       if (account) {
-        if (name === undefined && sortNo === undefined) return;
-        if (name !== undefined) account.name = name;
+        if (misc === undefined && sortNo === undefined) return;
+        if (misc !== undefined) account.misc = misc;
         if (sortNo !== undefined) account.sortNo = sortNo;
         const newAccounts = accounts.filter((account) => {return account.address !== address})||[];
         newAccounts.push(account);
@@ -62,15 +69,7 @@ export class StorageService {
     if (!accounts) return;
     const newAccounts = accounts.filter((account) => {return account.address !== address})||[];
     newAccounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
-    for (let i = 0; i < newAccounts.length; i++) {newAccounts[i].sortNo = i}
+    for (const [index, newAccount] of newAccounts.entries()) {newAccount.sortNo = index}
     await this._storage?.set("accounts", newAccounts);
   }
-}
-
-export class Account {
-  constructor(
-    public address:string,
-    public name?:string,
-    public sortNo?:number
-  ){}
 }
