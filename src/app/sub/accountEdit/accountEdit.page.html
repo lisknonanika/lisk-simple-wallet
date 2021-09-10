@@ -11,7 +11,9 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    {{(account | async)?.address}}
-    <button (click)="removeAccount()">delete</button>
+    <div>{{address}}</div>
+    <div><input placeholder="Enter misc (optional)" type="text" id="misc" [(ngModel)]="model.misc"></div>
+    <div><button (click)="save()">save</button></div>
+    <div><button (click)="removeAccount()">removeAccount</button></div>
   </div>
 </ion-content>

@@ -10,17 +10,19 @@ import { Account } from '../../common/types';
   styleUrls: ['../../app.component.scss'],
 })
 export class AccountEditPage {
-  account:Promise<Account>;
+  model:AccountModel;
   address:string;
   ref:number;
 
   constructor(private router: Router, private route: ActivatedRoute, private storageService: StorageService) {
+    this.model = new AccountModel("");
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.address = this.route.snapshot.params['address'];
-    this.account = this.storageService?.getAccount(this.address);
     this.route.queryParams.subscribe((params) => {this.ref = +params.ref});
+    const account = await this.storageService?.getAccount(this.address);
+    this.model.misc = account.misc||"";
   }
 
   async setAccount() {
@@ -33,10 +35,23 @@ export class AccountEditPage {
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
     }
   }
+  
+  async save() {
+    await this.storageService?.setAccount(this.address, this.model.misc);
+    if (this.ref === 0) {
+      this.router.navigateByUrl('/home/history', {replaceUrl: true});
+    }
+  }
 
   back() {
     if (this.ref === 0) {
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
     }
   }
+}
+
+export class AccountModel{
+  constructor(
+    public misc:string,
+  ){}
 }
