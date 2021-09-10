@@ -14,12 +14,17 @@ export class SignInPage {
   model:SignInModel;
   
   constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
-    this.model = new SignInModel("");
+    this.model = new SignInModel("", false);
     this.liskService.init();
   }
 
-  ionViewWillLeave(){
-    this.model = new SignInModel("");
+  async ionViewWillEnter() {
+    const network = await this.storageService.getNetwork();
+    this.model.network = network !== 0;
+  }
+
+  ionViewWillLeave() {
+    this.model.passphrase = "";
   }
 
   async setAccount(address:string) {
@@ -36,10 +41,15 @@ export class SignInPage {
 
     this.router.navigateByUrl('/action', {replaceUrl: true});
   }
+
+  async changeNetwork() {
+    await this.storageService.setNetwork(this.model.network? 1: 0);
+  }
 }
 
 export class SignInModel{
   constructor(
-    public passphrase: string
+    public passphrase: string,
+    public network: boolean,
   ){}
 }

@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>AccountEdit</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="back()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    {{(account | async)?.address}}
+    <button (click)="removeAccount()">delete</button>
+  </div>
+</ion-content>

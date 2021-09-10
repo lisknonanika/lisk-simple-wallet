@@ -23,6 +23,12 @@ const routes: Routes = [
       {path: '', pathMatch: 'full', redirectTo: 'info'}
     ]
   },
+  {
+    path: 'sub',
+    children: [
+      {path: 'accountEdit/:address', children: [{path: '', loadChildren: () => import('./sub/accountEdit/accountEdit.module').then(m => m.AccountEditPageModule)}]},
+    ]
+  },
   {path: '', pathMatch: 'full', redirectTo: 'home'}
 ];
 

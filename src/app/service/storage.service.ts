@@ -32,15 +32,17 @@ export class StorageService {
   }
 
   async getAccounts():Promise<Account[]> {
-    return await this.get("accounts")||[];
+    const storeName = await this.getNetwork()? "accounts": "testnet_accounts";
+    return await this.get(storeName)||[];
   }
 
   async getAccount(address:string):Promise<Account> {
-    const accounts:Account[] = await this.get("accounts")||[];
+    const accounts:Account[] = await this.getAccounts();
     return accounts.find((account) => {return account.address === address})||new Account("");
   }
 
   async setAccount(address:string, misc?:string, sortNo?:number) {
+    const storeName = await this.getNetwork()? "accounts": "testnet_accounts";
     const accounts = await this.getAccounts();
     if (accounts.length > 0) {
       const account = accounts.find((account) => {return account.address === address});
@@ -53,7 +55,8 @@ export class StorageService {
         const newAccounts = accounts.filter((account) => {return account.address !== address})||[];
         newAccounts.push(account);
         newAccounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
-        await this.set("accounts", newAccounts);
+
+        await this.set(storeName, newAccounts);
         return;
       }
     }
@@ -61,7 +64,7 @@ export class StorageService {
     // insert account
     accounts.push(new Account(address, "", accounts.length));
     accounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
-    await this.set("accounts", accounts);
+    await this.set(storeName, accounts);
   }
 
   async removeAccount(address:string):Promise<Account[]> {
@@ -70,7 +73,8 @@ export class StorageService {
     const newAccounts = accounts.filter((account) => {return account.address !== address})||[];
     newAccounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
     for (const [index, newAccount] of newAccounts.entries()) {newAccount.sortNo = index}
-    await this.set("accounts", newAccounts);
+    const storeName = await this.getNetwork()? "accounts": "testnet_accounts";
+    await this.set(storeName, newAccounts);
   }
 
   async setNetwork(network:number) {

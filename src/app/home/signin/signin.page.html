@@ -6,6 +6,7 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
+    <div><ion-toggle mode="ios" [(ngModel)]="model.network" (ionChange)="changeNetwork()"></ion-toggle></div>
     <input placeholder="Enter Passphrase" type="password" id="passphrase" [(ngModel)]="model.passphrase"> 
     <div><button (click)="signIn()">SingIn</button></div>
   </div>

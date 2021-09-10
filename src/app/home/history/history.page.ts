@@ -12,23 +12,29 @@ import { Account } from '../../common/types';
   styleUrls: ['../../app.component.scss'],
 })
 export class HistoryPage {
-  accounts:Promise<Account[]>;
+  isView:boolean;
+  model:HistoryModel;
+  accounts:Account[];
 
   constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
+    this.model = new HistoryModel(false);
     this.liskService.init();
+    this.isView = false;
   }
 
-  ionViewWillEnter(){
-    this.accounts = this.storageService?.getAccounts();
+  async ionViewWillEnter() {
+    this.model.network = await this.storageService.getNetwork() !== 0;
+    this.accounts = await this.storageService?.getAccounts();
+    this.isView = true;
   }
 
-  async setAccount(address:string, misc?:string, sortNo?:number) {
-    await this.storageService?.setAccount(address, misc, sortNo);
+  async ionViewWillLeave() {
+    this.isView = false;
   }
   
   async removeAccount(address:string) {
     await this.storageService?.removeAccount(address);
-    this.accounts = this.storageService?.getAccounts();
+    this.accounts = await this.storageService?.getAccounts();
   }
   
   async drop(event: CdkDragDrop<Account[]>) {
@@ -42,4 +48,19 @@ export class HistoryPage {
     this.liskService.setSignInAddress(address);
     this.router.navigateByUrl('/action', {replaceUrl: true});
   }
+
+  openAccountEdit(address:string) {
+    this.router.navigateByUrl(`/sub/accountEdit/${address}?ref=0`, {replaceUrl: true});
+  }
+
+  async changeNetwork() {
+    await this.storageService.setNetwork(this.model.network? 1: 0);
+    this.accounts = await this.storageService?.getAccounts();
+  }
+}
+
+export class HistoryModel{
+  constructor(
+    public network: boolean,
+  ){}
 }
