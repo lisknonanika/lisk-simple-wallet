@@ -24,10 +24,6 @@ export class AccountEditPage {
     const account = await this.storageService?.getAccount(this.address);
     this.model.misc = account.misc||"";
   }
-
-  async setAccount() {
-    await this.storageService?.setAccount(this.address);
-  }
   
   async removeAccount() {
     await this.storageService?.removeAccount(this.address);

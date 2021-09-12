@@ -9,7 +9,7 @@ import { Account } from '../../common/types';
 @Component({
   selector: 'app-history',
   templateUrl: 'history.page.html',
-  styleUrls: ['../../app.component.scss'],
+  styleUrls: ['../../app.component.scss', '../home.page.scss'],
 })
 export class HistoryPage {
   isView:boolean;

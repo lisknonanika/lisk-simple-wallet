@@ -38,7 +38,7 @@ export class StorageService {
 
   async getAccount(address:string):Promise<Account> {
     const accounts:Account[] = await this.getAccounts();
-    return accounts.find((account) => {return account.address === address})||new Account("");
+    return accounts.find((account) => {return account.address === address})||null;
   }
 
   async setAccount(address:string, misc?:string, sortNo?:number) {
@@ -62,7 +62,7 @@ export class StorageService {
     }
 
     // insert account
-    accounts.push(new Account(address, "", accounts.length));
+    accounts.push(new Account(address, misc?misc:"", accounts.length));
     accounts.sort((a, b) => {return (a.sortNo < b.sortNo) ? -1 : 1});
     await this.set(storeName, accounts);
   }

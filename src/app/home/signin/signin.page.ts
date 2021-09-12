@@ -8,7 +8,7 @@ import { cryptography, passphrase } from '@liskhq/lisk-client';
 @Component({
   selector: 'app-signin',
   templateUrl: 'signin.page.html',
-  styleUrls: ['../../app.component.scss'],
+  styleUrls: ['../../app.component.scss', '../home.page.scss'],
 })
 export class SignInPage {
   model:SignInModel;
@@ -28,7 +28,12 @@ export class SignInPage {
   }
 
   async setAccount(address:string) {
-    await this.storageService?.setAccount(address);
+    const storeAccount = await this.storageService.getAccount(address);
+    if (storeAccount) return;
+    const account = await this.liskService.getAccount(await this.storageService.getNetwork(), address);
+    const misc = (account && account.summary.isDelegate)? account.dpos.delegate.username: "";
+    console.log(misc)
+    await this.storageService?.setAccount(address, misc);
   }
 
   async signIn() {
@@ -38,7 +43,6 @@ export class SignInPage {
     this.liskService.setSignInAddress(address);
     if (!this.liskService.getSignInAddress) return;
     await this.setAccount(address);
-
     this.router.navigateByUrl('/action', {replaceUrl: true});
   }
 

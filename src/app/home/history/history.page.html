@@ -1,22 +1,30 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>History</ion-title>
+    <ion-buttons slot="primary">
+      <div class="select-network">
+        <div><ion-toggle mode="ios" [(ngModel)]="model.network" (ionChange)="changeNetwork()"></ion-toggle></div>
+        <div>testnet</div>
+      </div>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <div><ion-toggle mode="ios" [(ngModel)]="model.network" (ionChange)="changeNetwork()"></ion-toggle></div>
     <div *ngIf="isView; else elseBlock">
       <div cdkDropList [cdkDropListData]="accounts" (cdkDropListDropped)="drop($event)">
         <div cdkDrag *ngFor="let account of accounts">
-          <div style="border:1px solid #091e42; margin:5px 0px; border-radius:5px; background-color:#3b6ec0; display:flex; align-items:center;">
+          <div style="color:white; margin:5px 0px; border-radius:5px; background-color:#3b6ec0; display:flex; align-items:center;">
             <div style="font-size:1.1rem; width:30px; height: 75px; border-radius:5px 0 0 5px; background-color: #284f92; display:flex; align-items:center; justify-content: center;"
                 (click)="openAccountEdit(account.address)">
               <ion-icon name="settings-outline"></ion-icon>
             </div>
-            <div style="width:calc(100vw - 100px); padding: 5px 10px; text-align: left;" (click)="signIn(account.address)">
-              <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">{{account.address}}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+            <div style="display:flex; align-items:center; justify-content: center;padding-left: 10px;">
+              <img src="https://lisk-avator.ysdev.work/{{account.address}}?size=30" />
+            </div>
+            <div style="width:calc(100vw - 140px); padding: 5px 10px; text-align: left;" (click)="signIn(account.address)">
+              <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;">{{account.address}}</div>
               <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem;">misc: {{account.misc}}</div>
             </div>
             <ion-icon style="font-size:1.5rem; width:30px;" name="reorder-three-outline"></ion-icon>

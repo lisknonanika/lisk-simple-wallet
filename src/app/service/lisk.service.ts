@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { cryptography } from '@liskhq/lisk-client';
+import { LISK } from '../common/config';
 
 @Injectable({
   providedIn: 'root'
@@ -48,5 +49,15 @@ export class LiskService {
 
   getNetworkId():Buffer {
     return this._networkId;
+  }
+
+  async getAccount(network:number, address:string) {
+    try {
+      const res = await fetch(`${LISK.API[network]}/accounts?address=${address}`);
+      const json = await res.json();
+      return json.data[0];
+    } catch (err) {
+      return null;
+    }
   }
 }

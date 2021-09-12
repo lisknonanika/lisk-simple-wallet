@@ -1,0 +1,14 @@
+.select-network {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.6rem;
+  margin-right: 5px;
+}
+.select-network ion-toggle {
+  margin-top: 3px;
+  height: 1.3rem;
+  width: 2rem;
+  --handle-width: 1rem;
+}
