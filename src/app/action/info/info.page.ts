@@ -11,6 +11,6 @@ export class InfoPage {
   constructor(private liskService: LiskService) {}
 
   getSignInAddress() {
-    return this.liskService.getSignInAddress();
+    return this.liskService.getSignInAccount().address;
   }
 }

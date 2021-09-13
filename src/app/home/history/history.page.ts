@@ -44,8 +44,10 @@ export class HistoryPage {
     }
   }
 
-  signIn(address:string) {
-    this.liskService.setSignInAddress(address);
+  async signIn(address:string) {
+    await this.liskService.setSignInAccount(this.model.network? 1: 0, address);
+    const signinAccount = this.liskService.getSignInAccount();
+    if (!signinAccount.address) return;
     this.router.navigateByUrl('/action', {replaceUrl: true});
   }
 

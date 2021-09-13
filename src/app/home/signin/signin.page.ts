@@ -27,22 +27,20 @@ export class SignInPage {
     this.model.passphrase = "";
   }
 
-  async setAccount(address:string) {
-    const storeAccount = await this.storageService.getAccount(address);
-    if (storeAccount) return;
-    const account = await this.liskService.getAccount(await this.storageService.getNetwork(), address);
-    const misc = (account && account.summary.isDelegate)? account.dpos.delegate.username: "";
-    console.log(misc)
-    await this.storageService?.setAccount(address, misc);
-  }
-
   async signIn() {
     if (!this.model.passphrase) return;
     if (!passphrase.Mnemonic.validateMnemonic(this.model.passphrase)) return;
     const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
-    this.liskService.setSignInAddress(address);
-    if (!this.liskService.getSignInAddress) return;
-    await this.setAccount(address);
+
+    // set signin account
+    await this.liskService.setSignInAccount(this.model.network? 1: 0, address);
+    const signinAccount = this.liskService.getSignInAccount();
+    if (!signinAccount.address) return;
+    
+    // register account
+    const storeAccount = await this.storageService.getAccount(address);
+    if (!storeAccount) await this.storageService?.setAccount(address, signinAccount.userName);
+
     this.router.navigateByUrl('/action', {replaceUrl: true});
   }
 
