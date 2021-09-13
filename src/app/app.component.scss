@@ -19,6 +19,41 @@
   text-decoration: none;
 }
 
+#container .input-box {
+  position: relative;
+}
+
+#container input[type="text"],
+#container input[type="password"] {
+  font-size: 16px;
+  padding: 10px;
+  padding-right: 50px;
+  width: 80vw;
+  max-width: 500px;
+  height: 50px;
+}
+
+#container .input-clear {
+  position: absolute;
+  color: white;
+  right: 1px;
+  top: 1px;
+  width: 38px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background-color: rgba($color: #000000, $alpha: 0.15);
+}
+
+#container ion-button {
+  font-size: 16px;
+  height: 50px;
+  width: 80vw;
+  max-width: 500px;
+}
+
 .cdk-drag-placeholder {
   opacity: 0;
 }

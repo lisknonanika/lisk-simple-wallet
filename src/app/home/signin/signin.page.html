@@ -12,7 +12,10 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <input placeholder="Enter Passphrase" type="password" id="passphrase" [(ngModel)]="model.passphrase"> 
+    <div class="input-box">
+      <div><input placeholder="Enter Passphrase" type="password" id="passphrase" [(ngModel)]="model.passphrase"></div>
+      <div class="input-clear" (click)="clear()"><ion-icon name="trash"></ion-icon></div>
+    </div>
     <div><ion-button (click)="signIn()">SingIn</ion-button></div>
   </div>
 </ion-content>

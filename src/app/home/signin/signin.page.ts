@@ -8,7 +8,7 @@ import { cryptography, passphrase } from '@liskhq/lisk-client';
 @Component({
   selector: 'app-signin',
   templateUrl: 'signin.page.html',
-  styleUrls: ['../../app.component.scss', '../home.page.scss'],
+  styleUrls: ['../../app.component.scss', '../home.page.scss', './signin.page.scss'],
 })
 export class SignInPage {
   model:SignInModel;
@@ -24,6 +24,10 @@ export class SignInPage {
   }
 
   ionViewWillLeave() {
+    this.model.passphrase = "";
+  }
+
+  clear() {
     this.model.passphrase = "";
   }
 
