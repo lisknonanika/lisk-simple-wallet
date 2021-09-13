@@ -7,7 +7,7 @@ import { Account } from '../../common/types';
 @Component({
   selector: 'app-accountEdit',
   templateUrl: 'accountEdit.page.html',
-  styleUrls: ['../../app.component.scss'],
+  styleUrls: ['../../app.component.scss', './accountEdit.page.scss'],
 })
 export class AccountEditPage {
   model:AccountModel;
@@ -37,6 +37,14 @@ export class AccountEditPage {
     if (this.ref === 0) {
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
     }
+  }
+
+  clear() {
+    this.model.misc = "";
+  }
+
+  copy() {
+    
   }
 
   back() {

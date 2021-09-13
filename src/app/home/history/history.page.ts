@@ -32,7 +32,7 @@ export class HistoryPage {
     this.isView = false;
   }
   
-  async removeAccount(address:string) {
+  async delete(address:string) {
     await this.storageService?.removeAccount(address);
     this.accounts = await this.storageService?.getAccounts();
   }

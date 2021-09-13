@@ -11,9 +11,23 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <div>{{address}}</div>
-    <div><input placeholder="Enter misc (optional)" type="text" id="misc" [(ngModel)]="model.misc"></div>
-    <div><ion-button (click)="save()">save</ion-button></div>
-    <div><ion-button (click)="removeAccount()">removeAccount</ion-button></div>
+    <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=150"/></div>
+    <div class="item-title">- address -</div>
+    <div class="input-box">
+      <div><input type="text" value="{{address}}" readonly></div>
+      <div class="input-copy" (click)="copy()"><ion-icon name="copy"></ion-icon></div>
+    </div>
+    <div class="item-title">- misc -</div>
+    <div class="input-box">
+      <div><input placeholder="Enter misc (optional)" type="text" id="misc" [(ngModel)]="model.misc"></div>
+      <div class="input-clear" (click)="clear()"><ion-icon name="trash"></ion-icon></div>
+    </div>
   </div>
 </ion-content>
+
+<ion-footer>
+  <div class="footer-buttons">
+    <ion-button style="max-width: 100%; margin-right: 5px;" (click)="save()">save</ion-button>
+    <ion-button style="max-width: 100%; margin-left: 5px;" (click)="delete()">delete</ion-button>
+</div>
+</ion-footer>
