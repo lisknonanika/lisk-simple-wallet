@@ -52,19 +52,20 @@
   background-color: rgba($color: #000000, $alpha: 0.15);
 }
 
-ion-button {
-  font-size: 16px;
-  height: 50px;
-  width: 80vw;
-  max-width: 500px;
-}
-
 ion-footer .footer-buttons {
   display: flex;
   align-items: center;
   justify-content:space-between;
   flex-direction: row;
   padding: 0px 10px 20px 10px;
+}
+
+#container ion-button,
+ion-footer ion-button {
+  font-size: 16px;
+  height: 50px;
+  width: 80vw;
+  max-width: 500px;
 }
 
 .cdk-drag-placeholder {
@@ -74,4 +75,12 @@ ion-footer .footer-buttons {
 .cdk-drag-preview {
   text-align: center;
   opacity: 0.8;
+}
+
+::ng-deep .mat-snack-bar-container {
+  margin-top: 65px !important;
+}
+
+::ng-deep .mat-snack-bar-container button {
+  background-color: rgba($color: #ffffff, $alpha: 0.1) !important;
 }
