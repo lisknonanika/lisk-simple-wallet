@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { StorageService } from '../../service/storage.service';
-import { LiskService } from '../../service/lisk.service';
 
+import { StorageService } from '../../service/storage.service';
 import { Account } from '../../common/types';
 
 @Component({
@@ -16,9 +15,8 @@ export class HistoryPage {
   model:HistoryModel;
   accounts:Account[];
 
-  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
+  constructor(private router: Router, private storageService: StorageService) {
     this.model = new HistoryModel(false);
-    this.liskService.init();
     this.isView = false;
   }
 
@@ -44,11 +42,8 @@ export class HistoryPage {
     }
   }
 
-  async signIn(address:string) {
-    await this.liskService.setSignInAccount(this.model.network? 1: 0, address);
-    const signinAccount = this.liskService.getSignInAccount();
-    if (!signinAccount.address) return;
-    this.router.navigateByUrl('/action', {replaceUrl: true});
+  signIn(address:string) {
+    this.router.navigateByUrl(`/action/info/${address}`, {replaceUrl: true});
   }
 
   openAccountEdit(address:string) {

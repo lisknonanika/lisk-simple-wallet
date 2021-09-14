@@ -30,10 +30,8 @@ export class LiskService {
       if (!this._networkId) return;
 
       // set enter address
-      if (address && cryptography.validateBase32Address(address)) {
-        this._signInAccount.address = address;
-        this._signInAccount.bufferAddress = cryptography.getAddressFromLisk32Address(address);
-      }
+      this._signInAccount.address = address;
+      this._signInAccount.bufferAddress = cryptography.getAddressFromLisk32Address(address);
 
       // set lisk account
       const account = await this.getAccount(network, address);

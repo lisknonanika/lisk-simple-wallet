@@ -17,10 +17,9 @@ const routes: Routes = [
     path: 'action',
     component: ActionTabsComponent,
     children: [
-      {path: 'info', children: [{path: '', loadChildren: () => import('./action/info/info.module').then(m => m.InfoPageModule)}]},
+      {path: 'info/:address', children: [{path: '', loadChildren: () => import('./action/info/info.module').then(m => m.InfoPageModule)}]},
       {path: 'send', children: [{path: '', loadChildren: () => import('./action/send/send.module').then(m => m.SendPageModule)}]},
       {path: 'sign', children: [{path: '', loadChildren: () => import('./action/sign/sign.module').then(m => m.SignPageModule)}]},
-      {path: '', pathMatch: 'full', redirectTo: 'info'}
     ]
   },
   {

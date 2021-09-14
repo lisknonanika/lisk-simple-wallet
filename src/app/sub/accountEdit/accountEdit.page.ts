@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { StorageService } from '../../service/storage.service';
 
@@ -15,8 +15,9 @@ export class AccountEditPage {
   address:string;
   ref:number;
 
-  constructor(private router: Router, private route: ActivatedRoute, private storageService: StorageService,
-              private clipboard: Clipboard, private matSnackBar: MatSnackBar) {
+  constructor(private router: Router, private route: ActivatedRoute, 
+              private clipboard: Clipboard, private matSnackBar: MatSnackBar,
+              private storageService: StorageService) {
     this.model = new AccountModel("");
   }
 
@@ -30,6 +31,7 @@ export class AccountEditPage {
   async delete() {
     await this.storageService?.removeAccount(this.address);
     if (this.ref === 0) {
+      this.matSnackBar.open('deleted', 'close', { verticalPosition: 'top', duration: 1000 });
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
     }
   }
@@ -37,7 +39,7 @@ export class AccountEditPage {
   async save() {
     await this.storageService?.setAccount(this.address, this.model.misc);
     if (this.ref === 0) {
-      this.matSnackBar.open('success', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 1000 });
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
     }
   }

@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Info</ion-title>
     <ion-buttons slot="primary">
-      <ion-button [routerLink]="['/home']">
+      <ion-button (click)="signOut()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -11,6 +11,26 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    {{getSignInAddress()}}
+    <div *ngIf="isView">
+      <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=130"/></div>
+      <div *ngIf="isMultisignature">
+        <div class="item-title">Multi Signature Account</div>
+      </div>
+      <div class="item-title">- address -</div>
+      <div class="item-row">
+        <div class="row-text">{{address}}</div>
+        <div class="address-copy" (click)="copy()"><ion-icon name="copy"></ion-icon></div>
+      </div>
+      <div *ngIf="isDelegate">
+        <div class="item-title">- Delegate Name -</div>
+        <div class="input-box">
+          <div class="row-text">{{userName}}</div>
+        </div>
+      </div>
+      <div class="item-title">- balance -</div>
+      <div class="input-box">
+        <div class="row-text">{{balance}} LSK</div>
+      </div>
+    </div>
   </div>
 </ion-content>

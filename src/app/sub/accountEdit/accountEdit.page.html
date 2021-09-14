@@ -11,11 +11,11 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=150"/></div>
+    <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=130"/></div>
     <div class="item-title">- address -</div>
-    <div class="input-box">
-      <div><input type="text" value="{{address}}" readonly></div>
-      <div class="input-copy" (click)="copy()"><ion-icon name="copy"></ion-icon></div>
+    <div class="item-row">
+      <div class="address">{{address}}</div>
+      <div class="address-copy" (click)="copy()"><ion-icon name="copy"></ion-icon></div>
     </div>
     <div class="item-title">- misc -</div>
     <div class="input-box">
@@ -27,7 +27,7 @@
 
 <ion-footer>
   <div class="footer-buttons">
-    <ion-button style="max-width: 100%; margin-right: 5px;" (click)="save()">save</ion-button>
-    <ion-button style="max-width: 100%; margin-left: 5px;" (click)="delete()">delete</ion-button>
+    <ion-button style="max-width: 100%; margin-right: 5px;" (click)="save()">SAVE</ion-button>
+    <ion-button style="max-width: 100%; margin-left: 5px;" (click)="delete()" color="danger">DELETE</ion-button>
 </div>
 </ion-footer>

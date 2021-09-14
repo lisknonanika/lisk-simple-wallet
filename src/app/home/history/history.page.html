@@ -12,7 +12,7 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <div *ngIf="isView; else elseBlock">
+    <div *ngIf="isView">
       <div cdkDropList [cdkDropListData]="accounts" (cdkDropListDropped)="drop($event)">
         <div cdkDrag *ngFor="let account of accounts">
           <div class="row">

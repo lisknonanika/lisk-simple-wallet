@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
-import { StorageService } from '../../service/storage.service';
-import { LiskService } from '../../service/lisk.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { cryptography, passphrase } from '@liskhq/lisk-client';
+
+import { StorageService } from '../../service/storage.service';
 
 @Component({
   selector: 'app-signin',
@@ -13,9 +14,8 @@ import { cryptography, passphrase } from '@liskhq/lisk-client';
 export class SignInPage {
   model:SignInModel;
   
-  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
+  constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
     this.model = new SignInModel("", false);
-    this.liskService.init();
   }
 
   async ionViewWillEnter() {
@@ -31,21 +31,18 @@ export class SignInPage {
     this.model.passphrase = "";
   }
 
-  async signIn() {
-    if (!this.model.passphrase) return;
-    if (!passphrase.Mnemonic.validateMnemonic(this.model.passphrase)) return;
+  signIn() {
+    this.model.passphrase = this.model.passphrase.trim().toLowerCase();
+    if (!this.model.passphrase) {
+      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 1000 });
+      return;
+    }
+    if (!passphrase.Mnemonic.validateMnemonic(this.model.passphrase)) {
+      this.matSnackBar.open('invalid passphrase.', 'close', { verticalPosition: 'top', duration: 1000 });
+      return;
+    }
     const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
-
-    // set signin account
-    await this.liskService.setSignInAccount(this.model.network? 1: 0, address);
-    const signinAccount = this.liskService.getSignInAccount();
-    if (!signinAccount.address) return;
-    
-    // register account
-    const storeAccount = await this.storageService.getAccount(address);
-    if (!storeAccount) await this.storageService?.setAccount(address, signinAccount.userName);
-
-    this.router.navigateByUrl('/action', {replaceUrl: true});
+    this.router.navigateByUrl(`/action/info/${address}`, {replaceUrl: true});
   }
 
   async changeNetwork() {
