@@ -11,6 +11,12 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    Send
+    <div class="row">
+      <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
+      <div class="account">
+        <div class="address">{{address}}</div>
+        <div>balance: {{balance}} LSK</div>
+      </div>
+    </div>
   </div>
 </ion-content>

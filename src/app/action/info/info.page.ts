@@ -18,8 +18,7 @@ export class InfoPage {
   misc:string;
   isMultisignature:boolean;
 
-  constructor(private router: Router, private storageService: StorageService,private liskService: LiskService) {
-    this.liskService.init();
+  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
     this.isView = false;
   }
 
@@ -56,5 +55,9 @@ export class InfoPage {
 
   openAccountEdit(address:string) {
     this.router.navigateByUrl(`/sub/accountEdit/${address}?ref=1`, {replaceUrl: true});
+  }
+
+  openMembers(address:string) {
+    this.router.navigateByUrl(`/sub/members/${address}`, {replaceUrl: true});
   }
 }

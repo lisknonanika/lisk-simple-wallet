@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Multisignature Members</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="back()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <div *ngFor="let member of multisignatureMembers">
+      <div class="row">
+        <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{member.address}}?size=30"/></div>
+        <div class="account">
+          <div class="address">{{member.address}}</div>
+          <div>{{member.isMandatory? 'Mandatory': 'Optional'}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

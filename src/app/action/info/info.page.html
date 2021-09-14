@@ -12,8 +12,8 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
-      <div class="row">
-        <div class="setting" (click)="openAccountEdit(address)">
+      <div class="row" (click)="openAccountEdit(address)">
+        <div class="setting">
           <ion-icon name="settings-outline"></ion-icon>
         </div>
         <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
@@ -21,9 +21,14 @@
           <div class="address">{{address}}</div>
           <div>balance: {{balance}} LSK</div>
           <div>misc: {{misc}}</div>
-          <div *ngIf="isMultisignature">Multi Signature Account</div>
         </div>
       </div>
+      <div class="members" (click)="openMembers(address)">
+        <div class="icon"><ion-icon name="caret-forward"></ion-icon></div>
+        <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Display Multisgnature Members</div>
+      </div>
+      <div class="item-title">- Latest 10 Transactions -</div>
+
     </div>
   </div>
 </ion-content>

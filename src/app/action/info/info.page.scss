@@ -19,6 +19,11 @@
   height: 75px;
 }
 
+.item-title {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
 .identicon {
   display: flex;
   align-items: center;
@@ -43,4 +48,28 @@
 .account div.address {
   font-size: 1rem;
   color: #ffffff;
+}
+
+.members {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #537a7a;
+  border-radius: 5px;
+  height: 30px;
+}
+
+.members .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  background-color: #355050;
+  border-radius: 5px 0 0 5px;
+  width: 30px;
+  height: 30px;
+}
+
+.members .text {
+  width: calc(100vw - 70px);
 }
