@@ -12,24 +12,17 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
-      <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=130"/></div>
-      <div *ngIf="isMultisignature">
-        <div class="item-title">Multi Signature Account</div>
-      </div>
-      <div class="item-title">- address -</div>
-      <div class="item-row">
-        <div class="row-text">{{address}}</div>
-        <div class="address-copy" (click)="copy()"><ion-icon name="copy"></ion-icon></div>
-      </div>
-      <div *ngIf="isDelegate">
-        <div class="item-title">- Delegate Name -</div>
-        <div class="input-box">
-          <div class="row-text">{{userName}}</div>
+      <div class="row">
+        <div class="setting" (click)="openAccountEdit(address)">
+          <ion-icon name="settings-outline"></ion-icon>
         </div>
-      </div>
-      <div class="item-title">- balance -</div>
-      <div class="input-box">
-        <div class="row-text">{{balance}} LSK</div>
+        <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
+        <div class="account">
+          <div class="address">{{address}}</div>
+          <div>balance: {{balance}} LSK</div>
+          <div>misc: {{misc}}</div>
+          <div *ngIf="isMultisignature">Multi Signature Account</div>
+        </div>
       </div>
     </div>
   </div>

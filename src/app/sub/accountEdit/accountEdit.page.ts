@@ -41,6 +41,10 @@ export class AccountEditPage {
     if (this.ref === 0) {
       this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 1000 });
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
+
+    } else if (this.ref === 1) {
+      this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.router.navigateByUrl('/action/info', {replaceUrl: true});
     }
   }
 
@@ -56,6 +60,9 @@ export class AccountEditPage {
   back() {
     if (this.ref === 0) {
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
+      
+    } else if (this.ref === 1) {
+      this.router.navigateByUrl('/action/info', {replaceUrl: true});
     }
   }
 }

@@ -21,6 +21,7 @@ export class HistoryPage {
   }
 
   async ionViewWillEnter() {
+    await this.storageService.setSignInAddress("");
     this.model.network = await this.storageService.getNetwork() !== 0;
     this.accounts = await this.storageService?.getAccounts();
     this.isView = true;
@@ -42,8 +43,9 @@ export class HistoryPage {
     }
   }
 
-  signIn(address:string) {
-    this.router.navigateByUrl(`/action/info/${address}`, {replaceUrl: true});
+  async signIn(address:string) {
+    await this.storageService.setSignInAddress(address);
+    this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }
 
   openAccountEdit(address:string) {

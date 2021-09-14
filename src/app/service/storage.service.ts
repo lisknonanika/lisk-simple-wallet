@@ -32,7 +32,7 @@ export class StorageService {
   }
 
   async getAccounts():Promise<Account[]> {
-    const storeName = await this.getNetwork()? "accounts": "testnet_accounts";
+    const storeName = await this.getNetwork()? "testnet_accounts": "accounts";
     return await this.get(storeName)||[];
   }
 
@@ -42,7 +42,7 @@ export class StorageService {
   }
 
   async setAccount(address:string, misc?:string, sortNo?:number) {
-    const storeName = await this.getNetwork()? "accounts": "testnet_accounts";
+    const storeName = await this.getNetwork()? "testnet_accounts": "accounts";
     const accounts = await this.getAccounts();
     if (accounts.length > 0) {
       const account = accounts.find((account) => {return account.address === address});
@@ -83,5 +83,13 @@ export class StorageService {
 
   async getNetwork():Promise<number> {
     return await this.get("network")||0;
+  }
+
+  async setSignInAddress(address:string) {
+    await this.set("signInAddress", address);
+  }
+
+  async getSignInAddress():Promise<string> {
+    return await this.get("signInAddress")||"";
   }
 }

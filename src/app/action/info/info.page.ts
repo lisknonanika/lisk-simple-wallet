@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Clipboard } from '@angular/cdk/clipboard';
+import { Router } from "@angular/router";
 
 import { transactions } from '@liskhq/lisk-client';
 
@@ -17,22 +15,28 @@ export class InfoPage {
   isView:boolean;
   address:string;
   balance:string;
-  userName:string;
-  isDelegate:boolean;
+  misc:string;
   isMultisignature:boolean;
 
-  constructor(private router: Router, private route: ActivatedRoute, private matSnackBar: MatSnackBar, private clipboard: Clipboard,
-              private storageService: StorageService,private liskService: LiskService) {
+  constructor(private router: Router, private storageService: StorageService,private liskService: LiskService) {
     this.liskService.init();
     this.isView = false;
   }
 
   async ionViewWillEnter() {
-    this.address = this.route.snapshot.params['address'];
+    this.address = await this.storageService.getSignInAddress();
+    if (!this.address) {
+      this.signOut();
+      return;
+    }
 
     // set signin account
     await this.liskService.setSignInAccount(await this.storageService.getNetwork(), this.address);
     const signinAccount = this.liskService.getSignInAccount();
+    if (!signinAccount.address) {
+      this.signOut();
+      return;
+    }
     
     // register account
     const storeAccount = await this.storageService.getAccount(this.address);
@@ -40,19 +44,17 @@ export class InfoPage {
 
     // set fields
     this.balance = transactions.convertBeddowsToLSK(signinAccount.balance||"0");
-    this.userName = signinAccount.userName||"";
-    this.isDelegate = this.userName.length > 0;
+    this.misc = storeAccount? storeAccount.misc: signinAccount.userName;
     this.isMultisignature = signinAccount.isMultisignature;
 
     this.isView = true;
   }
 
-  async copy() {
-    const result = await this.clipboard.copy(this.address);
-    this.matSnackBar.open(result? 'copied': 'failed', 'close', { verticalPosition: 'top', duration: 1000 });
-  }
-
   signOut() {
     this.router.navigateByUrl('/home', {replaceUrl: true});
+  }
+
+  openAccountEdit(address:string) {
+    this.router.navigateByUrl(`/sub/accountEdit/${address}?ref=1`, {replaceUrl: true});
   }
 }

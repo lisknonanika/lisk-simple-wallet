@@ -19,6 +19,7 @@ export class SignInPage {
   }
 
   async ionViewWillEnter() {
+    await this.storageService.setSignInAddress("");
     const network = await this.storageService.getNetwork();
     this.model.network = network !== 0;
   }
@@ -31,7 +32,7 @@ export class SignInPage {
     this.model.passphrase = "";
   }
 
-  signIn() {
+  async signIn() {
     this.model.passphrase = this.model.passphrase.trim().toLowerCase();
     if (!this.model.passphrase) {
       this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 1000 });
@@ -42,7 +43,8 @@ export class SignInPage {
       return;
     }
     const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
-    this.router.navigateByUrl(`/action/info/${address}`, {replaceUrl: true});
+    await this.storageService.setSignInAddress(address);
+    this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }
 
   async changeNetwork() {

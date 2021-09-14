@@ -5,6 +5,7 @@
   background-color: #3b6ec0;
   border-radius: 5px;
   margin: 5px 0px;
+  height: 75px;
 }
 
 .setting {
@@ -31,18 +32,17 @@
   text-align: left;
 }
 
-.address {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: bold;
-}
-
-.misc {
+.account div {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.8rem;
+  color: #cee0ee;
+}
+
+.account div.address {
+  font-size: 1rem;
+  color: #ffffff;
 }
 
 .sort-icon {

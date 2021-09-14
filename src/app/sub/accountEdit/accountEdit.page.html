@@ -27,7 +27,8 @@
 
 <ion-footer>
   <div class="footer-buttons">
-    <ion-button style="max-width: 100%; margin-right: 5px;" (click)="save()">SAVE</ion-button>
-    <ion-button style="max-width: 100%; margin-left: 5px;" (click)="delete()" color="danger">DELETE</ion-button>
-</div>
+    <ion-button *ngIf="ref===0" style="max-width: 100%; margin-right: 5px;" (click)="save()">SAVE</ion-button>
+    <ion-button *ngIf="ref===0" style="max-width: 100%; margin-left: 5px;" (click)="delete()" color="danger">DELETE</ion-button>
+    <ion-button *ngIf="ref===1" style="max-width: 100%;" (click)="save()">SAVE</ion-button>
+  </div>
 </ion-footer>
