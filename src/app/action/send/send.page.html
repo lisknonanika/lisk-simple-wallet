@@ -23,6 +23,7 @@
       </div>
     
       <div class="input-area">
+        <div class="item-title">- Send Contents -</div>
         <div class="input-box">
           <div><input placeholder="Enter Recipient address" type="text" id="recipient" [(ngModel)]="model.recipient"></div>
           <div class="input-clear" (click)="clear(0)"><ion-icon name="trash"></ion-icon></div>
@@ -32,9 +33,10 @@
           <div class="input-clear" (click)="clear(1)"><ion-icon name="trash"></ion-icon></div>
         </div>
         <div class="input-box">
-          <div><input placeholder="Enter data (optional)" type="text" id="data" [(ngModel)]="model.data"></div>
+          <div><input placeholder="Enter data (optional)" type="text" maxlength="64" id="data" [(ngModel)]="model.data"></div>
           <div class="input-clear" (click)="clear(2)"><ion-icon name="trash"></ion-icon></div>
         </div>
+        <div class="fee">fee: {{fee}} LSK</div>
         <div style="margin-top: 10px;"><ion-button (click)="continue()">Continue</ion-button></div>
       </div>
     </div>

@@ -35,9 +35,13 @@ export class HistoryPage {
   
   async drop(event: CdkDragDrop<Account[]>) {
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    const accounts:Account[] = [];
     for(const [index, account] of event.container.data.entries()) {
-      await this.storageService?.setAccount(account.address, account.misc, index);
+      const orgAccount = await this.storageService.getAccount(account.address);
+      orgAccount.sortNo = index;
+      accounts.push(orgAccount);
     }
+    this.storageService.setAccounts(accounts);
   }
 
   async signIn(address:string) {

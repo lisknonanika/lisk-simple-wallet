@@ -29,6 +29,13 @@ export class InfoPage {
       this.signOut();
       return;
     }
+    
+    // get account
+    const storeAccount = await this.storageService.getAccount(this.address);
+    if (!storeAccount) {
+      this.signOut();
+      return;
+    }
 
     // set signin account
     await this.liskService.setSignInAccount(await this.storageService.getNetwork(), this.address);
@@ -37,10 +44,6 @@ export class InfoPage {
       this.signOut();
       return;
     }
-    
-    // register account
-    const storeAccount = await this.storageService.getAccount(this.address);
-    if (!storeAccount) await this.storageService?.setAccount(this.address, signinAccount.userName);
 
     // set fields
     this.balance = transactions.convertBeddowsToLSK(signinAccount.balance||"0");

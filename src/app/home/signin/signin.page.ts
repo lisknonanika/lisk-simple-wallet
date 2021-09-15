@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { cryptography, passphrase } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
+import { LiskService } from '../../service/lisk.service';
 
 @Component({
   selector: 'app-signin',
@@ -14,8 +15,10 @@ import { StorageService } from '../../service/storage.service';
 export class SignInPage {
   model:SignInModel;
   
-  constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
+  constructor(private router: Router, private matSnackBar: MatSnackBar,
+              private storageService: StorageService, private liskService: LiskService) {
     this.model = new SignInModel("");
+    this.liskService.init();
   }
 
   async ionViewWillEnter() {
@@ -42,6 +45,16 @@ export class SignInPage {
     }
     const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
     await this.storageService.setSignInAddress(address);
+
+    // register account
+    const storeAccount = await this.storageService.getAccount(address);
+    if (!storeAccount) {
+      await this.liskService.setSignInAccount(await this.storageService.getNetwork(), address);
+      const signinAccount = this.liskService.getSignInAccount();
+      const publicKey = cryptography.getAddressAndPublicKeyFromPassphrase(this.model.passphrase).publicKey;
+      await this.storageService?.setAccount(address, publicKey, signinAccount.userName);
+    }
+
     this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }
 }

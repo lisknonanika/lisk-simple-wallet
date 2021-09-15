@@ -14,7 +14,7 @@
   margin: 5px 0px;
   height: 75px;
   width: calc(100vw - 40px);
-  max-width: 500px;
+  max-width: 600px;
 }
 
 .identicon {
@@ -26,7 +26,7 @@
 
 .account {
   width: calc(100vw - 80px);
-  max-width: calc(500px - 40px);
+  max-width: calc(600px - 40px);
   padding: 5px 10px;
   text-align: left;
 }
@@ -42,4 +42,17 @@
 .account div.address {
   font-size: 1rem;
   color: #ffffff;
+}
+
+.item-title {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.fee {
+  text-align: left;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  opacity: 0.8;
 }

@@ -18,12 +18,12 @@ export class LiskService {
 
   async init() {
     this._networkId = null;
-    this._signInAccount = new SignInAccount("", null, "0", false, [], 0, "");
+    this._signInAccount = new SignInAccount("", null, BigInt(0), "0", false, [], 0, "");
   }
 
   async setSignInAccount(network:number, address:string,) {
     try {
-      this._signInAccount = new SignInAccount("", null, "0", false, [], 0, "");
+      this._signInAccount = new SignInAccount("", null, BigInt(0), "0", false, [], 0, "");
 
       // set networkId
       await this.setNetworkId(network);
@@ -36,6 +36,7 @@ export class LiskService {
       // set lisk account
       const account = await this.getAccount(network, address);
       if (!account) return;
+      this._signInAccount.nonce = BigInt(account.sequence.nonce);
       this._signInAccount.balance = account.summary.balance;
       if (account.summary.isMultisignature) {
         this._signInAccount.isMultisignature = true;

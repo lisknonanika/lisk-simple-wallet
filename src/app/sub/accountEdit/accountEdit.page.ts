@@ -37,7 +37,8 @@ export class AccountEditPage {
   }
   
   async save() {
-    await this.storageService?.setAccount(this.address, this.model.misc);
+    const account = await this.storageService?.getAccount(this.address);
+    await this.storageService?.setAccount(account.address, account.publicKey, this.model.misc);
     if (this.ref === 0) {
       this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 1000 });
       this.router.navigateByUrl('/home/history', {replaceUrl: true});

@@ -8,6 +8,7 @@ export class Settings {
 export class Account {
   constructor(
     public address:string,
+    public publicKey: Buffer,
     public misc?:string,
     public sortNo?:number
   ){}
@@ -17,6 +18,7 @@ export class SignInAccount {
   constructor(
     public address: string,
     public bufferAddress: Buffer,
+    public nonce: BigInt,
     public balance: string,
     public isMultisignature: boolean,
     public multisignatureMembers: MultiSigMember[],
@@ -31,4 +33,26 @@ export class MultiSigMember {
     public publicKey: Buffer,
     public isMandatory: boolean
   ){}
+}
+
+export class TransferTransaction {
+  public moduleID:number;
+  public assetID:number;
+  public nonce:BigInt;
+  public fee:BigInt;
+  public senderPublicKey:Buffer;
+  public asset: {
+    amount:BigInt,
+    recipientAddress:Buffer,
+    data:string
+  }
+
+  constructor(){
+    this.moduleID = 2;
+    this.assetID = 0;
+    this.nonce = BigInt(0);
+    this.fee = BigInt(10000000);
+    this.senderPublicKey = null;
+    this.asset = {amount: BigInt(0), recipientAddress: null, data: ""}
+  }
 }
