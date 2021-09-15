@@ -13,8 +13,8 @@
   <div id="container">
     <div *ngIf="isView">
       <div class="rows">
-        <div class="row" (click)="openAccountEdit(address)">
-          <div class="setting">
+        <div class="row">
+          <div class="setting" (click)="openAccountEdit(address)">
             <ion-icon name="settings-outline"></ion-icon>
           </div>
           <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
@@ -23,6 +23,9 @@
             <div>balance: {{balance}} LSK</div>
             <div>misc: {{misc}}</div>
           </div>
+          <div class="reload" (click)="reload()">
+            <ion-icon name="reload"></ion-icon>
+          </div>
         </div>
         <div class="members" (click)="openMembers(address)">
           <div class="icon"><ion-icon name="caret-forward"></ion-icon></div>
@@ -30,7 +33,7 @@
         </div>
       </div>
       
-      <div class="rows">
+      <div class="rows" style="margin-top: 20px;">
         <div class="item-title">- Latest 10 Transactions -</div>
       </div>
     </div>

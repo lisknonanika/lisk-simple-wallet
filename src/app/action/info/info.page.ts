@@ -22,6 +22,10 @@ export class InfoPage {
   }
 
   async ionViewWillEnter() {
+    await this.reload();
+  }
+
+  async reload() {
     const signinAccount = await this.storageService.getSignInAccount();
     if (!signinAccount) {
       this.signOut();

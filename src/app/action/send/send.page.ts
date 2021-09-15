@@ -6,7 +6,7 @@ import { transactions, cryptography } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
 import { getTransferAssetSchema } from '../../common/utils';
-import { SignInAccount, TransferTransaction } from '../../common/types';
+import { Account, SignInAccount, TransferTransaction } from '../../common/types';
 
 @Component({
   selector: 'app-send',
@@ -16,11 +16,10 @@ import { SignInAccount, TransferTransaction } from '../../common/types';
 export class SendPage {
   isView:boolean;
   model:SendModel;
+  storeAccount:Account;
   signinAccount:SignInAccount;
   address:string;
   balance:string;
-  isMultisignature:boolean;
-  publicKey:Buffer;
   fee:string;
 
   constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
@@ -30,6 +29,10 @@ export class SendPage {
   }
 
   async ionViewWillEnter() {
+    await this.reload();
+  }
+
+  async reload() {
     this.signinAccount = await this.storageService.getSignInAccount();
     if (!this.signinAccount) {
       this.signOut();
@@ -37,16 +40,14 @@ export class SendPage {
     }
     
     // get account
-    const storeAccount = await this.storageService.getAccount(this.signinAccount.address);
-    if (!storeAccount) {
+    this.storeAccount = await this.storageService.getAccount(this.signinAccount.address);
+    if (!this.storeAccount) {
       this.signOut();
       return;
     }
 
     this.address = this.signinAccount.address;
     this.balance = transactions.convertBeddowsToLSK(this.signinAccount.balance||"0");
-    this.isMultisignature = this.signinAccount.isMultisignature;
-    this.publicKey = storeAccount.publicKey;
 
     this.isView = true;
   }
@@ -69,12 +70,24 @@ export class SendPage {
 
   async computeFee() {
     try {
+      console.log("computeFee")
       this.fee = "0";
       if (!this.model.recipient || !cryptography.validateBase32Address(this.model.recipient)) return;
       if (this.model.amount === null || this.model.amount <= 0) return;
       if (this.model.data.length > 64) return;
 
       const tx = new TransferTransaction();
+      tx.nonce = this.signinAccount.nonce;
+      tx.senderPublicKey = this.storeAccount.publicKey;
+      tx.asset = {
+        recipientAddress: cryptography.getAddressFromLisk32Address(this.model.recipient),
+        amount: BigInt(transactions.convertLSKToBeddows(this.model.amount.toString())),
+        data: this.model.data
+      }
+
+      const options = this.signinAccount.isMultisignature? {numberOfSignatures: this.signinAccount.numberOfSignatures}: {};
+      const minFee = transactions.computeMinFee(getTransferAssetSchema(), tx.toJSON(), options);
+      this.fee = transactions.convertBeddowsToLSK(minFee.toString());
 
     } catch(err) {
       // none

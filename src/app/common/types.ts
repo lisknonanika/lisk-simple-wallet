@@ -55,4 +55,15 @@ export class TransferTransaction {
     this.senderPublicKey = null;
     this.asset = {amount: BigInt(0), recipientAddress: null, data: ""}
   }
+
+  toJSON(): Record<string, unknown> {
+    return {
+      moduleID: this.moduleID,
+      assetID: this.assetID,
+      nonce: this.nonce,
+      fee: this.fee,
+      senderPublicKey: this.senderPublicKey,
+      asset: this.asset
+    }
+  }
 }
