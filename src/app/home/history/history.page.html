@@ -7,18 +7,20 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
-      <div cdkDropList [cdkDropListData]="accounts" (cdkDropListDropped)="drop($event)">
-        <div cdkDrag *ngFor="let account of accounts">
-          <div class="row">
-            <div class="setting" (click)="openAccountEdit(account.address)">
-              <ion-icon name="settings-outline"></ion-icon>
+      <div class="rows">
+        <div cdkDropList [cdkDropListData]="accounts" (cdkDropListDropped)="drop($event)">
+          <div cdkDrag *ngFor="let account of accounts">
+            <div class="row">
+              <div class="setting" (click)="openAccountEdit(account.address)">
+                <ion-icon name="settings-outline"></ion-icon>
+              </div>
+              <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{account.address}}?size=30"/></div>
+              <div class="account" (click)="signIn(account.address)">
+                <div class="address">{{account.address}}</div>
+                <div>misc: {{account.misc}}</div>
+              </div>
+              <ion-icon class="sort-icon" name="reorder-three-outline"></ion-icon>
             </div>
-            <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{account.address}}?size=30"/></div>
-            <div class="account" (click)="signIn(account.address)">
-              <div class="address">{{account.address}}</div>
-              <div>misc: {{account.misc}}</div>
-            </div>
-            <ion-icon class="sort-icon" name="reorder-three-outline"></ion-icon>
           </div>
         </div>
       </div>

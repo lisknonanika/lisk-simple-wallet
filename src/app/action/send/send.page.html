@@ -11,11 +11,31 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <div class="row">
-      <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
-      <div class="account">
-        <div class="address">{{address}}</div>
-        <div>balance: {{balance}} LSK</div>
+    <div *ngIf="isView">
+      <div class="rows">
+        <div class="row">
+          <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
+          <div class="account">
+            <div class="address">{{address}}</div>
+            <div>balance: {{balance}} LSK</div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="input-area">
+        <div class="input-box">
+          <div><input placeholder="Enter Recipient address" type="text" id="recipient" [(ngModel)]="model.recipient"></div>
+          <div class="input-clear" (click)="clear(0)"><ion-icon name="trash"></ion-icon></div>
+        </div>
+        <div class="input-box">
+          <div><input placeholder="Enter amount" type="number" id="amount" [(ngModel)]="model.amount"></div>
+          <div class="input-clear" (click)="clear(1)"><ion-icon name="trash"></ion-icon></div>
+        </div>
+        <div class="input-box">
+          <div><input placeholder="Enter data (optional)" type="text" id="data" [(ngModel)]="model.data"></div>
+          <div class="input-clear" (click)="clear(2)"><ion-icon name="trash"></ion-icon></div>
+        </div>
+        <div style="margin-top: 10px;"><ion-button (click)="continue()">Continue</ion-button></div>
       </div>
     </div>
   </div>

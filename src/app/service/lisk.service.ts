@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { cryptography } from '@liskhq/lisk-client';
-import { LISK } from '../common/config';
+import { getApiURL } from '../common/utils';
 import { SignInAccount } from '../common/types';
 
 @Injectable({
@@ -61,7 +61,7 @@ export class LiskService {
 
   async setNetworkId(network:number) {
     try {
-      const res = await fetch(`${LISK.API[network]}/status`);
+      const res = await fetch(`${getApiURL(network)}/status`);
       const json = await res.json();
       this._networkId = Buffer.from(json.networkId, "hex");
     } catch (err) {
@@ -75,7 +75,7 @@ export class LiskService {
 
   async getAccount(network:number, address:string) {
     try {
-      const res = await fetch(`${LISK.API[network]}/v2/accounts?address=${address}`);
+      const res = await fetch(`${getApiURL(network)}/v2/accounts?address=${address}`);
       const json = await res.json();
       return json.data[0];
     } catch (err) {

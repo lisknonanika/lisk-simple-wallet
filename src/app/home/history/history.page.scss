@@ -1,3 +1,10 @@
+.rows {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -6,6 +13,8 @@
   border-radius: 5px;
   margin: 5px 0px;
   height: 75px;
+  width: calc(100vw - 40px);
+  max-width: 500px;
 }
 
 .setting {
@@ -28,6 +37,7 @@
 
 .account {
   width: calc(100vw - 140px);
+  max-width: calc(500px - 100px);
   padding: 5px 10px;
   text-align: left;
 }
