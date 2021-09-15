@@ -10,6 +10,8 @@ const routes: Routes = [
     children: [
       {path: 'signin', children: [{path: '', loadChildren: () => import('./home/signin/signin.module').then(m => m.SignInPageModule)}]},
       {path: 'history', children: [{path: '', loadChildren: () => import('./home/history/history.module').then(m => m.HistoryPageModule)}]},
+      {path: 'sign', children: [{path: '', loadChildren: () => import('./home/sign/sign.module').then(m => m.SignPageModule)}]},
+      {path: 'setting', children: [{path: '', loadChildren: () => import('./home/setting/setting.module').then(m => m.SettingPageModule)}]},
       {path: '', pathMatch: 'full', redirectTo: 'signin'}
     ]
   },
@@ -19,7 +21,6 @@ const routes: Routes = [
     children: [
       {path: 'info', children: [{path: '', loadChildren: () => import('./action/info/info.module').then(m => m.InfoPageModule)}]},
       {path: 'send', children: [{path: '', loadChildren: () => import('./action/send/send.module').then(m => m.SendPageModule)}]},
-      {path: 'sign', children: [{path: '', loadChildren: () => import('./action/sign/sign.module').then(m => m.SignPageModule)}]},
       {path: '', pathMatch: 'full', redirectTo: 'info'}
     ]
   },

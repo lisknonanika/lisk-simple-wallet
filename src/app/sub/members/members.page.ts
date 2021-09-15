@@ -16,6 +16,7 @@ export class MembersPage {
 
   constructor(private router: Router, private route: ActivatedRoute,
               private storageService: StorageService, private liskService: LiskService) {
+    this.liskService.init();
   }
 
   async ionViewWillEnter() {

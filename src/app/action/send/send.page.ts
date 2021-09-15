@@ -15,7 +15,9 @@ export class SendPage {
   address:string;
   balance:string;
 
-  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {}
+  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
+    this.liskService.init();
+  }
 
   async ionViewWillEnter() {
     this.address = await this.storageService.getSignInAddress();

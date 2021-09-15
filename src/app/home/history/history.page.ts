@@ -8,21 +8,18 @@ import { Account } from '../../common/types';
 @Component({
   selector: 'app-history',
   templateUrl: 'history.page.html',
-  styleUrls: ['../../app.component.scss', '../home.page.scss', './history.page.scss'],
+  styleUrls: ['../../app.component.scss', './history.page.scss'],
 })
 export class HistoryPage {
   isView:boolean;
-  model:HistoryModel;
   accounts:Account[];
 
   constructor(private router: Router, private storageService: StorageService) {
-    this.model = new HistoryModel(false);
     this.isView = false;
   }
 
   async ionViewWillEnter() {
     await this.storageService.setSignInAddress("");
-    this.model.network = await this.storageService.getNetwork() !== 0;
     this.accounts = await this.storageService?.getAccounts();
     this.isView = true;
   }
@@ -51,15 +48,4 @@ export class HistoryPage {
   openAccountEdit(address:string) {
     this.router.navigateByUrl(`/sub/accountEdit/${address}?ref=0`, {replaceUrl: true});
   }
-
-  async changeNetwork() {
-    await this.storageService.setNetwork(this.model.network? 1: 0);
-    this.accounts = await this.storageService?.getAccounts();
-  }
-}
-
-export class HistoryModel{
-  constructor(
-    public network: boolean,
-  ){}
 }

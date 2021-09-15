@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
-import { Account } from '../common/types';
+import { Account, Settings } from '../common/types';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +67,7 @@ export class StorageService {
     await this.set(storeName, accounts);
   }
 
-  async removeAccount(address:string):Promise<Account[]> {
+  async removeAccount(address:string) {
     const accounts = await this.getAccounts();
     if (!accounts) return;
     const newAccounts = accounts.filter((account) => {return account.address !== address})||[];
@@ -77,12 +77,9 @@ export class StorageService {
     await this.set(storeName, newAccounts);
   }
 
-  async setNetwork(network:number) {
-    await this.set("network", network);
-  }
-
-  async getNetwork():Promise<number> {
-    return await this.get("network")||0;
+  async removeAccounts() {
+    const storeName = await this.getNetwork()? "accounts": "testnet_accounts";
+    await this.remove(storeName);
   }
 
   async setSignInAddress(address:string) {
@@ -91,5 +88,33 @@ export class StorageService {
 
   async getSignInAddress():Promise<string> {
     return await this.get("signInAddress")||"";
+  }
+
+  async getSettings():Promise<Settings> {
+    return await this.get("settings")||new Settings(0, 0);
+  }
+
+  async setSettings(settings:Settings) {
+    return await this.set("settings", settings);
+  }
+
+  async setNetwork(network:number) {
+    const settings = await this.getSettings();
+    settings.network = network;
+    await this.setSettings(settings);
+  }
+
+  async getNetwork():Promise<number> {
+    return (await this.getSettings()).network||0;
+  }
+
+  async setExplorer(explorer:number) {
+    const settings = await this.getSettings();
+    settings.explorer = explorer;
+    await this.setSettings(settings);
+  }
+
+  async getExplorer():Promise<number> {
+    return (await this.getSettings()).explorer||0;
   }
 }

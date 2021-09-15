@@ -1,3 +1,10 @@
+export class Settings {
+  constructor(
+    public network:number,
+    public explorer:number
+  ){}
+}
+
 export class Account {
   constructor(
     public address:string,

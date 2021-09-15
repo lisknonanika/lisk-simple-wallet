@@ -20,6 +20,7 @@ export class InfoPage {
 
   constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
     this.isView = false;
+    this.liskService.init();
   }
 
   async ionViewWillEnter() {

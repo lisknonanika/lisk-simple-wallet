@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Setting</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <div>
+      <ion-radio-group [(ngModel)]="model.network" (ionChange)="changeNetwork()">
+        <ion-list-header>
+          <ion-label>Use Network</ion-label>
+        </ion-list-header>
+        <ion-item lines="full">
+          <ion-label>Mainnet</ion-label>
+          <ion-radio slot="end" value="0"></ion-radio>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>Testnet</ion-label>
+          <ion-radio slot="end" value="1"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </div>
+
+    <div class="setting-item">
+      <ion-radio-group [(ngModel)]="model.explorer" (ionChange)="changeExplorer()">
+        <ion-list-header>
+          <ion-label>Use Explorer</ion-label>
+        </ion-list-header>
+        <ion-item lines="full">
+          <ion-label>Lisk Observer</ion-label>
+          <ion-radio slot="end" value="0"></ion-radio>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>LiskScan</ion-label>
+          <ion-radio slot="end" value="1"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </div>
+  </div>
+</ion-content>

@@ -9,19 +9,17 @@ import { StorageService } from '../../service/storage.service';
 @Component({
   selector: 'app-signin',
   templateUrl: 'signin.page.html',
-  styleUrls: ['../../app.component.scss', '../home.page.scss', './signin.page.scss'],
+  styleUrls: ['../../app.component.scss', './signin.page.scss'],
 })
 export class SignInPage {
   model:SignInModel;
   
   constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
-    this.model = new SignInModel("", false);
+    this.model = new SignInModel("");
   }
 
   async ionViewWillEnter() {
     await this.storageService.setSignInAddress("");
-    const network = await this.storageService.getNetwork();
-    this.model.network = network !== 0;
   }
 
   ionViewWillLeave() {
@@ -46,15 +44,10 @@ export class SignInPage {
     await this.storageService.setSignInAddress(address);
     this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }
-
-  async changeNetwork() {
-    await this.storageService.setNetwork(this.model.network? 1: 0);
-  }
 }
 
 export class SignInModel{
   constructor(
     public passphrase: string,
-    public network: boolean,
   ){}
 }
