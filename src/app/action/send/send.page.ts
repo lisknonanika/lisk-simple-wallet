@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { transactions, cryptography } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
-import { LiskService } from '../../service/lisk.service';
 import { getTransferAssetSchema } from '../../common/utils';
 import { SignInAccount, TransferTransaction } from '../../common/types';
 
@@ -24,35 +23,27 @@ export class SendPage {
   publicKey:Buffer;
   fee:string;
 
-  constructor(private router: Router, private matSnackBar: MatSnackBar,
-              private storageService: StorageService, private liskService: LiskService) {
+  constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
     this.isView = false;
-    this.liskService.init();
     this.model = new SendModel("", null, "");
     this.fee = "0";
   }
 
   async ionViewWillEnter() {
-    this.address = await this.storageService.getSignInAddress();
-    if (!this.address) {
+    this.signinAccount = await this.storageService.getSignInAccount();
+    if (!this.signinAccount) {
       this.signOut();
       return;
     }
     
     // get account
-    const storeAccount = await this.storageService.getAccount(this.address);
+    const storeAccount = await this.storageService.getAccount(this.signinAccount.address);
     if (!storeAccount) {
       this.signOut();
       return;
     }
 
-    await this.liskService.setSignInAccount(await this.storageService.getNetwork(), this.address);
-    this.signinAccount = this.liskService.getSignInAccount();
-    if (!this.signinAccount.address) {
-      this.signOut();
-      return;
-    }
-
+    this.address = this.signinAccount.address;
     this.balance = transactions.convertBeddowsToLSK(this.signinAccount.balance||"0");
     this.isMultisignature = this.signinAccount.isMultisignature;
     this.publicKey = storeAccount.publicKey;

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { StorageService } from './service/storage.service';
-import { LiskService } from './service/lisk.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +7,7 @@ import { LiskService } from './service/lisk.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private storageService: StorageService, private liskService: LiskService) {
+  constructor(private storageService: StorageService) {
     this.storageService.init();
-    this.liskService.init();
   }
 }

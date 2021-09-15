@@ -14,7 +14,6 @@ export class SettingPage {
   }
 
   async ionViewWillEnter() {
-    await this.storageService.setSignInAddress("");
     this.model.network = (await this.storageService.getNetwork()).toString();
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
-import { Account, Settings } from '../common/types';
+import { Account, Settings, SignInAccount } from '../common/types';
 
 @Injectable({
   providedIn: 'root'
@@ -91,12 +91,16 @@ export class StorageService {
     await this.remove(storeName);
   }
 
-  async setSignInAddress(address:string) {
-    await this.set("signInAddress", address);
+  async setSignInAccount(account:SignInAccount) {
+    await this.set("signInAccount", account);
   }
 
-  async getSignInAddress():Promise<string> {
-    return await this.get("signInAddress")||"";
+  async getSignInAccount():Promise<SignInAccount> {
+    return await this.get("signInAccount")||null;
+  }
+
+  async removeSignInAccount() {
+    await this.remove("signInAccount");
   }
 
   async getSettings():Promise<Settings> {
@@ -105,6 +109,18 @@ export class StorageService {
 
   async setSettings(settings:Settings) {
     return await this.set("settings", settings);
+  }
+
+  async setNetworkId(networkId:Buffer) {
+    await this.set("networkId", networkId);
+  }
+
+  async getNetworkId():Promise<Buffer> {
+    return await this.get("networkId");
+  }
+
+  async removeNetworkId() {
+    await this.remove("networkId");
   }
 
   async setNetwork(network:number) {

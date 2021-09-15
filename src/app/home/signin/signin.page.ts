@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { cryptography, passphrase } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
-import { LiskService } from '../../service/lisk.service';
+import * as liskUtils from '../../common/lisk-utils';
 
 @Component({
   selector: 'app-signin',
@@ -15,14 +15,13 @@ import { LiskService } from '../../service/lisk.service';
 export class SignInPage {
   model:SignInModel;
   
-  constructor(private router: Router, private matSnackBar: MatSnackBar,
-              private storageService: StorageService, private liskService: LiskService) {
+  constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
     this.model = new SignInModel("");
-    this.liskService.init();
   }
 
   async ionViewWillEnter() {
-    await this.storageService.setSignInAddress("");
+    await this.storageService.removeSignInAccount();
+    await this.storageService.removeNetworkId();
   }
 
   ionViewWillLeave() {
@@ -44,16 +43,31 @@ export class SignInPage {
       return;
     }
     const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
-    await this.storageService.setSignInAddress(address);
+
+    // set networkId
+    const network = await this.storageService.getNetwork();
+    const networkId = await liskUtils.getNetworkId(network);
+    if (!networkId) {
+      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 1000 });
+      return;
+    }
+    await this.storageService.setNetworkId(networkId);
+
+    // set signin account
+    const signinAccount = await liskUtils.createSignInAccount(network, address);
+    if (!signinAccount) {
+      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 1000 });
+      return;
+    }
+    await this.storageService.setSignInAccount(signinAccount);
 
     // register account
     const storeAccount = await this.storageService.getAccount(address);
     if (!storeAccount) {
-      await this.liskService.setSignInAccount(await this.storageService.getNetwork(), address);
-      const signinAccount = this.liskService.getSignInAccount();
       const publicKey = cryptography.getAddressAndPublicKeyFromPassphrase(this.model.passphrase).publicKey;
       await this.storageService?.setAccount(address, publicKey, signinAccount.userName);
     }
+
 
     this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }

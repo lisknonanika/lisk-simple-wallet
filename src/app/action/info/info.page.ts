@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { transactions } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
-import { LiskService } from '../../service/lisk.service';
 
 @Component({
   selector: 'app-info',
@@ -18,34 +17,26 @@ export class InfoPage {
   misc:string;
   isMultisignature:boolean;
 
-  constructor(private router: Router, private storageService: StorageService, private liskService: LiskService) {
+  constructor(private router: Router, private storageService: StorageService) {
     this.isView = false;
-    this.liskService.init();
   }
 
   async ionViewWillEnter() {
-    this.address = await this.storageService.getSignInAddress();
-    if (!this.address) {
+    const signinAccount = await this.storageService.getSignInAccount();
+    if (!signinAccount) {
       this.signOut();
       return;
     }
     
     // get account
-    const storeAccount = await this.storageService.getAccount(this.address);
+    const storeAccount = await this.storageService.getAccount(signinAccount.address);
     if (!storeAccount) {
       this.signOut();
       return;
     }
 
-    // set signin account
-    await this.liskService.setSignInAccount(await this.storageService.getNetwork(), this.address);
-    const signinAccount = this.liskService.getSignInAccount();
-    if (!signinAccount.address) {
-      this.signOut();
-      return;
-    }
-
     // set fields
+    this.address = signinAccount.address;
     this.balance = transactions.convertBeddowsToLSK(signinAccount.balance||"0");
     this.misc = storeAccount? storeAccount.misc: signinAccount.userName;
     this.isMultisignature = signinAccount.isMultisignature;

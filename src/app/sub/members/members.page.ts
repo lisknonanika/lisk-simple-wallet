@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { StorageService } from '../../service/storage.service';
-import { LiskService } from '../../service/lisk.service';
-
-import { MultiSigMember } from '../..//common/types';
+import { MultiSigMember } from '../../common/types';
 
 @Component({
   selector: 'app-members',
@@ -14,15 +12,11 @@ import { MultiSigMember } from '../..//common/types';
 export class MembersPage {
   multisignatureMembers:MultiSigMember[];
 
-  constructor(private router: Router, private route: ActivatedRoute,
-              private storageService: StorageService, private liskService: LiskService) {
-    this.liskService.init();
+  constructor(private router: Router, private route: ActivatedRoute, private storageService: StorageService) {
   }
 
   async ionViewWillEnter() {
-    const address = this.route.snapshot.params['address'];
-    await this.liskService.setSignInAccount(await this.storageService.getNetwork(), address);
-    const signinAccount = this.liskService.getSignInAccount();
+    const signinAccount = await this.storageService.getSignInAccount();
     this.multisignatureMembers = signinAccount.multisignatureMembers;
   }
 
