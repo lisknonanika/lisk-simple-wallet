@@ -28,7 +28,8 @@ const routes: Routes = [
     path: 'sub',
     children: [
       {path: 'accountEdit/:address', children: [{path: '', loadChildren: () => import('./sub/accountEdit/accountEdit.module').then(m => m.AccountEditPageModule)}]},
-      {path: 'members/:address', children: [{path: '', loadChildren: () => import('./sub/members/members.module').then(m => m.MembersModule)}]},
+      {path: 'members', children: [{path: '', loadChildren: () => import('./sub/members/members.module').then(m => m.MembersModule)}]},
+      {path: 'passphrase/:address', children: [{path: '', loadChildren: () => import('./sub/passphrase/passphrase.module').then(m => m.PassphrasePageModule)}]},
     ]
   },
   {path: '', pathMatch: 'full', redirectTo: 'home'}

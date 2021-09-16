@@ -52,7 +52,7 @@ export class HistoryPage {
     const network = await this.storageService.getNetwork();
     const networkId = await liskUtils.getNetworkId(network);
     if (!networkId) {
-      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
@@ -61,7 +61,7 @@ export class HistoryPage {
     // set signin account
     const signinAccount = await liskUtils.createSignInAccount(network, address);
     if (!signinAccount) {
-      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
     await this.storageService.setSignInAccount(signinAccount);

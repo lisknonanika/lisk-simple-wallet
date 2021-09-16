@@ -31,12 +31,12 @@
           <ion-card-content>
             <div class="item-title">Recipient address</div>
             <div class="input-box">
-              <div><input placeholder="Enter recipient address" type="text" autocomplete="off"  [(ngModel)]="model.recipient" (input)="computeFee()"></div>
+              <div><input placeholder="Enter recipient address" type="text" autocomplete="off" [(ngModel)]="model.recipient" (input)="computeFee()"></div>
               <div class="input-clear" (click)="clear(0)"><ion-icon name="trash"></ion-icon></div>
             </div>
             <div class="item-title">Amount</div>
             <div class="input-box">
-              <div><input placeholder="Enter amount" type="number" autocomplete="off"  [(ngModel)]="model.amount" (input)="computeFee()"></div>
+              <div><input placeholder="Enter amount" type="number" autocomplete="off" [(ngModel)]="model.amount" (input)="computeFee()"></div>
               <div class="input-clear" (click)="clear(1)"><ion-icon name="trash"></ion-icon></div>
             </div>
             <div class="item-title">Data (optional)</div>

@@ -105,32 +105,32 @@ export class SendPage {
     this.model.data = this.model.data.trim();
 
     if (!this.model.recipient) {
-      this.matSnackBar.open('recipient address is required.', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('recipient address is required.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
     try {
       if (!cryptography.validateBase32Address(this.model.recipient)) {
-        this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 1000 });
+        this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 2000 });
         return;
       }
     } catch(err) {
-      this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
     if (this.model.amount === null) {
-      this.matSnackBar.open('amount is required.', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('amount is required.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
     if (this.model.amount <= 0) {
-      this.matSnackBar.open('invalid amount.', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('invalid amount.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
     if (this.model.data.length > 64) {
-      this.matSnackBar.open('data exceeds the maximum number of characters (Max:64).', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('data exceeds the maximum number of characters (Max:64).', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
@@ -140,7 +140,7 @@ export class SendPage {
     const fee = BigInt(transactions.convertLSKToBeddows(this.fee));
     const minBalance = BigInt(transactions.convertLSKToBeddows("0.05"));
     if ((balance - amount - fee) < minBalance) {
-      this.matSnackBar.open('not enough balance. At least 0.05LSK should be left.', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('not enough balance. At least 0.05LSK should be left.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
@@ -149,6 +149,7 @@ export class SendPage {
     tx.fee = fee;
     await this.storageService.setTransaction(tx.toJSON());
 
+    this.router.navigateByUrl(`/sub/passphrase/${this.address}?ref=0`, {replaceUrl: true});
   }
 }
 

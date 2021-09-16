@@ -56,7 +56,7 @@ export class InfoPage {
     this.router.navigateByUrl(`/sub/accountEdit/${address}?ref=1`, {replaceUrl: true});
   }
 
-  openMembers(address:string) {
-    this.router.navigateByUrl(`/sub/members/${address}`, {replaceUrl: true});
+  openMembers() {
+    this.router.navigateByUrl("/sub/members", {replaceUrl: true});
   }
 }

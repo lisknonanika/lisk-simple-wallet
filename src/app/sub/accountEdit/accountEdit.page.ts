@@ -31,7 +31,7 @@ export class AccountEditPage {
   async delete() {
     await this.storageService?.removeAccount(this.address);
     if (this.ref === 0) {
-      this.matSnackBar.open('deleted', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('deleted', 'close', { verticalPosition: 'top', duration: 2000 });
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
     }
   }
@@ -40,11 +40,11 @@ export class AccountEditPage {
     const account = await this.storageService?.getAccount(this.address);
     await this.storageService?.setAccount(account.address, account.publicKey, this.model.misc);
     if (this.ref === 0) {
-      this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 2000 });
       this.router.navigateByUrl('/home/history', {replaceUrl: true});
 
     } else if (this.ref === 1) {
-      this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 1000 });
+      this.matSnackBar.open('saved', 'close', { verticalPosition: 'top', duration: 2000 });
       this.router.navigateByUrl('/action/info', {replaceUrl: true});
     }
   }
@@ -55,7 +55,7 @@ export class AccountEditPage {
 
   async copy() {
     const result = await this.clipboard.copy(this.address);
-    this.matSnackBar.open(result? 'copied': 'failed', 'close', { verticalPosition: 'top', duration: 1000 });
+    this.matSnackBar.open(result? 'copied': 'failed', 'close', { verticalPosition: 'top', duration: 2000 });
   }
 
   back() {

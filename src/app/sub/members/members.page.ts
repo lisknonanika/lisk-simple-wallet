@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router } from "@angular/router";
 
 import { StorageService } from '../../service/storage.service';
 import { MultiSigMember } from '../../common/types';
@@ -12,7 +12,7 @@ import { MultiSigMember } from '../../common/types';
 export class MembersPage {
   multisignatureMembers:MultiSigMember[];
 
-  constructor(private router: Router, private route: ActivatedRoute, private storageService: StorageService) {
+  constructor(private router: Router, private storageService: StorageService) {
   }
 
   async ionViewWillEnter() {

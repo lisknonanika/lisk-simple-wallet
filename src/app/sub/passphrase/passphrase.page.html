@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Passphrase</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="back()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <div *ngIf="isView">
+      <div class="rows">
+        <div class="row">
+          <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
+          <div class="account">
+            <div class="address">{{address}}</div>
+            <div *ngIf="isMultisignature">{{isMandatory?"Mandatory member": "Optional member"}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <ion-card>
+          <ion-card-title>Passphrase</ion-card-title>
+          <ion-card-content>
+            <div class="item-title">Passphrase</div>
+            <div class="input-box">
+              <div><input placeholder="Enter passphrase" type="password" [(ngModel)]="model.passphrase"></div>
+              <div class="input-clear" (click)="clear()"><ion-icon name="trash"></ion-icon></div>
+            </div>
+            <div *ngIf="visibleSend" style="margin-top: 20px;"><ion-button (click)="send()">Send</ion-button></div>
+            <div *ngIf="visibleSign" style="margin-top: 20px;"><ion-button (click)="sign()">Sign</ion-button></div>
+            <div *ngIf="visibleSkip" style="margin-top: 10px;"><ion-button (click)="skip()" color="danger">Skip</ion-button></div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+</ion-content>
