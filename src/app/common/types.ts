@@ -67,3 +67,17 @@ export class TransferTransaction {
     }
   }
 }
+
+export class SignStatus {
+  public numberOfSignatures: number;
+  public numberOfMandatory: number;
+  public numberOfOptional: number;
+  public numberOfMandatorySigned: number;
+  public numberOfOptionalSigned: number;
+  public numberOfMandatoryRemain: number;
+  public numberOfOptionalRemain: number;
+  public signedAddress: string[];
+  public isFullSign: boolean;
+  public isOverSign: boolean;
+  constructor(){}
+}

@@ -3,7 +3,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { StorageService } from '../../service/storage.service';
-import { SignInAccount } from 'src/app/common/types';
+import { SignInAccount } from '../../common/types';
+import { getSignStatus } from '../../common/lisk-utils';
 
 @Component({
   selector: 'app-send',
@@ -32,61 +33,51 @@ export class PassphrasePage {
   async ionViewWillEnter() {
     this.address = this.route.snapshot.params['address'];
     this.route.queryParams.subscribe((params) => {this.ref = +params.ref});
+    this.isMandatory = false;
+    this.visibleSend = true;
+    this.visibleSign = false;
+    this.visibleSkip = false;
+
+    // get signin account
     this.signinAccount = await this.storageService.getSignInAccount();
     if (!this.signinAccount) {
       this.back();
       return;
     }
 
+    // get transaction
     this.transaction = await this.storageService.getTransaction();
     if (!this.transaction) {
       this.back();
       return;
     }
 
-    this.visibleSend = true;
-    this.visibleSign = false;
-    this.visibleSkip = false;
-    this.isMandatory = false;
-    this.isMultisignature = this.signinAccount.isMultisignature;
-    if (this.isMultisignature) {
-      const member = this.signinAccount.multisignatureMembers.find((m) => {return m.address === this.address});
-      if (!member) {
-        this.skip();
-        return;
-      }
-      this.isMandatory = member.isMandatory;
-
-      let mySignatureIndex:number = 0;
-      for (const [index, m] of this.signinAccount.multisignatureMembers.entries()) {
-        if (m.address !== this.address) continue;
-        mySignatureIndex = index;
-        break;
-      }
-
-      const numberOfSignatures:number = this.signinAccount.numberOfSignatures;
-      const numberOfMandatory:number = this.signinAccount.multisignatureMembers.filter((m) => {return m.isMandatory}).length;
-      let numberOfMandatorySigned:number = 0;
-      let numberOfOptionalSigned:number = 0;
-      const signatures = this.transaction.signatures as Buffer[]||[];
-      for (const [index, sig] of signatures.entries()) {
-        console.log(sig.length)
-        if (numberOfMandatory > 0 && index < numberOfMandatory) {
-          if (sig.length > 0 || index === mySignatureIndex) numberOfMandatorySigned += 1;
-          continue;
-        }
-        if (sig.length > 0 || index === mySignatureIndex) numberOfOptionalSigned += 1;
-      }
-      if (numberOfMandatorySigned + numberOfOptionalSigned > numberOfSignatures) {
-        this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 2000 });
-        this.back();
-        return;
-      }
-      this.visibleSend = numberOfMandatory === numberOfMandatorySigned && numberOfSignatures === numberOfMandatorySigned + numberOfOptionalSigned;
-      this.visibleSign = !this.visibleSend;
-      this.visibleSkip = !this.visibleSend;
+    // multisignature?
+    if (!this.signinAccount.isMultisignature) {
+      this.isView = true;
+      return;
     }
 
+    // member?
+    const member = this.signinAccount.multisignatureMembers.find((m) => {return m.address === this.address});
+    if (!member) {
+      this.skip();
+      return;
+    }
+
+    // over sign?
+    const signedStatus = getSignStatus(this.address, this.signinAccount, this.transaction.signatures as Buffer[]||[], true);
+    if (signedStatus.isOverSign) {
+      this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.back();
+      return;
+    }
+
+    // set params
+    this.isMandatory = member.isMandatory;
+    this.visibleSend = signedStatus.isFullSign;
+    this.visibleSign = !this.visibleSend;
+    this.visibleSkip = !this.visibleSend;
     this.isView = true;
   }
 
