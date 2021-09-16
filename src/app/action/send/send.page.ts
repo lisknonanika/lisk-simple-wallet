@@ -29,6 +29,7 @@ export class SendPage {
   }
 
   async ionViewWillEnter() {
+    await this.storageService.removeTransaction();
     await this.reload();
   }
 
@@ -45,9 +46,11 @@ export class SendPage {
       this.signOut();
       return;
     }
-
     this.address = this.signinAccount.address;
     this.balance = transactions.convertBeddowsToLSK(this.signinAccount.balance||"0");
+
+    // compute fee
+    await this.computeFee();
 
     this.isView = true;
   }
@@ -68,23 +71,26 @@ export class SendPage {
     }
   }
 
+  createTransaction():TransferTransaction {
+    const tx = new TransferTransaction();
+    tx.nonce = this.signinAccount.nonce;
+    tx.senderPublicKey = this.storeAccount.publicKey;
+    tx.asset = {
+      recipientAddress: cryptography.getAddressFromLisk32Address(this.model.recipient),
+      amount: BigInt(transactions.convertLSKToBeddows(this.model.amount.toString())),
+      data: this.model.data
+    }
+    return tx;
+  }
+
   async computeFee() {
     try {
-      console.log("computeFee")
       this.fee = "0";
       if (!this.model.recipient || !cryptography.validateBase32Address(this.model.recipient)) return;
       if (this.model.amount === null || this.model.amount <= 0) return;
       if (this.model.data.length > 64) return;
 
-      const tx = new TransferTransaction();
-      tx.nonce = this.signinAccount.nonce;
-      tx.senderPublicKey = this.storeAccount.publicKey;
-      tx.asset = {
-        recipientAddress: cryptography.getAddressFromLisk32Address(this.model.recipient),
-        amount: BigInt(transactions.convertLSKToBeddows(this.model.amount.toString())),
-        data: this.model.data
-      }
-
+      const tx = this.createTransaction();
       const options = this.signinAccount.isMultisignature? {numberOfSignatures: this.signinAccount.numberOfSignatures}: {};
       const minFee = transactions.computeMinFee(getTransferAssetSchema(), tx.toJSON(), options);
       this.fee = transactions.convertBeddowsToLSK(minFee.toString());
@@ -94,7 +100,7 @@ export class SendPage {
     }
   }
 
-  continue() {
+  async continue() {
     this.model.recipient = this.model.recipient.trim().toLowerCase();
     this.model.data = this.model.data.trim();
 
@@ -127,6 +133,22 @@ export class SendPage {
       this.matSnackBar.open('data exceeds the maximum number of characters (Max:64).', 'close', { verticalPosition: 'top', duration: 1000 });
       return;
     }
+
+    await this.reload();
+    const balance = BigInt(this.signinAccount.balance||"0");
+    const amount = BigInt(transactions.convertLSKToBeddows(this.model.amount.toString()));
+    const fee = BigInt(transactions.convertLSKToBeddows(this.fee));
+    const minBalance = BigInt(transactions.convertLSKToBeddows("0.05"));
+    if ((balance - amount - fee) < minBalance) {
+      this.matSnackBar.open('not enough balance. At least 0.05LSK should be left.', 'close', { verticalPosition: 'top', duration: 1000 });
+      return;
+    }
+
+    // create transaction
+    const tx = this.createTransaction();
+    tx.fee = fee;
+    await this.storageService.setTransaction(tx.toJSON());
+
   }
 }
 

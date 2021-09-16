@@ -123,6 +123,18 @@ export class StorageService {
     await this.remove("networkId");
   }
 
+  async setTransaction(transaction:Record<string, unknown>) {
+    await this.set("transaction", transaction);
+  }
+
+  async getTransaction():Promise<Record<string, unknown>> {
+    return await this.get("transaction");
+  }
+
+  async removeTransaction() {
+    await this.remove("transaction");
+  }
+
   async setNetwork(network:number) {
     const settings = await this.getSettings();
     settings.network = network;
