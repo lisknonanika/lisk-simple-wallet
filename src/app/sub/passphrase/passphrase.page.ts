@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { cryptography } from '@liskhq/lisk-client';
+
 import { StorageService } from '../../service/storage.service';
 import { SignInAccount } from '../../common/types';
-import { getSignStatus, signTransaction } from '../../common/lisk-utils';
+import { getSignStatus, sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
 
 @Component({
   selector: 'app-send',
@@ -16,6 +18,7 @@ export class PassphrasePage {
   model:PassphraseModel;
   signinAccount: SignInAccount;
   transaction: Record<string, unknown>;
+  network:number;
   networkId:Buffer;
   address:string;
   isMultisignature:boolean;
@@ -54,6 +57,7 @@ export class PassphrasePage {
     }
 
     // get networkId
+    this.network = await this.storageService.getNetwork();
     this.networkId = await this.storageService.getNetworkId();
     if (!this.networkId) {
       this.back();
@@ -107,12 +111,32 @@ export class PassphrasePage {
       this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
-    
+
+    if (this.address !== cryptography.getLisk32AddressFromPassphrase(this.model.passphrase)) {
+      this.matSnackBar.open('passphrase is incorrect.', 'close', { verticalPosition: 'top', duration: 2000 });
+      return;
+    }
     const signedTransaction = signTransaction(this.transaction, this.signinAccount, this.model.passphrase, this.networkId);
-
-
-
-    this.model.passphrase = "";
+    if (!signedTransaction) {
+      if (this.ref === 0) {
+        this.router.navigateByUrl('/action/send', {replaceUrl: true});
+      } else {
+        this.router.navigateByUrl('/home', {replaceUrl: true});
+      }
+      return;
+    }
+    const result = await sendTransferTransaction(this.network, signedTransaction);
+    if (!result) {
+      this.matSnackBar.open('failed to send the transaction.', 'close', { verticalPosition: 'top', duration: 2000 });
+      return;
+    }
+    
+    this.matSnackBar.open(`sent the transaction. transactionId=${result}`, 'close', { verticalPosition: 'top', duration: 2000 });
+    if (this.ref === 0) {
+      this.router.navigateByUrl('/action/send', {replaceUrl: true});
+    } else {
+      this.router.navigateByUrl('/home', {replaceUrl: true});
+    }
   }
 
   sign() {

@@ -1,6 +1,6 @@
 import { transactions, cryptography } from '@liskhq/lisk-client';
 import { getApiURL, getTransferAssetSchema } from './utils';
-import { MultiSigMember, SignInAccount, SignStatus } from './types';
+import { SignInAccount, SignStatus } from './types';
 
 export const createSignInAccount = async(network:number, address:string):Promise<SignInAccount> => {
   try {
@@ -97,6 +97,23 @@ export const signTransaction = (transaction:Record<string, unknown>, signinAccou
     }
     return transactions.signTransaction(getTransferAssetSchema(), transaction, networkId, passphrase);
   } catch(err) {
+    return null;
+  }
+}
+
+export const sendTransferTransaction = async(network:number, transaction:Record<string, unknown>):Promise<string> => {
+  try {
+    const payload = transactions.getBytes(getTransferAssetSchema(), transaction).toString("hex");
+    const res = await fetch(`${getApiURL(network)}/v2/transactions?transaction=${payload}`,{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json'
+      },
+    });
+    const json = await res.json();
+    if (json.error) return null;
+    return json.transactionId;
+  } catch (err) {
     return null;
   }
 }
