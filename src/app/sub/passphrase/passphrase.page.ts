@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { StorageService } from '../../service/storage.service';
 import { SignInAccount } from '../../common/types';
-import { getSignStatus } from '../../common/lisk-utils';
+import { getSignStatus, signTransaction } from '../../common/lisk-utils';
 
 @Component({
   selector: 'app-send',
@@ -16,6 +16,7 @@ export class PassphrasePage {
   model:PassphraseModel;
   signinAccount: SignInAccount;
   transaction: Record<string, unknown>;
+  networkId:Buffer;
   address:string;
   isMultisignature:boolean;
   isMandatory:boolean;
@@ -48,6 +49,13 @@ export class PassphrasePage {
     // get transaction
     this.transaction = await this.storageService.getTransaction();
     if (!this.transaction) {
+      this.back();
+      return;
+    }
+
+    // get networkId
+    this.networkId = await this.storageService.getNetworkId();
+    if (!this.networkId) {
       this.back();
       return;
     }
@@ -93,7 +101,17 @@ export class PassphrasePage {
     this.model.passphrase = "";
   }
 
-  send() {
+  async send() {
+    this.model.passphrase = this.model.passphrase.trim().toLowerCase();
+    if (!this.model.passphrase) {
+      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 2000 });
+      return;
+    }
+    
+    const signedTransaction = signTransaction(this.transaction, this.signinAccount, this.model.passphrase, this.networkId);
+
+
+
     this.model.passphrase = "";
   }
 

@@ -1,5 +1,5 @@
-import { cryptography } from '@liskhq/lisk-client';
-import { getApiURL } from './utils';
+import { transactions, cryptography } from '@liskhq/lisk-client';
+import { getApiURL, getTransferAssetSchema } from './utils';
 import { MultiSigMember, SignInAccount, SignStatus } from './types';
 
 export const createSignInAccount = async(network:number, address:string):Promise<SignInAccount> => {
@@ -84,4 +84,19 @@ export const getSignStatus = (signAddress:string, signinAccount:SignInAccount, s
   signStatus.isOverSign = signStatus.numberOfMandatorySigned + signStatus.numberOfOptionalSigned > signStatus.numberOfSignatures;
 
   return signStatus;
+}
+
+export const signTransaction = (transaction:Record<string, unknown>, signinAccount:SignInAccount, passphrase:string, networkId:Buffer) => {
+  try {
+    if (signinAccount.isMultisignature) {
+      const keys = {
+        mandatoryKeys: signinAccount.multisignatureMembers.map((member) => {if (member.isMandatory) return member.publicKey})||[],
+        optionalKeys: signinAccount.multisignatureMembers.map((member) => {if (!member.isMandatory) return member.publicKey})||[]
+      }
+      return transactions.signMultiSignatureTransaction(getTransferAssetSchema(), transaction, networkId, passphrase, keys, false);
+    }
+    return transactions.signTransaction(getTransferAssetSchema(), transaction, networkId, passphrase);
+  } catch(err) {
+    return null;
+  }
 }
