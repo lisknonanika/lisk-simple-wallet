@@ -4,11 +4,6 @@ export const API = [
   "https://testnet-service.lisk.com/api"
 ];
 
-export const WS = [
-  "wss/://mainnet-service.ysdev.work/ws",
-  "wss/://testnet-service.ysdev.work/ws",
-];
-
 export const EXPLORER = [
   [
     "https://lisk.observer",
