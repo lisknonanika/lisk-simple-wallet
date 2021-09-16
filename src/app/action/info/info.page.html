@@ -27,14 +27,14 @@
             <ion-icon name="reload"></ion-icon>
           </div>
         </div>
-        <div class="members" (click)="openMembers(address)">
+        <div *ngIf="isMultisignature" class="members" (click)="openMembers(address)">
           <div class="icon"><ion-icon name="caret-forward"></ion-icon></div>
           <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Display Multisgnature Members</div>
         </div>
       </div>
       
-      <div class="rows" style="margin-top: 20px;">
-        <div class="item-title">- Latest 10 Transactions -</div>
+      <div class="content-title">- Latest 10 Transactions -</div>
+      <div class="rows" style="margin-top: 10px;">
       </div>
     </div>
   </div>

@@ -1,45 +1,4 @@
-.rows {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
 .row {
-  display: flex;
-  align-items: center;
-  color: white;
   background-color: #289292;
-  border-radius: 5px;
-  margin: 5px 0px;
   height: 50px;
-  width: calc(100vw - 40px);
-  max-width: 600px;
-}
-
-.identicon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 10px;
-}
-
-.account {
-  width: calc(100vw - 80px);
-  max-width: calc(600px - 40px);
-  padding: 5px 10px;
-  text-align: left;
-}
-
-.account div {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.8rem;
-  color: #cee0ee;
-}
-
-.account div.address {
-  font-size: 1rem;
-  color: #ffffff;
 }

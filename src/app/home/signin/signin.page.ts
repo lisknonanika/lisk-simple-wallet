@@ -14,6 +14,7 @@ import * as liskUtils from '../../common/lisk-utils';
 })
 export class SignInPage {
   model:SignInModel;
+  network:number;
   
   constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
     this.model = new SignInModel("");
@@ -22,6 +23,7 @@ export class SignInPage {
   async ionViewWillEnter() {
     await this.storageService.removeSignInAccount();
     await this.storageService.removeNetworkId();
+    this.network = await this.storageService.getNetwork();
   }
 
   ionViewWillLeave() {

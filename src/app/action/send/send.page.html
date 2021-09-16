@@ -24,25 +24,30 @@
           </div>
         </div>
       </div>
-    
+
       <div class="input-area">
-        <div class="item-title" style="margin-top: 20px;">Recipient address</div>
-        <div class="input-box">
-          <div><input placeholder="Enter recipient address" type="text" autocomplete="off"  [(ngModel)]="model.recipient" (input)="computeFee()"></div>
-          <div class="input-clear" (click)="clear(0)"><ion-icon name="trash"></ion-icon></div>
-        </div>
-        <div class="item-title">Amount</div>
-        <div class="input-box">
-          <div><input placeholder="Enter amount" type="number" autocomplete="off"  [(ngModel)]="model.amount" (input)="computeFee()"></div>
-          <div class="input-clear" (click)="clear(1)"><ion-icon name="trash"></ion-icon></div>
-        </div>
-        <div class="item-title">Data (optional)</div>
-        <div class="input-box">
-          <div><input placeholder="Enter data (optional)" type="text" autocomplete="off" maxlength="64" [(ngModel)]="model.data" (input)="computeFee()"></div>
-          <div class="input-clear" (click)="clear(2)"><ion-icon name="trash"></ion-icon></div>
-        </div>
-        <div class="fee">fee: {{fee}} LSK</div>
-        <div style="margin-top: 20px;"><ion-button (click)="continue()">Continue</ion-button></div>
+        <ion-card>
+          <ion-card-title>Send Contents</ion-card-title>
+          <ion-card-content>
+            <div class="item-title">Recipient address</div>
+            <div class="input-box">
+              <div><input placeholder="Enter recipient address" type="text" autocomplete="off"  [(ngModel)]="model.recipient" (input)="computeFee()"></div>
+              <div class="input-clear" (click)="clear(0)"><ion-icon name="trash"></ion-icon></div>
+            </div>
+            <div class="item-title">Amount</div>
+            <div class="input-box">
+              <div><input placeholder="Enter amount" type="number" autocomplete="off"  [(ngModel)]="model.amount" (input)="computeFee()"></div>
+              <div class="input-clear" (click)="clear(1)"><ion-icon name="trash"></ion-icon></div>
+            </div>
+            <div class="item-title">Data (optional)</div>
+            <div class="input-box">
+              <div><input placeholder="Enter data (optional)" type="text" autocomplete="off" maxlength="64" [(ngModel)]="model.data" (input)="computeFee()"></div>
+              <div class="input-clear" (click)="clear(2)"><ion-icon name="trash"></ion-icon></div>
+            </div>
+            <div class="fee">fee: {{fee}} LSK</div>
+            <div style="margin-top: 20px;"><ion-button (click)="continue()">Continue</ion-button></div>
+          </ion-card-content>
+        </ion-card>
       </div>
     </div>
   </div>

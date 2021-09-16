@@ -26,34 +26,32 @@
   flex-direction: column;
 }
 
-#container .input-box {
+ion-card {
+  padding: 20px;
+  width: calc(100vw - 40px);
+  max-width: 600px;
+}
+
+ion-card-title {
+  font-size: 1.5rem;
+}
+
+ion-card-content {
+  padding: 0;
+  margin: 0;
+}
+
+ion-card-content .input-box {
   position: relative;
-  width: calc(100vw - 40px);
-  max-width: 600px;
 }
 
-#container input[type="text"],
-#container input[type="number"],
-#container input[type="password"] {
-  font-size: 16px;
-  padding: 10px;
-  padding-right: 40px;
-  width: calc(100vw - 40px);
-  max-width: 600px;
-  height: 50px;
-}
-
-#container input:read-only {
-  color: #8c8c8c;
-}
-
-#container .input-clear {
+ion-card-content .input-clear {
   position: absolute;
   color: white;
-  right: 1px;
-  top: 1px;
+  right: 0px;
+  top: 5px;
   width: 30px;
-  height: 48px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,30 +59,114 @@
   background-color: rgba(0, 0, 0, 0.15);
 }
 
-ion-footer .footer-content {
-  display: flex;
-  align-items: center;
-  justify-content:center;
-  padding: 0px 10px 20px 10px;
-}
-
-ion-footer .footer-buttons {
-  display: flex;
-  align-items: center;
-  justify-content:center;
-  flex-direction: row;
-  width: calc(100vw - 40px);
-  max-width: 600px;
-}
-
-#container ion-button,
-ion-footer ion-button {
+ion-card-content input[type="text"],
+ion-card-content input[type="number"],
+ion-card-content input[type="password"],
+ion-card-content ion-button {
   font-size: 16px;
   height: 50px;
+  width: calc(100vw - 80px) !important;
+  max-width: 560px !important;
+}
+
+ion-card-content input[type="text"],
+ion-card-content input[type="number"],
+ion-card-content input[type="password"] {
+  padding: 10px;
+  padding-right: 40px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: none;
+}
+
+ion-card-content ion-button {
+  margin-left: -1px;
+}
+
+ion-card-content .item-title {
+  margin-top: 10px;
+  text-align: left;
+  color: #8c8c8c;
+  opacity: 0.8;
+  width: calc(100vw - 80px) !important;
+  max-width: 560px !important;
+}
+
+// address row
+.rows {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  color: white;
+  background-color: #3b6ec0;
+  border-radius: 5px;
+  margin: 5px 0px;
+  height: 75px;
   width: calc(100vw - 40px);
   max-width: 600px;
 }
 
+.row .setting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background-color: #284f92;
+  border-radius: 5px 0 0 5px;
+  width: 30px;
+  height: 75px;
+}
+
+.row .reload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background-color: #284f92;
+  border-radius: 0 5px 5px 0;
+  width: 30px;
+  height: 75px;
+}
+
+.row .identicon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+}
+
+.row .sort {
+  font-size: 25px;
+  width: 30px;
+}
+
+.row .account {
+  width: calc(100vw - 90px);
+  max-width: calc(600px - 50px);
+  padding: 5px 10px 5px 0px;
+  text-align: left;
+}
+
+.row .account div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  color: #cee0ee;
+}
+
+.row .account div.address {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+// angular
 .cdk-drag-placeholder {
   opacity: 0;
 }

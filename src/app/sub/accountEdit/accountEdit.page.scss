@@ -4,30 +4,33 @@
   justify-content: center;
   flex-direction: column;
   padding: 0px;
-  height: 100%;
-}
-
-.item-title {
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-.item-row {
-  display: flex;
-  flex-direction: row;
 }
 
 .address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  position: relative;
+  margin-top: 20px;
+  height: 40px;
+}
+
+.address-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 78vw;
-  max-width: 400px;
+  font-size: 20px;
+  width: calc(100vw - 130px);
+  max-width: 560px;
 }
 
 .address-copy {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  right: 0;
   font-size: 20px;
+  width: 30px;
 }
