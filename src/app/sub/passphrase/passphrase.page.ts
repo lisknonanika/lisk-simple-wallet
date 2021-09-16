@@ -78,7 +78,7 @@ export class PassphrasePage {
         if (sig.length > 0 || index === mySignatureIndex) numberOfOptionalSigned += 1;
       }
       if (numberOfMandatorySigned + numberOfOptionalSigned > numberOfSignatures) {
-        this.matSnackBar.open('cannot sign. exceeded the number of signatures.', 'close', { verticalPosition: 'top', duration: 2000 });
+        this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 2000 });
         this.back();
         return;
       }
