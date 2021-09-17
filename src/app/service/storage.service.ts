@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
-import { Account, Settings, SignInAccount } from '../common/types';
+import { Account, Settings, SignInAccount, TRANSFER_JSON } from '../common/types';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +50,7 @@ export class StorageService {
     return accounts.find((account) => {return account.address === address})||null;
   }
 
-  async setAccount(address:string, publicKey:Buffer, misc?:string, sortNo?:number) {
+  async setAccount(address:string, publicKey:string, misc?:string, sortNo?:number) {
     const storeName = await this.getAccountsStoreName();
     const accounts = await this.getAccounts();
     if (accounts.length > 0) {
@@ -86,6 +86,11 @@ export class StorageService {
     await this.set(storeName, newAccounts);
   }
 
+  async removeAllAccounts() {
+    await this.remove("testnet_accounts");
+    await this.remove("accounts");
+  }
+
   async removeAccounts() {
     const storeName = await this.getAccountsStoreName();
     await this.remove(storeName);
@@ -111,11 +116,11 @@ export class StorageService {
     return await this.set("settings", settings);
   }
 
-  async setNetworkId(networkId:Buffer) {
+  async setNetworkId(networkId:string) {
     await this.set("networkId", networkId);
   }
 
-  async getNetworkId():Promise<Buffer> {
+  async getNetworkId():Promise<string> {
     return await this.get("networkId");
   }
 
@@ -123,11 +128,11 @@ export class StorageService {
     await this.remove("networkId");
   }
 
-  async setTransaction(transaction:Record<string, unknown>) {
+  async setTransaction(transaction:TRANSFER_JSON) {
     await this.set("transaction", transaction);
   }
 
-  async getTransaction():Promise<Record<string, unknown>> {
+  async getTransaction():Promise<TRANSFER_JSON> {
     return await this.get("transaction");
   }
 

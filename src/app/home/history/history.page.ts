@@ -55,11 +55,12 @@ export class HistoryPage {
       this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
-
     await this.storageService.setNetworkId(networkId);
 
+    const storeAccount = await this.storageService.getAccount(address);
+
     // set signin account
-    const signinAccount = await liskUtils.createSignInAccount(network, address);
+    const signinAccount = await liskUtils.createSignInAccount(network, address, storeAccount.publicKey);
     if (!signinAccount) {
       this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;

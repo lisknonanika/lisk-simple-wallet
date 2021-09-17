@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { cryptography } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
-import { SignInAccount } from '../../common/types';
+import { SignInAccount, TRANSFER_JSON } from '../../common/types';
 import { getSignStatus, sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
 
 @Component({
@@ -17,9 +17,9 @@ export class PassphrasePage {
   isView:boolean;
   model:PassphraseModel;
   signinAccount: SignInAccount;
-  transaction: Record<string, unknown>;
+  transaction: TRANSFER_JSON;
   network:number;
-  networkId:Buffer;
+  networkId:string;
   address:string;
   isMultisignature:boolean;
   isMandatory:boolean;
@@ -78,7 +78,7 @@ export class PassphrasePage {
     }
 
     // over sign?
-    const signedStatus = getSignStatus(this.address, this.signinAccount, this.transaction.signatures as Buffer[]||[], true);
+    const signedStatus = getSignStatus(this.address, this.signinAccount, this.transaction.signatures, true);
     if (signedStatus.isOverSign) {
       this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 2000 });
       this.back();

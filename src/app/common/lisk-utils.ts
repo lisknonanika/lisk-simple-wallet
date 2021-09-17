@@ -1,26 +1,26 @@
 import { transactions, cryptography } from '@liskhq/lisk-client';
 import { getApiURL, getTransferAssetSchema } from './utils';
-import { SignInAccount, SignStatus } from './types';
+import { SignInAccount, SignStatus, TransferTransaction ,TRANSFER_JSON, TRANSFER_JS } from './types';
 
-export const createSignInAccount = async(network:number, address:string):Promise<SignInAccount> => {
+export const createSignInAccount = async(network:number, address:string, publicKey:string):Promise<SignInAccount> => {
   try {
-    const signInAccount = new SignInAccount("", null, BigInt(0), "0", false, [], 0, "");
+    const signInAccount = new SignInAccount("", "", "0", "0", false, [], 0, "");
 
     // set enter address
     signInAccount.address = address;
-    signInAccount.bufferAddress = cryptography.getAddressFromLisk32Address(address);
+    signInAccount.publicKey = publicKey;
 
     // set lisk account
     const account = await getAccount(network, address);
     if (!account) return;
-    signInAccount.nonce = BigInt(account.sequence.nonce);
+    signInAccount.nonce = account.sequence.nonce;
     signInAccount.balance = account.summary.balance;
     if (account.summary.isMultisignature) {
       signInAccount.isMultisignature = true;
       for (const member of account.keys.members) {
         signInAccount.multisignatureMembers.push({
           address: member.address,
-          publicKey: Buffer.from(member.publicKey, "hex"),
+          publicKey: member.publicKey,
           isMandatory: member.isMandatory
         });
       }
@@ -44,17 +44,17 @@ export const getAccount = async(network:number, address:string):Promise<any> => 
   }
 }
 
-export const getNetworkId = async(network:number):Promise<Buffer> => {
+export const getNetworkId = async(network:number):Promise<string> => {
   try {
     const res = await fetch(`${getApiURL(network)}/status`);
     const json = await res.json();
-    return Buffer.from(json.networkId, "hex");
+    return json.networkId;
   } catch (err) {
     return null;
   }
 }
 
-export const getSignStatus = (signAddress:string, signinAccount:SignInAccount, signatures:Buffer[], isIncludeSign:boolean):SignStatus => {
+export const getSignStatus = (signAddress:string, signinAccount:SignInAccount, signatures:string[], isIncludeSign:boolean):SignStatus => {
   const signStatus = new SignStatus();
   signStatus.numberOfSignatures = signinAccount.numberOfSignatures;
   signStatus.numberOfMandatory = signinAccount.multisignatureMembers.filter((m) => {return m.isMandatory}).length;
@@ -86,24 +86,29 @@ export const getSignStatus = (signAddress:string, signinAccount:SignInAccount, s
   return signStatus;
 }
 
-export const signTransaction = (transaction:Record<string, unknown>, signinAccount:SignInAccount, passphrase:string, networkId:Buffer) => {
+export const signTransaction = (transaction:TRANSFER_JSON, signinAccount:SignInAccount, passphrase:string, networkId:string):TRANSFER_JS => {
   try {
+    const tx = new TransferTransaction(transaction).toJsObject();
     if (signinAccount.isMultisignature) {
       const keys = {
-        mandatoryKeys: signinAccount.multisignatureMembers.map((member) => {if (member.isMandatory) return member.publicKey})||[],
-        optionalKeys: signinAccount.multisignatureMembers.map((member) => {if (!member.isMandatory) return member.publicKey})||[]
+        mandatoryKeys: signinAccount.multisignatureMembers.map((member) => {
+          if (member.isMandatory) return cryptography.hexToBuffer(member.publicKey);
+        })||[],
+        optionalKeys: signinAccount.multisignatureMembers.map((member) => {
+          if (!member.isMandatory) return cryptography.hexToBuffer(member.publicKey);
+        })||[]
       }
-      return transactions.signMultiSignatureTransaction(getTransferAssetSchema(), transaction, networkId, passphrase, keys, false);
+      return transactions.signMultiSignatureTransaction(getTransferAssetSchema(), tx, cryptography.hexToBuffer(networkId), passphrase, keys, false) as TRANSFER_JS;
     }
-    return transactions.signTransaction(getTransferAssetSchema(), transaction, networkId, passphrase);
+    return transactions.signTransaction(getTransferAssetSchema(), tx, cryptography.hexToBuffer(networkId), passphrase) as TRANSFER_JS;
   } catch(err) {
     return null;
   }
 }
 
-export const sendTransferTransaction = async(network:number, transaction:Record<string, unknown>):Promise<string> => {
+export const sendTransferTransaction = async(network:number, transaction:TRANSFER_JS):Promise<string> => {
   try {
-    const payload = transactions.getBytes(getTransferAssetSchema(), transaction).toString("hex");
+    const payload = cryptography.bufferToHex(transactions.getBytes(getTransferAssetSchema(), transaction));
     const res = await fetch(`${getApiURL(network)}/v2/transactions?transaction=${payload}`,{
       method: 'POST',
       headers: {

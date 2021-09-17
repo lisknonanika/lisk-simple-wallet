@@ -45,6 +45,7 @@ export class SignInPage {
       return;
     }
     const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
+    const publicKey = cryptography.bufferToHex(cryptography.getAddressAndPublicKeyFromPassphrase(this.model.passphrase).publicKey);
 
     // set networkId
     const network = await this.storageService.getNetwork();
@@ -56,7 +57,7 @@ export class SignInPage {
     await this.storageService.setNetworkId(networkId);
 
     // set signin account
-    const signinAccount = await liskUtils.createSignInAccount(network, address);
+    const signinAccount = await liskUtils.createSignInAccount(network, address, publicKey);
     if (!signinAccount) {
       this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 2000 });
       return;
@@ -65,12 +66,7 @@ export class SignInPage {
 
     // register account
     const storeAccount = await this.storageService.getAccount(address);
-    if (!storeAccount) {
-      const publicKey = cryptography.getAddressAndPublicKeyFromPassphrase(this.model.passphrase).publicKey;
-      await this.storageService?.setAccount(address, publicKey, signinAccount.userName);
-    }
-
-
+    if (!storeAccount) await this.storageService?.setAccount(address, publicKey, signinAccount.userName);
     this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }
 }

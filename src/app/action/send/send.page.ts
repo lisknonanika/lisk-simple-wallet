@@ -16,7 +16,6 @@ import { Account, SignInAccount, TransferTransaction } from '../../common/types'
 export class SendPage {
   isView:boolean;
   model:SendModel;
-  storeAccount:Account;
   signinAccount:SignInAccount;
   address:string;
   balance:string;
@@ -36,13 +35,6 @@ export class SendPage {
   async reload() {
     this.signinAccount = await this.storageService.getSignInAccount();
     if (!this.signinAccount) {
-      this.signOut();
-      return;
-    }
-    
-    // get account
-    this.storeAccount = await this.storageService.getAccount(this.signinAccount.address);
-    if (!this.storeAccount) {
       this.signOut();
       return;
     }
@@ -74,10 +66,10 @@ export class SendPage {
   createTransaction():TransferTransaction {
     const tx = new TransferTransaction();
     tx.nonce = this.signinAccount.nonce;
-    tx.senderPublicKey = this.storeAccount.publicKey;
+    tx.senderPublicKey = this.signinAccount.publicKey;
     tx.asset = {
-      recipientAddress: cryptography.getAddressFromLisk32Address(this.model.recipient),
-      amount: BigInt(transactions.convertLSKToBeddows(this.model.amount.toString())),
+      recipientAddress:  cryptography.bufferToHex(cryptography.getAddressFromLisk32Address(this.model.recipient)),
+      amount: transactions.convertLSKToBeddows(this.model.amount.toString()),
       data: this.model.data
     }
     return tx;
@@ -86,13 +78,13 @@ export class SendPage {
   async computeFee() {
     try {
       this.fee = "0";
-      if (!this.model.recipient || !cryptography.validateBase32Address(this.model.recipient)) return;
+      if (!this.model.recipient || !cryptography.validateBase32Address(this.model.recipient.trim().toLocaleLowerCase())) return;
       if (this.model.amount === null || this.model.amount <= 0) return;
       if (this.model.data.length > 64) return;
 
       const tx = this.createTransaction();
       const options = this.signinAccount.isMultisignature? {numberOfSignatures: this.signinAccount.numberOfSignatures}: {};
-      const minFee = transactions.computeMinFee(getTransferAssetSchema(), tx.toJSON(), options);
+      const minFee = transactions.computeMinFee(getTransferAssetSchema(), tx.toJsObject(), options);
       this.fee = transactions.convertBeddowsToLSK(minFee.toString());
 
     } catch(err) {
@@ -146,7 +138,7 @@ export class SendPage {
 
     // create transaction
     const tx = this.createTransaction();
-    tx.fee = fee;
+    tx.fee = transactions.convertLSKToBeddows(this.fee);
     await this.storageService.setTransaction(tx.toJSON());
 
     this.router.navigateByUrl(`/sub/passphrase/${this.address}?ref=0`, {replaceUrl: true});

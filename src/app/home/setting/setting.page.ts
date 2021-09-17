@@ -24,6 +24,13 @@ export class SettingPage {
   async changeExplorer() {
     await this.storageService.setExplorer(+this.model.explorer);
   }
+
+  async initialize() {
+    await this.storageService.removeAllAccounts();
+    await this.storageService.setNetwork(0);
+    await this.storageService.setExplorer(0);
+    this.model = new SettingModel("0", "0");
+  }
 }
 
 export class SettingModel{
