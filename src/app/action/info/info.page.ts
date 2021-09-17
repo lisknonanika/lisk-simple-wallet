@@ -57,6 +57,6 @@ export class InfoPage {
   }
 
   openMembers() {
-    this.router.navigateByUrl("/sub/members", {replaceUrl: true});
+    this.router.navigateByUrl("/sub/members");
   }
 }

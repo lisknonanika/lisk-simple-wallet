@@ -31,7 +31,12 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/theme/variables.scss", "src/global.scss"],
+            "styles": [
+              "node_modules/sweetalert2/src/sweetalert2.scss",
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/theme/variables.scss",
+              "src/global.scss"
+            ],
             "scripts": [],
             "aot": false,
             "vendorChunk": true,

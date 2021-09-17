@@ -4,8 +4,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { PassphrasePage } from './passphrase.page';
-import { PassphrasePageRoutingModule } from './passphrase-routing.module';
+import { MultiSignPage } from './multiSign.page';
+import { MultiSignPageRoutingModule } from './multiSign-routing.module';
 
 
 @NgModule({
@@ -14,8 +14,8 @@ import { PassphrasePageRoutingModule } from './passphrase-routing.module';
     MatSnackBarModule,
     FormsModule,
     IonicModule,
-    PassphrasePageRoutingModule
+    MultiSignPageRoutingModule
   ],
-  declarations: [PassphrasePage]
+  declarations: [MultiSignPage]
 })
-export class PassphrasePageModule {}
+export class MultiSignPageModule {}

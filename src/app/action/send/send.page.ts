@@ -3,10 +3,12 @@ import { Router } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { transactions, cryptography } from '@liskhq/lisk-client';
+import Swal, { SweetAlertOptions } from 'sweetalert2';
 
 import { StorageService } from '../../service/storage.service';
 import { getTransferAssetSchema } from '../../common/utils';
-import { Account, SignInAccount, TransferTransaction } from '../../common/types';
+import { sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
+import { SignInAccount, TransferTransaction, TRANSFER_JSON } from '../../common/types';
 
 @Component({
   selector: 'app-send',
@@ -16,6 +18,8 @@ import { Account, SignInAccount, TransferTransaction } from '../../common/types'
 export class SendPage {
   isView:boolean;
   model:SendModel;
+  network:number;
+  networkId:string;
   signinAccount:SignInAccount;
   address:string;
   balance:string;
@@ -34,6 +38,13 @@ export class SendPage {
   }
 
   async reload() {
+    this.network = await this.storageService.getNetwork();
+    this.networkId = await this.storageService.getNetworkId();
+    if (!this.networkId) {
+      this.signOut();
+      return;
+    }
+
     this.signinAccount = await this.storageService.getSignInAccount();
     if (!this.signinAccount) {
       this.signOut();
@@ -150,9 +161,55 @@ export class SendPage {
     // create transaction
     const tx = this.createTransaction();
     tx.fee = transactions.convertLSKToBeddows(this.fee);
-    await this.storageService.setTransaction(tx.toJSON());
+    const transactionJSON = tx.toJSON();
+    await this.storageService.setTransaction(transactionJSON);
 
-    this.router.navigateByUrl(`/sub/passphrase/${this.address}?ref=0`, {replaceUrl: true});
+    // not ultisignature -> send
+    if (!this.signinAccount.isMultisignature) {
+      const options:SweetAlertOptions = {
+        title: "Enter Passphrase",
+        showCancelButton: true,
+        input: 'password',
+        inputPlaceholder: 'Enter Passphrase',
+      }
+      const confirmDialog = Swal.mixin({...options});
+      const { isConfirmed, value } = await confirmDialog.fire({
+        didOpen() {
+          confirmDialog.getInput().value = "";
+        }
+      });
+      if (!isConfirmed) return;
+      const result = await this.send(transactionJSON, value);
+      console.log(result)
+      return;
+    }
+    this.router.navigateByUrl(`/sub/multiSign/${this.address}?ref=0`);
+  }
+
+  async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {
+    passphrase = passphrase.trim().toLowerCase();
+    if (!passphrase) {
+      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 3000 });
+      return "";
+    }
+
+    if (this.address !== cryptography.getLisk32AddressFromPassphrase(passphrase)) {
+      this.matSnackBar.open('passphrase is incorrect.', 'close', { verticalPosition: 'top', duration: 3000 });
+      return "";
+    }
+
+    const signedTransaction = signTransaction(transaction, this.signinAccount, passphrase, this.networkId);
+    if (!signedTransaction) {
+      this.matSnackBar.open('failed to sign.', 'close', { verticalPosition: 'top', duration: 3000 });
+      return "";
+    }
+
+    const result = await sendTransferTransaction(this.network, signedTransaction);
+    if (!result) {
+      this.matSnackBar.open('failed to send the transaction.', 'close', { verticalPosition: 'top', duration: 3000 });
+      return "";
+    }
+    return result;
   }
 }
 

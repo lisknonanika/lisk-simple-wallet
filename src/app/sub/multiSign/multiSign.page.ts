@@ -10,10 +10,10 @@ import { getSignStatus, sendTransferTransaction, signTransaction } from '../../c
 
 @Component({
   selector: 'app-send',
-  templateUrl: 'passphrase.page.html',
-  styleUrls: ['../../app.component.scss', './passphrase.page.scss'],
+  templateUrl: 'multiSign.page.html',
+  styleUrls: ['../../app.component.scss', './multiSign.page.scss'],
 })
-export class PassphrasePage {
+export class MultiSignPage {
   isView:boolean;
   model:PassphraseModel;
   signinAccount: SignInAccount;
