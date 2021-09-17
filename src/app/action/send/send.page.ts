@@ -19,6 +19,7 @@ export class SendPage {
   signinAccount:SignInAccount;
   address:string;
   balance:string;
+  misc:string;
   fee:string;
 
   constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
@@ -38,8 +39,18 @@ export class SendPage {
       this.signOut();
       return;
     }
+    
+    // get account
+    const storeAccount = await this.storageService.getAccount(this.signinAccount.address);
+    if (!storeAccount) {
+      this.signOut();
+      return;
+    }
+    
+    // set fields
     this.address = this.signinAccount.address;
     this.balance = transactions.convertBeddowsToLSK(this.signinAccount.balance||"0");
+    this.misc = storeAccount? storeAccount.misc: this.signinAccount.userName;
 
     // compute fee
     await this.computeFee();
@@ -97,32 +108,32 @@ export class SendPage {
     this.model.data = this.model.data.trim();
 
     if (!this.model.recipient) {
-      this.matSnackBar.open('recipient address is required.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('recipient address is required.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
 
     try {
       if (!cryptography.validateBase32Address(this.model.recipient)) {
-        this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 2000 });
+        this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 3000 });
         return;
       }
     } catch(err) {
-      this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
 
     if (this.model.amount === null) {
-      this.matSnackBar.open('amount is required.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('amount is required.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
 
     if (this.model.amount <= 0) {
-      this.matSnackBar.open('invalid amount.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('invalid amount.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
 
     if (this.model.data.length > 64) {
-      this.matSnackBar.open('data exceeds the maximum number of characters (Max:64).', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('data exceeds the maximum number of characters (Max:64).', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
 
@@ -132,7 +143,7 @@ export class SendPage {
     const fee = BigInt(transactions.convertLSKToBeddows(this.fee));
     const minBalance = BigInt(transactions.convertLSKToBeddows("0.05"));
     if ((balance - amount - fee) < minBalance) {
-      this.matSnackBar.open('not enough balance. At least 0.05LSK should be left.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('not enough balance. At least 0.05LSK should be left.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
 

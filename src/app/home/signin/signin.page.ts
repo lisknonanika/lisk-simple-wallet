@@ -37,11 +37,11 @@ export class SignInPage {
   async signIn() {
     this.model.passphrase = this.model.passphrase.trim().toLowerCase();
     if (!this.model.passphrase) {
-      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
     if (!passphrase.Mnemonic.validateMnemonic(this.model.passphrase)) {
-      this.matSnackBar.open('invalid passphrase.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('invalid passphrase.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
     const address = cryptography.getLisk32AddressFromPassphrase(this.model.passphrase);
@@ -51,7 +51,7 @@ export class SignInPage {
     const network = await this.storageService.getNetwork();
     const networkId = await liskUtils.getNetworkId(network);
     if (!networkId) {
-      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
     await this.storageService.setNetworkId(networkId);
@@ -59,7 +59,7 @@ export class SignInPage {
     // set signin account
     const signinAccount = await liskUtils.createSignInAccount(network, address, publicKey);
     if (!signinAccount) {
-      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
     await this.storageService.setSignInAccount(signinAccount);

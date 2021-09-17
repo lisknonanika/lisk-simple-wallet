@@ -80,7 +80,7 @@ export class PassphrasePage {
     // over sign?
     const signedStatus = getSignStatus(this.address, this.signinAccount, this.transaction.signatures, true);
     if (signedStatus.isOverSign) {
-      this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 3000 });
       this.back();
       return;
     }
@@ -108,12 +108,12 @@ export class PassphrasePage {
   async send() {
     this.model.passphrase = this.model.passphrase.trim().toLowerCase();
     if (!this.model.passphrase) {
-      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
 
     if (this.address !== cryptography.getLisk32AddressFromPassphrase(this.model.passphrase)) {
-      this.matSnackBar.open('passphrase is incorrect.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('passphrase is incorrect.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
     const signedTransaction = signTransaction(this.transaction, this.signinAccount, this.model.passphrase, this.networkId);
@@ -127,11 +127,11 @@ export class PassphrasePage {
     }
     const result = await sendTransferTransaction(this.network, signedTransaction);
     if (!result) {
-      this.matSnackBar.open('failed to send the transaction.', 'close', { verticalPosition: 'top', duration: 2000 });
+      this.matSnackBar.open('failed to send the transaction.', 'close', { verticalPosition: 'top', duration: 3000 });
       return;
     }
     
-    this.matSnackBar.open(`sent the transaction. transactionId=${result}`, 'close', { verticalPosition: 'top', duration: 2000 });
+    this.matSnackBar.open(`sent the transaction. transactionId=${result}`, 'close', { verticalPosition: 'top', duration: 3000 });
     if (this.ref === 0) {
       this.router.navigateByUrl('/action/send', {replaceUrl: true});
     } else {
