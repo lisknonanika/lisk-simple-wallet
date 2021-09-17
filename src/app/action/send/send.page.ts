@@ -3,11 +3,11 @@ import { Router } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { transactions, cryptography } from '@liskhq/lisk-client';
-import Swal, { SweetAlertOptions } from 'sweetalert2';
 
 import { StorageService } from '../../service/storage.service';
 import { getTransferAssetSchema } from '../../common/utils';
 import { sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
+import { PassphraseDialog } from '../../dialog/passphrase-dialog';
 import { SignInAccount, TransferTransaction, TRANSFER_JSON } from '../../common/types';
 
 @Component({
@@ -166,18 +166,8 @@ export class SendPage {
 
     // not ultisignature -> send
     if (!this.signinAccount.isMultisignature) {
-      const options:SweetAlertOptions = {
-        title: "Enter Passphrase",
-        showCancelButton: true,
-        input: 'password',
-        inputPlaceholder: 'Enter Passphrase',
-      }
-      const confirmDialog = Swal.mixin({...options});
-      const { isConfirmed, value } = await confirmDialog.fire({
-        didOpen() {
-          confirmDialog.getInput().value = "";
-        }
-      });
+      const passphraseDialog = new PassphraseDialog(this.address);
+      const { isConfirmed, value } = await passphraseDialog.openDialog();
       if (!isConfirmed) return;
       const result = await this.send(transactionJSON, value);
       console.log(result)
