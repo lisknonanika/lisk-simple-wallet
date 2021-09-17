@@ -5,9 +5,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { transactions, cryptography } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
-import { getTransferAssetSchema } from '../../common/utils';
-import { sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
 import { PassphraseDialog } from '../../dialog/passphrase-dialog';
+import { getTransferAssetSchema } from '../../common/utils';
+import { createSignInAccount, sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
 import { SignInAccount, TransferTransaction, TRANSFER_JSON } from '../../common/types';
 
 @Component({
@@ -38,6 +38,7 @@ export class SendPage {
   }
 
   async reload() {
+    // get network
     this.network = await this.storageService.getNetwork();
     this.networkId = await this.storageService.getNetworkId();
     if (!this.networkId) {
@@ -45,6 +46,7 @@ export class SendPage {
       return;
     }
 
+    // get signin account
     this.signinAccount = await this.storageService.getSignInAccount();
     if (!this.signinAccount) {
       this.signOut();
@@ -57,6 +59,10 @@ export class SendPage {
       this.signOut();
       return;
     }
+
+    // update signin account
+    this.signinAccount = await createSignInAccount(this.network, this.signinAccount.address, this.signinAccount.publicKey);
+    await this.storageService.setSignInAccount(this.signinAccount);
     
     // set fields
     this.address = this.signinAccount.address;
@@ -124,7 +130,7 @@ export class SendPage {
     }
 
     try {
-      if (!cryptography.validateBase32Address(this.model.recipient)) {
+      if (!cryptography.validateLisk32Address(this.model.recipient)) {
         this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 3000 });
         return;
       }
@@ -173,7 +179,7 @@ export class SendPage {
       console.log(result)
       return;
     }
-    this.router.navigateByUrl(`/sub/multiSign/${this.address}?ref=0`);
+    this.router.navigateByUrl(`/sub/multiSign?ref=0`);
   }
 
   async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {

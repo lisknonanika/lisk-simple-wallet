@@ -54,7 +54,7 @@ export const getNetworkId = async(network:number):Promise<string> => {
   }
 }
 
-export const getSignStatus = (signAddress:string, signinAccount:SignInAccount, signatures:string[], isIncludeSign:boolean):SignStatus => {
+export const getSignStatus = (signinAccount:SignInAccount, signatures:string[]):SignStatus => {
   const signStatus = new SignStatus();
   signStatus.numberOfSignatures = signinAccount.numberOfSignatures;
   signStatus.numberOfMandatory = signinAccount.multisignatureMembers.filter((m) => {return m.isMandatory}).length;
@@ -63,17 +63,10 @@ export const getSignStatus = (signAddress:string, signinAccount:SignInAccount, s
   signStatus.numberOfOptionalSigned = 0;
   signStatus.signedAddress = [];
 
-  let mySignatureIndex:number = 0;
   const members = signinAccount.multisignatureMembers;
-  for (const [index, m] of members.entries()) {
-    if (m.address !== signAddress) continue;
-    mySignatureIndex = index;
-    break;
-  }
-
   for (const [index, sig] of signatures.entries()) {
-    if (sig.length > 0) signStatus.signedAddress.push(members[index].address);
-    if (sig.length > 0 || (isIncludeSign && index === mySignatureIndex)) {
+    if (sig.length > 0) {
+      signStatus.signedAddress.push(members[index].address);
       if (signStatus.numberOfMandatory > 0 && index < signStatus.numberOfMandatory) signStatus.numberOfMandatorySigned += 1;
       else signStatus.numberOfOptionalSigned += 1;
     }
@@ -90,18 +83,17 @@ export const signTransaction = (transaction:TRANSFER_JSON, signinAccount:SignInA
   try {
     const tx = new TransferTransaction(transaction).toJsObject();
     if (signinAccount.isMultisignature) {
+      const mandatories = signinAccount.multisignatureMembers.filter((m) => {return m.isMandatory})||[];
+      const optionals = signinAccount.multisignatureMembers.filter((m) => {return !m.isMandatory})||[];
       const keys = {
-        mandatoryKeys: signinAccount.multisignatureMembers.map((member) => {
-          if (member.isMandatory) return cryptography.hexToBuffer(member.publicKey);
-        })||[],
-        optionalKeys: signinAccount.multisignatureMembers.map((member) => {
-          if (!member.isMandatory) return cryptography.hexToBuffer(member.publicKey);
-        })||[]
+        mandatoryKeys: mandatories.map((member) => {return cryptography.hexToBuffer(member.publicKey)})||[],
+        optionalKeys: optionals.map((member) => {return cryptography.hexToBuffer(member.publicKey)})||[]
       }
       return transactions.signMultiSignatureTransaction(getTransferAssetSchema(), tx, cryptography.hexToBuffer(networkId), passphrase, keys, false) as TRANSFER_JS;
     }
     return transactions.signTransaction(getTransferAssetSchema(), tx, cryptography.hexToBuffer(networkId), passphrase) as TRANSFER_JS;
   } catch(err) {
+    console.log(err)
     return null;
   }
 }

@@ -113,7 +113,7 @@ export class TransferTransaction {
       senderPublicKey: cryptography.hexToBuffer(this.senderPublicKey),
       nonce: BigInt(this.nonce),
       fee: BigInt(this.fee),
-      signatures: this.signatures.map((signature) => {return cryptography.hexToBuffer(signature)})||[],
+      signatures: this.signatures.map((signature) => {return signature? cryptography.hexToBuffer(signature):Buffer.from("", "hex")})||[],
       asset: {
         amount: BigInt(this.asset.amount),
         recipientAddress: cryptography.hexToBuffer(this.asset.recipientAddress),
