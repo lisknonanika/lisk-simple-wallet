@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalController } from '@ionic/angular';
 
 import { transactions, cryptography } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
-import { PassphraseDialog } from '../../dialog/passphrase-dialog';
+import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
 import { SignInAccount, SignStatus, TransferTransaction, TRANSFER_JSON } from '../../common/types';
 import { createSignInAccount, getSignStatus, sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
 
@@ -27,7 +28,8 @@ export class MultiSignPage {
   ref:number;
 
   constructor(private router: Router, private route: ActivatedRoute,
-              private matSnackBar: MatSnackBar, private storageService: StorageService) {
+              private matSnackBar: MatSnackBar, private modalController: ModalController,
+              private storageService: StorageService) {
     this.isView = false;
   }
 
@@ -107,34 +109,39 @@ export class MultiSignPage {
     await this.storageService.setTransaction(transactionJSON);
 
     // open dialog
-    const passphraseDialog = new PassphraseDialog(address);
-    const { isConfirmed, value } = await passphraseDialog.openDialog();
-    if (!isConfirmed) return;
+    const modal = await this.modalController.create({
+      component: PassphrasePage,
+      cssClass: 'dialog-custom-class',
+      componentProps: { address: address }
+    });
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (!data) return;
 
-    // check passphrase
-    const passphrase = value.trim().toLowerCase();
-    if (!passphrase) {
-      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return;
-    }
-
-    if (address !== cryptography.getLisk32AddressFromPassphrase(passphrase)) {
-      this.matSnackBar.open('passphrase is incorrect.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return;
-    }
     // sign transaction
-    const signedTransaction = signTransaction(this.transaction, this.signinAccount, passphrase, this.networkId);
+    const signedTransaction = signTransaction(this.transaction, this.signinAccount, data, this.networkId);
     if (!signedTransaction) {
       this.matSnackBar.open('failed to sign.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return;
+      return "";
     }
 
     // update transaction
     const newTransaction = new TransferTransaction();
     this.storageService.setTransaction(newTransaction.object2JSON(signedTransaction));
-console.log(newTransaction.object2JSON(signedTransaction))
+    console.log(newTransaction.object2JSON(signedTransaction));
+
     // reload
     await this.reload();
+  }
+
+  async send():Promise<string> {
+    const tx = new TransferTransaction(this.transaction);
+    const result = await sendTransferTransaction(this.network, tx.toJsObject());
+    if (!result) {
+      this.matSnackBar.open('failed to send the transaction.', 'close', { verticalPosition: 'top', duration: 3000 });
+      return;
+    }
+    console.log(result);
   }
 
   async transferValidation() {

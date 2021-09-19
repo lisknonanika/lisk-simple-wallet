@@ -30,10 +30,6 @@ export class SignInPage {
     this.model.passphrase = "";
   }
 
-  clear() {
-    this.model.passphrase = "";
-  }
-
   async signIn() {
     this.model.passphrase = this.model.passphrase.trim().toLowerCase();
     if (!this.model.passphrase) {

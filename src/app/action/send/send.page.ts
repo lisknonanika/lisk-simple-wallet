@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalController } from '@ionic/angular';
 
 import { transactions, cryptography } from '@liskhq/lisk-client';
 
 import { StorageService } from '../../service/storage.service';
-import { PassphraseDialog } from '../../dialog/passphrase-dialog';
+import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
 import { getTransferAssetSchema } from '../../common/utils';
 import { createSignInAccount, sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
 import { SignInAccount, TransferTransaction, TRANSFER_JSON } from '../../common/types';
@@ -26,7 +27,8 @@ export class SendPage {
   misc:string;
   fee:string;
 
-  constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
+  constructor(private router: Router, private modalController: ModalController,
+              private matSnackBar: MatSnackBar, private storageService: StorageService) {
     this.isView = false;
     this.model = new SendModel("", null, "");
     this.fee = "0";
@@ -172,28 +174,23 @@ export class SendPage {
 
     // not ultisignature -> send
     if (!this.signinAccount.isMultisignature) {
-      const passphraseDialog = new PassphraseDialog(this.address);
-      const { isConfirmed, value } = await passphraseDialog.openDialog();
-      if (!isConfirmed) return;
-      const result = await this.send(transactionJSON, value);
-      console.log(result)
+      const modal = await this.modalController.create({
+        component: PassphrasePage,
+        cssClass: 'dialog-custom-class',
+        componentProps: { address: this.address }
+      });
+      await modal.present();
+      const { data } = await modal.onDidDismiss();
+      if (!data) return;
+
+      const result = await this.send(transactionJSON, data);
+      console.log(result);
       return;
     }
     this.router.navigateByUrl(`/sub/multiSign?ref=0`);
   }
 
   async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {
-    passphrase = passphrase.trim().toLowerCase();
-    if (!passphrase) {
-      this.matSnackBar.open('passphrase is required.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return "";
-    }
-
-    if (this.address !== cryptography.getLisk32AddressFromPassphrase(passphrase)) {
-      this.matSnackBar.open('passphrase is incorrect.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return "";
-    }
-
     const signedTransaction = signTransaction(transaction, this.signinAccount, passphrase, this.networkId);
     if (!signedTransaction) {
       this.matSnackBar.open('failed to sign.', 'close', { verticalPosition: 'top', duration: 3000 });

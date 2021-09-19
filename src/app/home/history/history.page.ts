@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalController } from '@ionic/angular';
 
 import { StorageService } from '../../service/storage.service';
 import { Account } from '../../common/types';
 import * as liskUtils from '../../common/lisk-utils';
+import { AccountEditPage } from '../../dialog/accountEdit/accountEdit.page';
 
 @Component({
   selector: 'app-history',
@@ -16,19 +18,24 @@ export class HistoryPage {
   isView:boolean;
   accounts:Account[];
 
-  constructor(private router: Router, private matSnackBar: MatSnackBar, private storageService: StorageService) {
+  constructor(private router: Router, private matSnackBar: MatSnackBar,
+              private modalController: ModalController, private storageService: StorageService) {
     this.isView = false;
   }
 
   async ionViewWillEnter() {
-    await this.storageService.removeSignInAccount();
-    await this.storageService.removeNetworkId();
-    this.accounts = await this.storageService?.getAccounts();
-    this.isView = true;
+    await this.reload();
   }
 
   async ionViewWillLeave() {
     this.isView = false;
+  }
+
+  async reload() {
+    await this.storageService.removeSignInAccount();
+    await this.storageService.removeNetworkId();
+    this.accounts = await this.storageService?.getAccounts();
+    this.isView = true;
   }
   
   async delete(address:string) {
@@ -70,7 +77,18 @@ export class HistoryPage {
     this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }
 
-  openAccountEdit(address:string) {
-    this.router.navigateByUrl(`/sub/accountEdit/${address}?ref=0`, {replaceUrl: true});
+  async openAccountEdit(address:string) {
+    const modal = await this.modalController.create({
+      component: AccountEditPage,
+      cssClass: 'dialog-custom-class',
+      componentProps: {
+        address: address,
+        availableDelete: true
+      }
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data) await this.reload();
   }
 }

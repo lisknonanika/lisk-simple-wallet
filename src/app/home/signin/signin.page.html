@@ -6,17 +6,16 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <ion-card>
-      <ion-card-subtitle>{{network===0?"Mainnet":"Testnet"}}</ion-card-subtitle>
-      <ion-card-title>Signin</ion-card-title>
-      <ion-card-content>
+    <div class="card">
+      <div class="sub-title">{{network===0?"Mainnet":"Testnet"}}</div>
+      <div class="title">Signin</div>
+      <div>
         <div class="item-title">Passphrase</div>
-        <div class="input-box">
-          <div><input placeholder="Enter Passphrase" type="password" [(ngModel)]="model.passphrase"></div>
-          <div class="input-clear" (click)="clear()"><ion-icon name="trash"></ion-icon></div>
-        </div>
+        <ion-item class="input-item" lines="full">
+          <ion-input type="text" placeholder="Enter Passphrase" clearInput="true" autocomplete="off" [(ngModel)]="model.passphrase"></ion-input>
+        </ion-item>
         <div style="margin-top: 10px;"><ion-button (click)="signIn()">SingIn</ion-button></div>
-      </ion-card-content>
-    </ion-card>
+      </div>
+    </div>
   </div>
 </ion-content>

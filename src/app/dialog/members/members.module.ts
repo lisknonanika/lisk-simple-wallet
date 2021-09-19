@@ -4,15 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { MembersPage } from './members.page';
-import { MembersPageRoutingModule } from './members-routing.module';
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
-    MembersPageRoutingModule
+    IonicModule
   ],
   declarations: [MembersPage]
 })

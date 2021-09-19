@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { ModalController } from '@ionic/angular';
 
 import { StorageService } from '../../service/storage.service';
 import { MultiSigMember } from '../../common/types';
@@ -11,8 +11,7 @@ import { MultiSigMember } from '../../common/types';
 })
 export class MembersPage {
   multisignatureMembers:MultiSigMember[];
-
-  constructor(private router: Router, private storageService: StorageService) {
+  constructor(private modalController: ModalController, private storageService: StorageService) {
   }
 
   async ionViewWillEnter() {
@@ -20,7 +19,7 @@ export class MembersPage {
     this.multisignatureMembers = signinAccount.multisignatureMembers;
   }
 
-  back() {
-    this.router.navigateByUrl('/action/info', {replaceUrl: true});
+  close() {
+    this.modalController.dismiss();
   }
 }

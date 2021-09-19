@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
+import { ModalController } from '@ionic/angular';
 
 import { transactions } from '@liskhq/lisk-client';
 
+import { MembersPage } from '../../dialog/members/members.page';
+import { AccountEditPage } from '../../dialog/accountEdit/accountEdit.page';
 import { StorageService } from '../../service/storage.service';
 
 @Component({
@@ -17,7 +20,7 @@ export class InfoPage {
   misc:string;
   isMultisignature:boolean;
 
-  constructor(private router: Router, private storageService: StorageService) {
+  constructor(private router: Router, private modalController: ModalController, private storageService: StorageService) {
     this.isView = false;
   }
 
@@ -52,11 +55,22 @@ export class InfoPage {
     this.router.navigateByUrl('/home', {replaceUrl: true});
   }
 
-  openAccountEdit(address:string) {
-    this.router.navigateByUrl(`/sub/accountEdit/${address}?ref=1`, {replaceUrl: true});
+  async openAccountEdit(address:string) {
+    const modal = await this.modalController.create({
+      component: AccountEditPage,
+      cssClass: 'dialog-custom-class',
+      componentProps: { address: address, availableDelete: false }
+    });
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (data) await this.reload();
   }
 
-  openMembers() {
-    this.router.navigateByUrl("/sub/members");
+  async openMembers() {
+    const modal = await this.modalController.create({
+      component: MembersPage,
+      cssClass: 'dialog-custom-class'
+    });
+    await modal.present();
   }
 }
