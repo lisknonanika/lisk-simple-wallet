@@ -1,0 +1,38 @@
+.row .notSigned,
+.row .signed,
+.row .notAvailable {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  background-color: rgba($color: #ffffff, $alpha: 0.5);
+  color: #284f92 !important;
+  padding: 3px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  width: 100px !important;
+}
+
+.row .notSigned {
+  color: #284f92 !important;
+}
+
+.row .signed {
+  color: #115221 !important;
+}
+
+.row .notAvailable {
+  color: #922828 !important;
+}
+
+.item-title,
+#container ion-button {
+  width: calc(100vw - 40px) !important;
+  max-width: 600px !important;
+}
+
+.sub-button {
+  font-size: 12px !important;
+  margin-bottom: 5px !important;
+  height: 30px !important;
+}

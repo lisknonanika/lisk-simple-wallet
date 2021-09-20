@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Sign</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="back()">
+      <ion-button (click)="close()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -12,15 +12,17 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
+      <ion-button class="sub-button" fill="outline" color="medium" (click)="copy()"><ion-icon name="copy"></ion-icon>&nbsp;Copy transaction</ion-button>
       <div class="rows">
-
         <div class="item-title">Sender</div>
         <div class="row" (click)="sign(senderStatus.address)">
           <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{senderStatus.address}}?size=30"/></div>
           <div class="account">
+            <div *ngIf="senderStatus.status===0" class="notSigned"><ion-icon name="caret-forward"></ion-icon>&nbsp;Unsigned</div>
+            <div *ngIf="senderStatus.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
+            <div *ngIf="senderStatus.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
             <div class="address">{{senderStatus.address}}</div>
-            <div>{{senderStatus.isMandatory? 'Mandatory': 'Optional'}}</div>
-            <div>{{senderStatus.isSigned? 'Signed': 'Not Signed'}}</div>
+            <div *ngIf="senderStatus.isMember">{{senderStatus.isMandatory? 'Mandatory': 'Optional'}}</div>
           </div>
         </div>
 
@@ -29,9 +31,11 @@
           <div class="row" (click)="sign(member.address)">
             <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{member.address}}?size=30"/></div>
             <div class="account">
+              <div *ngIf="member.status===0" class="notSigned"><ion-icon name="caret-forward"></ion-icon>&nbsp;Unsigned</div>
+              <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
+              <div *ngIf="member.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
               <div class="address">{{member.address}}</div>
               <div>{{member.isMandatory? 'Mandatory': 'Optional'}}</div>
-              <div>{{member.isSigned? 'Signed': 'Not Signed'}}</div>
             </div>
           </div>
         </div>
@@ -41,15 +45,15 @@
           <div class="row" (click)="sign(member.address)">
             <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{member.address}}?size=30"/></div>
             <div class="account">
+              <div *ngIf="member.status===0" class="notSigned"><ion-icon name="caret-forward"></ion-icon>&nbsp;Unsigned</div>
+              <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
+              <div *ngIf="member.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
               <div class="address">{{member.address}}</div>
               <div>{{member.isMandatory? 'Mandatory': 'Optional'}}</div>
-              <div>{{member.isSigned? 'Signed': 'Not Signed'}}</div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div style="margin-top: 20px;"><ion-button disabled="{{!signedStatus.isFullSign}}" (click)="send()">Send</ion-button></div>
+      </div><div style="margin-top: 20px;"><ion-button disabled="{{!signedStatus.isFullSign}}" (click)="send()">Send</ion-button></div>
     </div>
   </div>
 </ion-content>

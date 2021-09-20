@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { ModalController } from '@ionic/angular';
 
 import { transactions, cryptography } from '@liskhq/lisk-client';
@@ -28,8 +29,8 @@ export class MultiSignPage {
   ref:number;
 
   constructor(private router: Router, private route: ActivatedRoute,
-              private matSnackBar: MatSnackBar, private modalController: ModalController,
-              private storageService: StorageService) {
+              private clipboard: Clipboard, private matSnackBar: MatSnackBar,
+              private modalController: ModalController, private storageService: StorageService) {
     this.isView = false;
   }
 
@@ -43,21 +44,21 @@ export class MultiSignPage {
     this.network = await this.storageService.getNetwork();
     this.networkId = await this.storageService.getNetworkId();
     if (!this.networkId) {
-      this.back();
+      this.close();
       return;
     }
 
     // get transaction
     this.transaction = await this.storageService.getTransaction();
     if (!this.transaction) {
-      this.back();
+      this.close();
       return;
     }
 
     // get signin account
     this.signinAccount = await this.storageService.getSignInAccount();
     if (!this.signinAccount) {
-      this.back();
+      this.close();
       return;
     }
 
@@ -71,25 +72,58 @@ export class MultiSignPage {
     // over sign?
     if (this.signedStatus.isOverSign) {
       this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 3000 });
-      this.back();
+      this.close();
       return;
     }
 
     // set member status
     const senderAddress = this.signinAccount.address;
     const multisignatureMembers = this.signinAccount.multisignatureMembers;
+
+    // set sender status
     const sender = multisignatureMembers.find((m) => {return m.address === senderAddress});
+    if(!sender) {
+      this.senderStatus = new MemberStatus(senderAddress, "", false, false, 9);
+    } else {
+      this.senderStatus = new MemberStatus(senderAddress, sender.publicKey, true, sender.isMandatory, 0);
+      if (this.signedStatus.signedAddress.includes(senderAddress)) {
+        this.senderStatus.status = 1;
+      } else if ((this.senderStatus.isMandatory && this.signedStatus.numberOfMandatoryRemain <= 0) ||
+                 (!this.senderStatus.isMandatory && this.signedStatus.numberOfOptionalRemain <= 0)) {
+        this.senderStatus.status = 9;
+      }
+    }
+    
     const mandatories = multisignatureMembers.filter((m) => {return m.address !== senderAddress && m.isMandatory})||[];
+    this.mandatoryStatus = mandatories.map((m) => {return new MemberStatus(m.address, m.publicKey, true, true, 0)})||[];
+    for (const status of this.mandatoryStatus) {
+      if (this.signedStatus.signedAddress.includes(status.address)) {
+        this.senderStatus.status = 1;
+      } else if (this.signedStatus.numberOfMandatoryRemain <= 0) {
+        this.senderStatus.status = 9;
+      }
+    }
+
     const optionals = multisignatureMembers.filter((m) => {return m.address !== senderAddress && !m.isMandatory})||[];
-    this.senderStatus = new MemberStatus(sender.address, sender.publicKey, sender.isMandatory, this.signedStatus.signedAddress.includes(sender.address));
-    this.mandatoryStatus = mandatories.map((m) => {return new MemberStatus(m.address, m.publicKey, true, this.signedStatus.signedAddress.includes(m.address))})||[];
-    this.optionalStatus = optionals.map((m) => {return new MemberStatus(m.address, m.publicKey, false, this.signedStatus.signedAddress.includes(m.address))})||[];
+    this.optionalStatus = optionals.map((m) => {return new MemberStatus(m.address, m.publicKey, true, false, 0)})||[];
+    for (const status of this.optionalStatus) {
+      if (this.signedStatus.signedAddress.includes(status.address)) {
+        this.senderStatus.status = 1;
+      } else if (this.signedStatus.numberOfOptionalRemain <= 0) {
+        this.senderStatus.status = 9;
+      }
+    }
 
     // set params
     this.isView = true;
   }
 
-  back() {
+  async copy() {
+    const result = await this.clipboard.copy(JSON.stringify(this.transaction));
+    this.matSnackBar.open(result? 'copied': 'failed', 'close', { verticalPosition: 'top', duration: 3000 });
+  }
+
+  close() {
     if (this.ref === 0) {
       this.router.navigateByUrl('/action/send');
     } else {
@@ -203,7 +237,8 @@ class MemberStatus {
   constructor(
     public address: string,
     public publicKey: string,
+    public isMember:boolean,
     public isMandatory: boolean,
-    public isSigned: boolean
+    public status: number
   ) {}
 }
