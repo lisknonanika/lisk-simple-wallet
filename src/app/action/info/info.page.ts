@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { ModalController } from '@ionic/angular';
+import { ToastrService } from 'ngx-toastr';
 
 import { transactions } from '@liskhq/lisk-client';
 const { convertBeddowsToLSK } = transactions;
@@ -21,7 +22,8 @@ export class InfoPage {
   misc:string;
   isMultisignature:boolean;
 
-  constructor(private router: Router, private modalController: ModalController, private storageService: StorageService) {
+  constructor(private router: Router, private modalController: ModalController,
+              private toastr: ToastrService, private storageService: StorageService) {
     this.isView = false;
   }
 
@@ -53,6 +55,7 @@ export class InfoPage {
   }
 
   signOut() {
+    this.toastr.info("sign out.");
     this.router.navigateByUrl('/home', {replaceUrl: true});
   }
 

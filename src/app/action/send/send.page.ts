@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
-import { ModalController } from '@ionic/angular';
+import { ModalController, LoadingController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { transactions, cryptography } from '@liskhq/lisk-client';
@@ -29,7 +29,7 @@ export class SendPage {
   misc:string;
   fee:string;
 
-  constructor(private router: Router, private modalController: ModalController,
+  constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
               private toastr: ToastrService, private storageService: StorageService) {
     this.isView = false;
     this.model = new SendModel("", null, "");
@@ -82,6 +82,7 @@ export class SendPage {
   }
 
   signOut() {
+    this.toastr.info("sign out.");
     this.router.navigateByUrl('/home', {replaceUrl: true});
   }
 
@@ -193,18 +194,28 @@ export class SendPage {
   }
 
   async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {
-    const signedTransaction = sign(transaction, this.signinAccount, passphrase, this.networkId);
-    if (!signedTransaction) {
-      this.toastr.error("failed to sign.");
-      return "";
-    }
+    let loading:HTMLIonLoadingElement;
+    try {
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      loading.present();
+    
+        const signedTransaction = sign(transaction, this.signinAccount, passphrase, this.networkId);
+      if (!signedTransaction) {
+        this.toastr.error("failed to sign.");
+        return "";
+      }
 
-    const result = await sendTransferTransaction(this.network, signedTransaction);
-    if (!result) {
-      this.toastr.error("failed to send the transaction.");
-      return "";
+      const result = await sendTransferTransaction(this.network, signedTransaction);
+      if (!result) {
+        this.toastr.error("failed to send the transaction.");
+        return "";
+      }
+      return result;
+    
+    } finally {
+      await loading.dismiss();
     }
-    return result;
   }
 }
 

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { Clipboard } from '@angular/cdk/clipboard';
-import { ModalController } from '@ionic/angular';
+import { ModalController, LoadingController} from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { StorageService } from '../../service/storage.service';
@@ -28,7 +27,7 @@ export class MultiSignPage {
   ref:number;
 
   constructor(private router: Router, private route: ActivatedRoute,
-              private clipboard: Clipboard, private modalController: ModalController,
+              private modalController: ModalController, private LoadingController: LoadingController,
               private toastr: ToastrService, private storageService: StorageService) {
     this.isView = false;
   }
@@ -158,30 +157,49 @@ export class MultiSignPage {
     await modal.present();
     const { data } = await modal.onDidDismiss();
     if (!data) return;
+    
+    let loading:HTMLIonLoadingElement;
+    try {
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      loading.present();
+      // sign transaction
+      const signedTransaction = sign(this.transaction, this.signinAccount, data, this.networkId);
+      if (!signedTransaction) {
+        this.toastr.error('failed to sign.');
+        return;
+      }
 
-    // sign transaction
-    const signedTransaction = sign(this.transaction, this.signinAccount, data, this.networkId);
-    if (!signedTransaction) {
-      this.toastr.error('failed to sign.');
-      return;
+      // update transaction
+      const newTransaction = new TransferTransaction();
+      this.storageService.setTransaction(newTransaction.object2JSON(signedTransaction));
+
+      // reload
+      await this.reload();
+
+    } finally {
+      await loading.dismiss();
     }
-
-    // update transaction
-    const newTransaction = new TransferTransaction();
-    this.storageService.setTransaction(newTransaction.object2JSON(signedTransaction));
-
-    // reload
-    await this.reload();
   }
 
   async send():Promise<string> {
-    const tx = new TransferTransaction(this.transaction);
-    const result = await sendTransferTransaction(this.network, tx.toJsObject());
-    if (!result) {
-      this.toastr.error('failed to send the transaction.');
-      return;
+    let loading:HTMLIonLoadingElement;
+    try {
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      loading.present();
+      
+      const tx = new TransferTransaction(this.transaction);
+      const result = await sendTransferTransaction(this.network, tx.toJsObject());
+      if (!result) {
+        this.toastr.error('failed to send the transaction.');
+        return;
+      }
+      this.router.navigateByUrl(`/sub/complete?ref=${this.ref}`, {replaceUrl: true});
+
+    } finally {
+      await loading.dismiss();
     }
-    this.router.navigateByUrl(`/sub/complete?ref=${this.ref}`, {replaceUrl: true});
   }
 }
 

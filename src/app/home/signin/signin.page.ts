@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
+import { LoadingController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { cryptography, passphrase } from '@liskhq/lisk-client';
@@ -18,7 +19,8 @@ export class SignInPage {
   model:SignInModel;
   network:number;
   
-  constructor(private router: Router, private toastr: ToastrService, private storageService: StorageService) {
+  constructor(private router: Router, private LoadingController: LoadingController,
+              private toastr: ToastrService, private storageService: StorageService) {
     this.model = new SignInModel("");
   }
 
@@ -34,39 +36,50 @@ export class SignInPage {
   }
 
   async signIn() {
-    this.model.passphrase = this.model.passphrase.trim().toLowerCase();
-    if (!this.model.passphrase) {
-      this.toastr.error('passphrase is required.');
-      return;
-    }
-    if (!Mnemonic.validateMnemonic(this.model.passphrase)) {
-      this.toastr.error('invalid passphrase.');
-      return;
-    }
-    const address = getLisk32AddressFromPassphrase(this.model.passphrase);
-    const publicKey = bufferToHex(getAddressAndPublicKeyFromPassphrase(this.model.passphrase).publicKey);
+    let loading:HTMLIonLoadingElement;
+    try {
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      loading.present();
 
-    // set networkId
-    const network = await this.storageService.getNetwork();
-    const networkId = await getNetworkId(network);
-    if (!networkId) {
-      this.toastr.error('network error.');
-      return;
-    }
-    await this.storageService.setNetworkId(networkId);
+      // check
+      this.model.passphrase = this.model.passphrase.trim().toLowerCase();
+      if (!this.model.passphrase) {
+        this.toastr.error('passphrase is required.');
+        return;
+      }
+      if (!Mnemonic.validateMnemonic(this.model.passphrase)) {
+        this.toastr.error('invalid passphrase.');
+        return;
+      }
+      const address = getLisk32AddressFromPassphrase(this.model.passphrase);
+      const publicKey = bufferToHex(getAddressAndPublicKeyFromPassphrase(this.model.passphrase).publicKey);
 
-    // set signin account
-    const signinAccount = await createSignInAccount(network, address, publicKey);
-    if (!signinAccount) {
-      this.toastr.error('network error.');
-      return;
-    }
-    await this.storageService.setSignInAccount(signinAccount);
+      // set networkId
+      const network = await this.storageService.getNetwork();
+      const networkId = await getNetworkId(network);
+      if (!networkId) {
+        this.toastr.error('network error.');
+        return;
+      }
+      await this.storageService.setNetworkId(networkId);
 
-    // register account
-    const storeAccount = await this.storageService.getAccount(address);
-    if (!storeAccount) await this.storageService?.setAccount(address, publicKey, signinAccount.userName);
-    this.router.navigateByUrl('/action/info', {replaceUrl: true});
+      // set signin account
+      const signinAccount = await createSignInAccount(network, address, publicKey);
+      if (!signinAccount) {
+        this.toastr.error('network error.');
+        return;
+      }
+      await this.storageService.setSignInAccount(signinAccount);
+
+      // register account
+      const storeAccount = await this.storageService.getAccount(address);
+      if (!storeAccount) await this.storageService?.setAccount(address, publicKey, signinAccount.userName);
+      this.router.navigateByUrl('/action/info', {replaceUrl: true});
+
+    } finally {
+      await loading.dismiss();
+    }
   }
 }
 

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ModalController, LoadingController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
-import { ModalController } from '@ionic/angular';
 
 import { StorageService } from '../../service/storage.service';
 import { Account } from '../../common/types';
@@ -18,17 +18,13 @@ export class HistoryPage {
   isView:boolean;
   accounts:Account[];
 
-  constructor(private router: Router, private toastr: ToastrService,
-              private modalController: ModalController, private storageService: StorageService) {
+  constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
+              private toastr: ToastrService, private storageService: StorageService) {
     this.isView = false;
   }
 
   async ionViewWillEnter() {
     await this.reload();
-  }
-
-  async ionViewWillLeave() {
-    this.isView = false;
   }
 
   async reload() {
@@ -56,26 +52,36 @@ export class HistoryPage {
   }
 
   async signIn(address:string) {
-    // set networkId
-    const network = await this.storageService.getNetwork();
-    const networkId = await liskUtils.getNetworkId(network);
-    if (!networkId) {
-      this.toastr.error('network error.');
-      return;
-    }
-    await this.storageService.setNetworkId(networkId);
+    let loading:HTMLIonLoadingElement;
+    try {
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      loading.present();
+      
+      // set networkId
+      const network = await this.storageService.getNetwork();
+      const networkId = await liskUtils.getNetworkId(network);
+      if (!networkId) {
+        this.toastr.error('network error.');
+        return;
+      }
+      await this.storageService.setNetworkId(networkId);
 
-    const storeAccount = await this.storageService.getAccount(address);
+      const storeAccount = await this.storageService.getAccount(address);
 
-    // set signin account
-    const signinAccount = await liskUtils.createSignInAccount(network, address, storeAccount.publicKey);
-    if (!signinAccount) {
-      this.toastr.error('network error.');
-      return;
+      // set signin account
+      const signinAccount = await liskUtils.createSignInAccount(network, address, storeAccount.publicKey);
+      if (!signinAccount) {
+        this.toastr.error('network error.');
+        return;
+      }
+      await this.storageService.setSignInAccount(signinAccount);
+      
+      this.router.navigateByUrl('/action/info', {replaceUrl: true});
+      
+    } finally {
+      await loading.dismiss();
     }
-    await this.storageService.setSignInAccount(signinAccount);
-    
-    this.router.navigateByUrl('/action/info', {replaceUrl: true});
   }
 
   async openAccountEdit(address:string) {

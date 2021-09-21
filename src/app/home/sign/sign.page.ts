@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
+import { LoadingController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { cryptography } from '@liskhq/lisk-client';
@@ -17,7 +18,8 @@ import { TransferTransaction, TRANSFER_JSON } from 'src/app/common/types';
 export class SignPage {
   model:SignModel;
 
-  constructor(private router: Router, private toastr: ToastrService, private storageService: StorageService) {
+  constructor(private router: Router, private LoadingController: LoadingController,
+              private toastr: ToastrService, private storageService: StorageService) {
     this.model = new SignModel("");
   }
 
@@ -32,57 +34,68 @@ export class SignPage {
   }
 
   async continue() {
-    this.model.transaction = this.model.transaction.trim();
-    if (!this.model.transaction) {
-      this.toastr.error('transaction is required.');
-      return;
-    }
-    
-    let transferTransaction:TransferTransaction;
-    let address:string;
+    let loading:HTMLIonLoadingElement;
     try {
-      const json = JSON.parse(this.model.transaction);
-      transferTransaction = new TransferTransaction(json);
-      address = getLisk32AddressFromPublicKey(hexToBuffer(transferTransaction.senderPublicKey));
-    } catch(err) {
-      this.toastr.error('invalid transaction.');
-      return;
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      loading.present();
+      
+      // check
+      this.model.transaction = this.model.transaction.trim();
+      if (!this.model.transaction) {
+        this.toastr.error('transaction is required.');
+        return;
+      }
+      
+      let transferTransaction:TransferTransaction;
+      let address:string;
+      try {
+        const json = JSON.parse(this.model.transaction);
+        transferTransaction = new TransferTransaction(json);
+        address = getLisk32AddressFromPublicKey(hexToBuffer(transferTransaction.senderPublicKey));
+      } catch(err) {
+        this.toastr.error('invalid transaction.');
+        return;
+      }
+
+      // set networkId
+      const network = await this.storageService.getNetwork();
+      const networkId = await getNetworkId(network);
+      if (!networkId) {
+        this.toastr.error('network error.');
+        return;
+      }
+      await this.storageService.setNetworkId(networkId);
+
+      // set signin account
+      const signinAccount = await createSignInAccount(network, address, transferTransaction.senderPublicKey);
+      if (!signinAccount) {
+        this.toastr.error('network error.');
+        return;
+      }
+      await this.storageService.setSignInAccount(signinAccount);
+
+      if (!signinAccount.isMultisignature) {
+        this.toastr.error('sender account is not multisignature account.');
+        return;
+      }
+
+      // validation
+      const tx:TRANSFER_JSON = transferTransaction.toJSON();
+      const message = transferValidation(signinAccount, tx, true);
+      if (message) {
+        this.toastr.error(message);
+        return;
+      }
+
+      // set transaction
+      await this.storageService.setTransaction(tx);
+
+      this.router.navigateByUrl(`/sub/multiSign?ref=1`, {replaceUrl: true});
+
+    } finally {
+      await loading.dismiss();
     }
-
-    // set networkId
-    const network = await this.storageService.getNetwork();
-    const networkId = await getNetworkId(network);
-    if (!networkId) {
-      this.toastr.error('network error.');
-      return;
-    }
-    await this.storageService.setNetworkId(networkId);
-
-    // set signin account
-    const signinAccount = await createSignInAccount(network, address, transferTransaction.senderPublicKey);
-    if (!signinAccount) {
-      this.toastr.error('network error.');
-      return;
-    }
-    await this.storageService.setSignInAccount(signinAccount);
-
-    if (!signinAccount.isMultisignature) {
-      this.toastr.error('sender account is not multisignature account.');
-      return;
-    }
-
-    // validation
-    const tx:TRANSFER_JSON = transferTransaction.toJSON();
-    const message = transferValidation(signinAccount, tx, true);
-    if (message) {
-      this.toastr.error(message);
-      return;
-    }
-
-    // set transaction
-    await this.storageService.setTransaction(tx);
-
-    this.router.navigateByUrl(`/sub/multiSign?ref=1`, {replaceUrl: true});
   }
 }
 
