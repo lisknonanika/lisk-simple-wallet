@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Transaction</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <ion-button class="sub-button" fill="outline" color="medium" (click)="copy()"><ion-icon name="copy"></ion-icon>&nbsp;Copy transaction</ion-button>
+    <div class="rows">
+      <div class="item-title">Sender</div>
+      <div class="row">
+        <img src="https://lisk-avator.ysdev.work/{{sender}}?size=30"/>
+        <div class="address">{{sender}}</div>
+      </div>
+
+      <div class="item-title">Recipient</div>
+      <div class="row">
+        <img src="https://lisk-avator.ysdev.work/{{recipient}}?size=30"/>
+        <div class="address">{{recipient}}</div>
+      </div>
+
+      <div class="item-title">Amount</div>
+      <div class="row">
+        <div class="data">{{amount}} LSK</div>
+      </div>
+
+      <div class="item-title">Fee</div>
+      <div class="row">
+        <div class="data">{{fee}} LSK</div>
+      </div>
+
+      <div *ngIf="data" class="item-title">Data</div>
+      <div *ngIf="data" class="row">
+        <div class="data">{{data}}</div>
+      </div>
+    </div>
+  </div>
+</ion-content>

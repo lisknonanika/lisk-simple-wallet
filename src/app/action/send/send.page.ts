@@ -38,10 +38,10 @@ export class SendPage {
 
   async ionViewWillEnter() {
     await this.storageService.removeTransaction();
-    await this.reload();
+    await this.reload(false);
   }
 
-  async reload() {
+  async reload(isUpdate:boolean) {
     // get network
     this.network = await this.storageService.getNetwork();
     this.networkId = await this.storageService.getNetworkId();
@@ -65,8 +65,10 @@ export class SendPage {
     }
 
     // update signin account
-    this.signinAccount = await createSignInAccount(this.network, this.signinAccount.address, this.signinAccount.publicKey);
-    await this.storageService.setSignInAccount(this.signinAccount);
+    if (isUpdate) {
+      this.signinAccount = await createSignInAccount(this.network, this.signinAccount.address, this.signinAccount.publicKey);
+      await this.storageService.setSignInAccount(this.signinAccount);
+    }
     
     // set fields
     this.address = this.signinAccount.address;
@@ -154,7 +156,7 @@ export class SendPage {
       return;
     }
 
-    await this.reload();
+    await this.reload(true);
     const tx = this.createTransaction();
     const transactionJSON = tx.toJSON();
 
@@ -184,10 +186,10 @@ export class SendPage {
       // update transaction
       transactionJSON.id = result;
       await this.storageService.setTransaction(transactionJSON);
-      this.router.navigateByUrl(`/sub/complete?ref=0`);
+      this.router.navigateByUrl(`/sub/complete?ref=0`, {replaceUrl: true});
       return;
     }
-    this.router.navigateByUrl(`/sub/multiSign?ref=0`);
+    this.router.navigateByUrl(`/sub/multiSign?ref=0`, {replaceUrl: true});
   }
 
   async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {

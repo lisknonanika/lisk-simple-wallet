@@ -15,10 +15,24 @@ import { ActionTabsComponent } from './tabas/actionTabs.component';
 import { AccountEditPage } from './dialog/accountEdit/accountEdit.page';
 import { MembersPage } from './dialog/members/members.page';
 import { PassphrasePage } from './dialog/passphrase/passphrase.page';
+import { TransactionPage } from './dialog/transaction/transaction.page';
 
 @NgModule({
-  declarations: [AppComponent, HomeTabsComponent, ActionTabsComponent, AccountEditPage, MembersPage, PassphrasePage],
-  entryComponents: [AccountEditPage, MembersPage, PassphrasePage],
+  declarations: [
+    AppComponent,
+    HomeTabsComponent,
+    ActionTabsComponent,
+    AccountEditPage,
+    MembersPage,
+    PassphrasePage,
+    TransactionPage
+  ],
+  entryComponents: [
+    AccountEditPage,
+    MembersPage,
+    PassphrasePage,
+    TransactionPage
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

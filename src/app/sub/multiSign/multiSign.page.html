@@ -12,7 +12,7 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
-      <ion-button class="sub-button" fill="outline" color="medium" (click)="copy()"><ion-icon name="copy"></ion-icon>&nbsp;Copy transaction</ion-button>
+      <ion-button class="sub-button" fill="outline" color="medium" (click)="showTransaction()"><ion-icon name="reader-outline"></ion-icon>&nbsp;Show transaction</ion-button>
       <div class="rows">
         <div class="item-title">Sender</div>
         <div class="row" (click)="sign(senderStatus.address)">

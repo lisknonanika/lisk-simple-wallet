@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { StorageService } from '../../service/storage.service';
 import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
+import { TransactionPage } from '../../dialog/transaction/transaction.page';
 import { SignInAccount, SignStatus, TransferTransaction, TRANSFER_JSON } from '../../common/types';
 import { createSignInAccount, getSignStatus, transferValidation, sendTransferTransaction, sign } from '../../common/lisk-utils';
 
@@ -116,18 +117,17 @@ export class MultiSignPage {
     this.isView = true;
   }
 
-  async copy() {
-    const result = await this.clipboard.copy(JSON.stringify(this.transaction));
-    if (result) {
-      this.toastr.info('copied.');
-    } else {
-      this.toastr.error('failed.');
-    }
+  async showTransaction() {
+    const modal = await this.modalController.create({
+      component: TransactionPage,
+      cssClass: 'dialog-custom-class'
+    });
+    await modal.present();
   }
 
   close() {
     if (this.ref === 0) {
-      this.router.navigateByUrl('/action/send');
+      this.router.navigateByUrl('/action/send', {replaceUrl: true});
     } else {
       this.router.navigateByUrl('/home', {replaceUrl: true});
     }
