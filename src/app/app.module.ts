@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { ToastrModule } from 'ngx-toastr';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
@@ -18,7 +19,14 @@ import { PassphrasePage } from './dialog/passphrase/passphrase.page';
 @NgModule({
   declarations: [AppComponent, HomeTabsComponent, ActionTabsComponent, AccountEditPage, MembersPage, PassphrasePage],
   entryComponents: [AccountEditPage, MembersPage, PassphrasePage],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot(), MatSnackBarModule, BrowserAnimationsModule],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    ClipboardModule,
+    ToastrModule.forRoot({ timeOut: 3000, preventDuplicates: true }),
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    IonicStorageModule.forRoot()],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })

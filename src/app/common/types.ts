@@ -1,5 +1,6 @@
-import { Type } from '@angular/core';
+
 import { cryptography } from '@liskhq/lisk-client';
+const {  hexToBuffer, bufferToHex } = cryptography;
 
 export class Settings {
   constructor(
@@ -110,16 +111,16 @@ export class TransferTransaction {
     return {
       moduleID: this.moduleID,
       assetID: this.assetID,
-      senderPublicKey: cryptography.hexToBuffer(this.senderPublicKey),
+      senderPublicKey: hexToBuffer(this.senderPublicKey),
       nonce: BigInt(this.nonce),
       fee: BigInt(this.fee),
-      signatures: this.signatures.map((signature) => {return signature? cryptography.hexToBuffer(signature):Buffer.from("", "hex")})||[],
+      signatures: this.signatures.map((signature) => {return signature? hexToBuffer(signature):Buffer.from("", "hex")})||[],
       asset: {
         amount: BigInt(this.asset.amount),
-        recipientAddress: cryptography.hexToBuffer(this.asset.recipientAddress),
+        recipientAddress: hexToBuffer(this.asset.recipientAddress),
         data: this.asset.data
       },
-      id: this.id? cryptography.hexToBuffer(this.id): Buffer.from("", "hex")
+      id: this.id? hexToBuffer(this.id): Buffer.from("", "hex")
     }
   }
 
@@ -140,16 +141,16 @@ export class TransferTransaction {
     return {
       moduleID: transaction.moduleID,
       assetID: transaction.assetID,
-      senderPublicKey: cryptography.bufferToHex(transaction.senderPublicKey),
+      senderPublicKey: bufferToHex(transaction.senderPublicKey),
       nonce: transaction.nonce.toString(),
       fee: transaction.fee.toString(),
-      signatures: transaction.signatures.map((signature) => {return cryptography.bufferToHex(signature)}),
+      signatures: transaction.signatures.map((signature) => {return bufferToHex(signature)}),
       asset: {
         amount: transaction.asset.amount.toString(),
-        recipientAddress: cryptography.bufferToHex(transaction.asset.recipientAddress),
+        recipientAddress: bufferToHex(transaction.asset.recipientAddress),
         data: transaction.asset.data.toString()
       },
-      id: cryptography.bufferToHex(transaction.id)
+      id: bufferToHex(transaction.id)
     }
   }
 }

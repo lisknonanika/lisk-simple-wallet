@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalController } from '@ionic/angular';
+import { ToastrService } from 'ngx-toastr';
 
 import { transactions, cryptography } from '@liskhq/lisk-client';
+const { computeMinFee, convertBeddowsToLSK, convertLSKToBeddows } = transactions;
+const { bufferToHex, getAddressFromLisk32Address, validateLisk32Address } = cryptography;
 
 import { StorageService } from '../../service/storage.service';
 import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
 import { getTransferAssetSchema } from '../../common/utils';
-import { createSignInAccount, sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
+import { createSignInAccount, sendTransferTransaction, transferValidation, sign } from '../../common/lisk-utils';
 import { SignInAccount, TransferTransaction, TRANSFER_JSON } from '../../common/types';
 
 @Component({
@@ -28,7 +30,7 @@ export class SendPage {
   fee:string;
 
   constructor(private router: Router, private modalController: ModalController,
-              private matSnackBar: MatSnackBar, private storageService: StorageService) {
+              private toastr: ToastrService, private storageService: StorageService) {
     this.isView = false;
     this.model = new SendModel("", null, "");
     this.fee = "0";
@@ -68,7 +70,7 @@ export class SendPage {
     
     // set fields
     this.address = this.signinAccount.address;
-    this.balance = transactions.convertBeddowsToLSK(this.signinAccount.balance||"0");
+    this.balance = convertBeddowsToLSK(this.signinAccount.balance||"0");
     this.misc = storeAccount? storeAccount.misc: this.signinAccount.userName;
 
     // compute fee
@@ -98,9 +100,15 @@ export class SendPage {
     tx.nonce = this.signinAccount.nonce;
     tx.senderPublicKey = this.signinAccount.publicKey;
     tx.asset = {
-      recipientAddress:  cryptography.bufferToHex(cryptography.getAddressFromLisk32Address(this.model.recipient)),
-      amount: transactions.convertLSKToBeddows(this.model.amount.toString()),
+      recipientAddress:  bufferToHex(getAddressFromLisk32Address(this.model.recipient)),
+      amount: convertLSKToBeddows(this.model.amount.toString()),
       data: this.model.data
+    }
+    tx.fee = convertLSKToBeddows(this.fee);
+    if (this.signinAccount.isMultisignature) {
+      tx.signatures = this.signinAccount.multisignatureMembers.map(() => { return ""});
+    } else {
+      tx.signatures = [""];
     }
     return tx;
   }
@@ -108,14 +116,14 @@ export class SendPage {
   async computeFee() {
     try {
       this.fee = "0";
-      if (!this.model.recipient || !cryptography.validateBase32Address(this.model.recipient.trim().toLocaleLowerCase())) return;
+      if (!this.model.recipient || !validateLisk32Address(this.model.recipient.trim().toLocaleLowerCase())) return;
       if (this.model.amount === null || this.model.amount <= 0) return;
       if (this.model.data.length > 64) return;
 
       const tx = this.createTransaction();
       const options = this.signinAccount.isMultisignature? {numberOfSignatures: this.signinAccount.numberOfSignatures}: {};
-      const minFee = transactions.computeMinFee(getTransferAssetSchema(), tx.toJsObject(), options);
-      this.fee = transactions.convertBeddowsToLSK(minFee.toString());
+      const minFee = computeMinFee(getTransferAssetSchema(), tx.toJsObject(), options);
+      this.fee = convertBeddowsToLSK(minFee.toString());
 
     } catch(err) {
       // none
@@ -127,49 +135,36 @@ export class SendPage {
     this.model.data = this.model.data.trim();
 
     if (!this.model.recipient) {
-      this.matSnackBar.open('recipient address is required.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error("recipient address is required.");
       return;
     }
 
     try {
-      if (!cryptography.validateLisk32Address(this.model.recipient)) {
-        this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 3000 });
+      if (!validateLisk32Address(this.model.recipient)) {
+        this.toastr.error("invalid recipient address.");
         return;
       }
     } catch(err) {
-      this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error("invalid recipient address.");
       return;
     }
 
     if (this.model.amount === null) {
-      this.matSnackBar.open('amount is required.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return;
-    }
-
-    if (this.model.amount <= 0) {
-      this.matSnackBar.open('invalid amount.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return;
-    }
-
-    if (this.model.data.length > 64) {
-      this.matSnackBar.open('data exceeds the maximum number of characters (Max:64).', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error("amount is required.");
       return;
     }
 
     await this.reload();
-    const balance = BigInt(this.signinAccount.balance||"0");
-    const amount = BigInt(transactions.convertLSKToBeddows(this.model.amount.toString()));
-    const fee = BigInt(transactions.convertLSKToBeddows(this.fee));
-    const minBalance = BigInt(transactions.convertLSKToBeddows("0.05"));
-    if ((balance - amount - fee) < minBalance) {
-      this.matSnackBar.open('not enough balance. At least 0.05LSK should be left.', 'close', { verticalPosition: 'top', duration: 3000 });
+    const tx = this.createTransaction();
+    const transactionJSON = tx.toJSON();
+
+    const message = transferValidation(this.signinAccount, tx.toJSON(), false);
+    if (message) {
+      this.toastr.error(message);
       return;
     }
 
-    // create transaction
-    const tx = this.createTransaction();
-    tx.fee = transactions.convertLSKToBeddows(this.fee);
-    const transactionJSON = tx.toJSON();
+    // update transaction
     await this.storageService.setTransaction(transactionJSON);
 
     // not ultisignature -> send
@@ -191,15 +186,15 @@ export class SendPage {
   }
 
   async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {
-    const signedTransaction = signTransaction(transaction, this.signinAccount, passphrase, this.networkId);
+    const signedTransaction = sign(transaction, this.signinAccount, passphrase, this.networkId);
     if (!signedTransaction) {
-      this.matSnackBar.open('failed to sign.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error("failed to sign.");
       return "";
     }
 
     const result = await sendTransferTransaction(this.network, signedTransaction);
     if (!result) {
-      this.matSnackBar.open('failed to send the transaction.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error("failed to send the transaction.");
       return "";
     }
     return result;

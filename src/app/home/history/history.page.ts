@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 import { ModalController } from '@ionic/angular';
 
 import { StorageService } from '../../service/storage.service';
@@ -18,7 +18,7 @@ export class HistoryPage {
   isView:boolean;
   accounts:Account[];
 
-  constructor(private router: Router, private matSnackBar: MatSnackBar,
+  constructor(private router: Router, private toastr: ToastrService,
               private modalController: ModalController, private storageService: StorageService) {
     this.isView = false;
   }
@@ -59,7 +59,7 @@ export class HistoryPage {
     const network = await this.storageService.getNetwork();
     const networkId = await liskUtils.getNetworkId(network);
     if (!networkId) {
-      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error('network error.');
       return;
     }
     await this.storageService.setNetworkId(networkId);
@@ -69,7 +69,7 @@ export class HistoryPage {
     // set signin account
     const signinAccount = await liskUtils.createSignInAccount(network, address, storeAccount.publicKey);
     if (!signinAccount) {
-      this.matSnackBar.open('network error.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error('network error.');
       return;
     }
     await this.storageService.setSignInAccount(signinAccount);

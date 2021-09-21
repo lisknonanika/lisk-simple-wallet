@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ModalController } from '@ionic/angular';
-
-import { transactions, cryptography } from '@liskhq/lisk-client';
+import { ToastrService } from 'ngx-toastr';
 
 import { StorageService } from '../../service/storage.service';
 import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
 import { SignInAccount, SignStatus, TransferTransaction, TRANSFER_JSON } from '../../common/types';
-import { createSignInAccount, getSignStatus, sendTransferTransaction, signTransaction } from '../../common/lisk-utils';
+import { createSignInAccount, getSignStatus, transferValidation, sendTransferTransaction, sign } from '../../common/lisk-utils';
 
 @Component({
   selector: 'app-send',
@@ -29,8 +27,8 @@ export class MultiSignPage {
   ref:number;
 
   constructor(private router: Router, private route: ActivatedRoute,
-              private clipboard: Clipboard, private matSnackBar: MatSnackBar,
-              private modalController: ModalController, private storageService: StorageService) {
+              private clipboard: Clipboard, private modalController: ModalController,
+              private toastr: ToastrService, private storageService: StorageService) {
     this.isView = false;
   }
 
@@ -71,7 +69,7 @@ export class MultiSignPage {
 
     // over sign?
     if (this.signedStatus.isOverSign) {
-      this.matSnackBar.open('over the number of signatures.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error('over the number of signatures.');
       this.close();
       return;
     }
@@ -120,7 +118,11 @@ export class MultiSignPage {
 
   async copy() {
     const result = await this.clipboard.copy(JSON.stringify(this.transaction));
-    this.matSnackBar.open(result? 'copied': 'failed', 'close', { verticalPosition: 'top', duration: 3000 });
+    if (result) {
+      this.toastr.info('copied.');
+    } else {
+      this.toastr.error('failed.');
+    }
   }
 
   close() {
@@ -135,7 +137,12 @@ export class MultiSignPage {
     if (this.signedStatus.signedAddress.includes(address)) return;
 
     // validation
-    if (!(await this.transferValidation())) return;
+    await this.reload();
+    const message = await transferValidation(this.signinAccount, this.transaction, true);
+    if (message) {
+      this.toastr.error(message);
+      return;
+    }
 
     // create transaction
     const tx:TransferTransaction = new TransferTransaction(this.transaction);
@@ -153,10 +160,10 @@ export class MultiSignPage {
     if (!data) return;
 
     // sign transaction
-    const signedTransaction = signTransaction(this.transaction, this.signinAccount, data, this.networkId);
+    const signedTransaction = sign(this.transaction, this.signinAccount, data, this.networkId);
     if (!signedTransaction) {
-      this.matSnackBar.open('failed to sign.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return "";
+      this.toastr.error('failed to sign.');
+      return;
     }
 
     // update transaction
@@ -172,64 +179,10 @@ export class MultiSignPage {
     const tx = new TransferTransaction(this.transaction);
     const result = await sendTransferTransaction(this.network, tx.toJsObject());
     if (!result) {
-      this.matSnackBar.open('failed to send the transaction.', 'close', { verticalPosition: 'top', duration: 3000 });
+      this.toastr.error('failed to send the transaction.');
       return;
     }
     console.log(result);
-  }
-
-  async transferValidation() {
-    const recipient = this.transaction.asset.recipientAddress;
-    if (!recipient) {
-      this.matSnackBar.open('recipient address is required.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return false;
-    }
-
-    try {
-      if (!cryptography.validateLisk32Address(cryptography.getLisk32AddressFromAddress(cryptography.hexToBuffer(recipient)))) {
-        this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 3000 });
-        return false;
-      }
-    } catch(err) {
-      this.matSnackBar.open('invalid recipient address.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return false;
-    }
-
-    const amount = this.transaction.asset.amount;
-    if (!amount) {
-      this.matSnackBar.open('amount is required.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return false;
-    }
-
-    try {
-      if (BigInt(amount) <= 0) {
-        this.matSnackBar.open('invalid amount.', 'close', { verticalPosition: 'top', duration: 3000 });
-        return false;
-      }
-    } catch(err) {
-      this.matSnackBar.open('invalid amount.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return false;
-    }
-
-    const data = this.transaction.asset.data;
-    if (data.length > 64) {
-      this.matSnackBar.open('data exceeds the maximum number of characters (Max:64).', 'close', { verticalPosition: 'top', duration: 3000 });
-      return false;
-    }
-
-    await this.reload();
-    const balance = BigInt(this.signinAccount.balance||"0");
-    const minBalance = BigInt(transactions.convertLSKToBeddows("0.05"));
-    if ((balance - BigInt(amount) - BigInt(this.transaction.fee)) < minBalance) {
-      this.matSnackBar.open('not enough balance. At least 0.05LSK should be left.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return false;
-    }
-
-    if (this.transaction.nonce !== this.signinAccount.nonce) {
-      this.matSnackBar.open('nonce missmatch.', 'close', { verticalPosition: 'top', duration: 3000 });
-      return false;
-    }
-    return true;
   }
 }
 

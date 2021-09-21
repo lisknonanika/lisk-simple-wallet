@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { ModalController } from '@ionic/angular';
 
 import { transactions } from '@liskhq/lisk-client';
+const { convertBeddowsToLSK } = transactions;
 
 import { MembersPage } from '../../dialog/members/members.page';
 import { AccountEditPage } from '../../dialog/accountEdit/accountEdit.page';
@@ -44,7 +45,7 @@ export class InfoPage {
 
     // set fields
     this.address = signinAccount.address;
-    this.balance = transactions.convertBeddowsToLSK(signinAccount.balance||"0");
+    this.balance = convertBeddowsToLSK(signinAccount.balance||"0");
     this.misc = storeAccount? storeAccount.misc: signinAccount.userName;
     this.isMultisignature = signinAccount.isMultisignature;
 
