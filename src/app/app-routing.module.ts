@@ -28,6 +28,7 @@ const routes: Routes = [
     path: 'sub',
     children: [
       {path: 'multiSign', children: [{path: '', loadChildren: () => import('./sub/multiSign/multiSign.module').then(m => m.MultiSignPageModule)}]},
+      {path: 'complete', children: [{path: '', loadChildren: () => import('./sub/complete/complete.module').then(m => m.CompletePageModule)}]},
     ]
   },
   {path: '', pathMatch: 'full', redirectTo: 'home'}

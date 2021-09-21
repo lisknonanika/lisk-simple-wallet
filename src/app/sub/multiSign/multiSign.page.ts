@@ -10,7 +10,7 @@ import { SignInAccount, SignStatus, TransferTransaction, TRANSFER_JSON } from '.
 import { createSignInAccount, getSignStatus, transferValidation, sendTransferTransaction, sign } from '../../common/lisk-utils';
 
 @Component({
-  selector: 'app-send',
+  selector: 'app-multiSign',
   templateUrl: 'multiSign.page.html',
   styleUrls: ['../../app.component.scss', './multiSign.page.scss'],
 })

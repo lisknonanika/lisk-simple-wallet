@@ -147,6 +147,7 @@ ion-item.input-item {
   width: calc(100vw - 80px);
   max-width: 560px;
   margin-top: 5px;
+  --background: var(--ion-background-color, #fff);
 }
 
 // angular

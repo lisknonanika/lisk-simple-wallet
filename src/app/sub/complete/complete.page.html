@@ -1,0 +1,20 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Sending</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <ion-card class="card">
+      <div class="sub-title">Wait a second...</div>
+      <div class="item-title">TransactionID</div>
+      <div class="title">{{transactionId}}</div>
+    </ion-card>
+  </div>
+</ion-content>

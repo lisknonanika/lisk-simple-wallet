@@ -179,7 +179,12 @@ export class SendPage {
       if (!data) return;
 
       const result = await this.send(transactionJSON, data);
-      console.log(result);
+      if (!result) return;
+      
+      // update transaction
+      transactionJSON.id = result;
+      await this.storageService.setTransaction(transactionJSON);
+      this.router.navigateByUrl(`/sub/complete?ref=0`);
       return;
     }
     this.router.navigateByUrl(`/sub/multiSign?ref=0`);

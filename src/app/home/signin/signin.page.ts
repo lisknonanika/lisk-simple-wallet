@@ -23,6 +23,7 @@ export class SignInPage {
   }
 
   async ionViewWillEnter() {
+    await this.storageService.removeTransaction();
     await this.storageService.removeSignInAccount();
     await this.storageService.removeNetworkId();
     this.network = await this.storageService.getNetwork();

@@ -32,6 +32,7 @@ export class HistoryPage {
   }
 
   async reload() {
+    await this.storageService.removeTransaction();
     await this.storageService.removeSignInAccount();
     await this.storageService.removeNetworkId();
     this.accounts = await this.storageService?.getAccounts();
