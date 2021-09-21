@@ -6,7 +6,7 @@
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    <div class="card">
+    <ion-card class="card">
       <div class="sub-title">{{network===0?"Mainnet":"Testnet"}}</div>
       <div class="title">Signin</div>
       <div>
@@ -16,6 +16,6 @@
         </ion-item>
         <div style="margin-top: 10px;"><ion-button (click)="signIn()">SingIn</ion-button></div>
       </div>
-    </div>
+    </ion-card>
   </div>
 </ion-content>
