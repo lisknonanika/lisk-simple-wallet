@@ -20,10 +20,7 @@
     <ion-item class="input-item" lines="full">
       <ion-input type="text" value={{misc}} placeholder="Enter misc (optional)" clearInput="true" autocomplete="off" (ionChange)="setMisc($event.target.value)"></ion-input>
     </ion-item>
+    <ion-button (click)="save()" style="margin-top: 10px;">Save</ion-button>
+    <ion-button *ngIf="availableDelete" style="margin-top: 5px;" (click)="delete()" color="danger">Delete</ion-button>
   </div>
 </ion-content>
-
-<ion-footer>
-  <ion-button (click)="save()">Save</ion-button>
-  <ion-button *ngIf="availableDelete" style="margin-top: 5px;" (click)="delete()" color="danger">Delete</ion-button>
-</ion-footer>

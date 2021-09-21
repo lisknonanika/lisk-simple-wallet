@@ -20,9 +20,6 @@
     <ion-item class="input-item" lines="full">
       <ion-input type="password" value={{passphrase}} placeholder="Enter passphrase" clearInput="true" autocomplete="off" (ionChange)="setPassphrase($event.target.value)"></ion-input>
     </ion-item>
+    <ion-button (click)="sign()" style="margin-top: 10px;">Sign</ion-button>
   </div>
 </ion-content>
-
-<ion-footer>
-  <ion-button (click)="sign()">Sign</ion-button>
-</ion-footer>

@@ -26,20 +26,11 @@
   flex-direction: column;
 }
 
-ion-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding-bottom: 20px;
-}
-
 ::ng-deep ion-input {
   font-size: 16px;
 }
 
-#container ion-button,
-ion-footer ion-button {
+#container ion-button {
   font-size: 16px;
   height: 50px;
   width: calc(100vw - 80px) !important;
@@ -138,7 +129,7 @@ ion-footer ion-button {
 ::ng-deep .dialog-custom-class .modal-wrapper {
   width: calc(100vw - 40px);
   max-width: 600px;
-  height: 80vh;
+  height: 520px;
   border-radius: 10px;
 }
 

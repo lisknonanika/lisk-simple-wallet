@@ -15,7 +15,7 @@ export const createSignInAccount = async(network:number, address:string, publicK
 
     // set lisk account
     const account = await getAccount(network, address);
-    if (!account) return;
+    if (!account) return signInAccount;
     signInAccount.nonce = account.sequence.nonce;
     signInAccount.balance = account.summary.balance;
     if (account.summary.isMultisignature) {
