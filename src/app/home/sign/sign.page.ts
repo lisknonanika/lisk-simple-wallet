@@ -73,7 +73,6 @@ export class SignPage {
 
     // validation
     const tx:TRANSFER_JSON = transferTransaction.toJSON();
-    console.log(tx)
     const message = transferValidation(signinAccount, tx, true);
     if (message) {
       this.toastr.error(message);

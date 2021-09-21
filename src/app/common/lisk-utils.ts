@@ -106,7 +106,6 @@ export const sign = (transaction:TRANSFER_JSON, signinAccount:SignInAccount, pas
     }
     return signTransaction(getTransferAssetSchema(), tx, hexToBuffer(networkId), passphrase) as TRANSFER_JS;
   } catch(err) {
-    console.log(err)
     return null;
   }
 }
