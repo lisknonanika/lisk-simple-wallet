@@ -129,7 +129,7 @@ export class MultiSignPage {
     if (this.ref === 0) {
       this.router.navigateByUrl('/action/send', {replaceUrl: true});
     } else {
-      this.router.navigateByUrl('/home', {replaceUrl: true});
+      this.router.navigateByUrl('/home/sign', {replaceUrl: true});
     }
   }
 
@@ -169,7 +169,6 @@ export class MultiSignPage {
     // update transaction
     const newTransaction = new TransferTransaction();
     this.storageService.setTransaction(newTransaction.object2JSON(signedTransaction));
-    console.log(newTransaction.object2JSON(signedTransaction));
 
     // reload
     await this.reload();
@@ -182,7 +181,7 @@ export class MultiSignPage {
       this.toastr.error('failed to send the transaction.');
       return;
     }
-    console.log(result);
+    this.router.navigateByUrl(`/sub/complete?ref=${this.ref}`, {replaceUrl: true});
   }
 }
 

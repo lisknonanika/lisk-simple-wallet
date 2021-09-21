@@ -1,11 +1,20 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Sign</ion-title>
+    <ion-title>Multisignature sign</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div id="container">
-    Sign
+    <ion-card class="card">
+      <div class="title">Enter transaction</div>
+      <div>
+        <div class="item-title">Transaction (token:transfer)</div>
+        <ion-item class="input-item" lines="full">
+          <ion-textarea placeholder="Enter token:transfer transaction" rows="10" clearOnEdit="true" [(ngModel)]="model.transaction"></ion-textarea>
+        </ion-item>
+        <div style="margin-top: 10px;"><ion-button (click)="continue()">Continue</ion-button></div>
+      </div>
+    </ion-card>
   </div>
 </ion-content>

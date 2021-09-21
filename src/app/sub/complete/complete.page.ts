@@ -50,9 +50,9 @@ export class CompletePage {
   close() {
     if (this.timeout) clearTimeout(this.timeout);
     if (this.ref === 0) {
-      this.router.navigateByUrl('/action', {replaceUrl: true});
+      this.router.navigateByUrl('/action/info', {replaceUrl: true});
     } else {
-      this.router.navigateByUrl('/home', {replaceUrl: true});
+      this.router.navigateByUrl('/home/sign', {replaceUrl: true});
     }
   }
 }

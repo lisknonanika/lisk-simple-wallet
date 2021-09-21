@@ -7,7 +7,7 @@ const { getLisk32AddressFromPassphrase, getAddressAndPublicKeyFromPassphrase, bu
 const { Mnemonic }  = passphrase;
 
 import { StorageService } from '../../service/storage.service';
-import * as liskUtils from '../../common/lisk-utils';
+import { getNetworkId, createSignInAccount } from '../../common/lisk-utils';
 
 @Component({
   selector: 'app-signin',
@@ -48,7 +48,7 @@ export class SignInPage {
 
     // set networkId
     const network = await this.storageService.getNetwork();
-    const networkId = await liskUtils.getNetworkId(network);
+    const networkId = await getNetworkId(network);
     if (!networkId) {
       this.toastr.error('network error.');
       return;
@@ -56,7 +56,7 @@ export class SignInPage {
     await this.storageService.setNetworkId(networkId);
 
     // set signin account
-    const signinAccount = await liskUtils.createSignInAccount(network, address, publicKey);
+    const signinAccount = await createSignInAccount(network, address, publicKey);
     if (!signinAccount) {
       this.toastr.error('network error.');
       return;
