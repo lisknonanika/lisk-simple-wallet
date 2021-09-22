@@ -8,7 +8,8 @@ const {  getLisk32AddressFromPublicKey, getLisk32AddressFromAddress, hexToBuffer
 const {  convertBeddowsToLSK } = transactions;
 
 import { StorageService } from '../../service/storage.service';
-import { TRANSFER_JSON } from 'src/app/common/types';
+import { TRANSFER_JSON } from '../../common/types';
+import { getExplorerURL } from '../../common/utils';
 
 @Component({
   selector: 'app-transaction',
@@ -16,6 +17,7 @@ import { TRANSFER_JSON } from 'src/app/common/types';
   styleUrls: ['../../app.component.scss', './transaction.page.scss'],
 })
 export class TransactionPage {
+  explorerUrl:string;
   transaction:TRANSFER_JSON;
   sender:string;
   recipient:string;
@@ -34,6 +36,10 @@ export class TransactionPage {
     this.amount = convertBeddowsToLSK(this.transaction.asset.amount);
     this.fee = convertBeddowsToLSK(this.transaction.fee);
     this.data = this.transaction.asset.data||"";
+    
+    // set explorer URL
+    const settings = await this.storageService.getSettings();
+    this.explorerUrl = getExplorerURL(settings.network, settings.explorer);
   }
 
   async copy() {

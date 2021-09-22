@@ -12,9 +12,7 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <img src="https://lisk-avator.ysdev.work/{{address}}?size=130"/>
-    <div class="address">
-      {{address}}
-    </div>
+    <div class="address">{{address}}</div>
     <div class="item-title">Passphrase</div>
     <ion-item class="input-item" lines="full">
       <ion-input type="password" value={{passphrase}} placeholder="Enter passphrase" clearInput="true" autocomplete="off" (ionChange)="setPassphrase($event.target.value)"></ion-input>

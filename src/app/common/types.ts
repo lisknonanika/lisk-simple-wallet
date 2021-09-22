@@ -168,3 +168,14 @@ export class SignStatus {
   public isOverSign: boolean;
   constructor(){}
 }
+
+export class TransactionRow {
+  constructor(
+    public moduleAssetId: string,
+    public moduleAssetName: string,
+    public id: string,
+    public amount?: string,
+    public address?: string,
+    public sendOrReceive?: number
+  ){}
+}

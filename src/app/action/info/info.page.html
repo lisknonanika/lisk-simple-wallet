@@ -10,6 +10,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="reflesh($event)">
+    <ion-refresher-content pullingText="Pull to refresh" refreshingText="Refreshing..."></ion-refresher-content>
+  </ion-refresher>
   <div id="container">
     <div *ngIf="isView">
       <div class="rows">
@@ -35,7 +38,52 @@
       </div>
       
       <div class="content-title">- Latest 10 Transactions -</div>
-      <div class="rows" style="margin-top: 10px;">
+      <div class="rows transactions" style="margin-top: 10px;">
+        <div cdkDrag *ngFor="let tx of transactions">
+
+          <div *ngIf="tx.moduleAssetId==='2:0' && tx.sendOrReceive===0" class="row send">
+            <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
+              <div class="side-btn left"><ion-icon name="arrow-redo"></ion-icon></div>
+              <div class="transaction">
+                <div class="id">{{tx.id}}</div>
+                <div><img src="https://lisk-avator.ysdev.work/{{tx.address}}?size=15"/>&nbsp;{{tx.address}}</div>
+                <div>{{tx.amount}} LSK</div>
+              </div>
+              <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
+            </a>
+          </div>
+
+          <div *ngIf="tx.moduleAssetId==='2:0' && tx.sendOrReceive===1" class="row receive">
+            <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
+              <div class="side-btn left"><ion-icon name="arrow-undo"></ion-icon></div>
+              <div class="transaction">
+                <div class="id">{{tx.id}}</div>
+                <div><img src="https://lisk-avator.ysdev.work/{{tx.address}}?size=15"/>&nbsp;{{tx.address}}</div>
+                <div>{{tx.amount}} LSK</div>
+              </div>
+              <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
+            </a>
+          </div>
+
+          <div *ngIf="tx.moduleAssetId!=='2:0'" class="row other">
+            <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
+              <div class="side-btn left">
+                <ion-icon *ngIf="tx.moduleAssetId==='4:0'" name="key"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId==='5:0'" name="person-add"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId==='5:1'" name="star-half"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId==='5:2'" name="lock-open"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId==='5:3'" name="receipt"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId==='1000:0'" name="shield-checkmark"></ion-icon>
+              </div>
+              <div class="transaction">
+                <div class="id">{{tx.id}}</div>
+                <div>{{tx.moduleAssetName}}</div>
+              </div>
+              <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
+            </a>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>

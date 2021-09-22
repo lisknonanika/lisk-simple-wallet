@@ -67,6 +67,16 @@ export const getSendTransaction = async(network:number, publicKey:string, nonce:
   }
 }
 
+export const getTransactions = async(network:number, address:string):Promise<any[]> => {
+  try {
+    const res = await fetch(`${getApiURL(network)}/v2/transactions?address=${address}&offset=0&limit=10`);
+    const json = await res.json();
+    return json.data.error? null: json.data;
+  } catch (err) {
+    return null;
+  }
+}
+
 export const getSignStatus = (signinAccount:SignInAccount, signatures:string[]):SignStatus => {
   const signStatus = new SignStatus();
   signStatus.numberOfSignatures = signinAccount.numberOfSignatures;

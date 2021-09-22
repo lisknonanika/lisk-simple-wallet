@@ -5,5 +5,49 @@
 
 .row .account {
   width: calc(100vw - 150px);
-  max-width: calc(600px - 110px);
+  max-width: 490px;
+}
+
+.rows.transactions .side-btn {
+  height: 65px;
+}
+
+.row .transaction {
+  width: calc(100vw - 100px);
+  max-width: 500px;
+  padding: 5px 10px;
+  text-align: left;
+}
+
+.row .transaction .id {
+  font-size: 1rem;
+}
+
+.row .transaction div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  color: #ffffff;
+  vertical-align: middle;
+}
+.row.receive {
+  background-color: #009e5c;
+}
+.row.receive .side-btn.left {
+  background-color: #016b3f;
+}
+
+.row.send {
+  background-color: #a02f2f;
+}
+.row.send .side-btn.left {
+  background-color: #860202;
+}
+
+.row.other {
+  background-color: #7a7878;
+}
+.row.other .side-btn.left {
+  background-color: #525252;
 }
