@@ -38,46 +38,57 @@
       </div>
       
       <div class="content-title">- Latest 5 Transactions -</div>
-      <div class="rows transactions" style="margin-top: 10px;">
+      <div *ngIf="transactions.length === 0" style="margin-top: 5px;">No data</div>
+      <div *ngIf="transactions.length > 0" class="rows transactions" style="margin-top: 5px;">
         <div cdkDrag *ngFor="let tx of transactions">
 
-          <div *ngIf="tx.moduleAssetId==='2:0' && tx.sendOrReceive===0" class="row send">
+          <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 0" class="row send">
             <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
               <div class="side-btn left"><ion-icon name="arrow-redo"></ion-icon></div>
               <div class="transaction">
-                <div class="id">{{tx.id}}</div>
-                <div><img src="https://lisk-avator.ysdev.work/{{tx.address}}?size=15"/>&nbsp;{{tx.address}}</div>
-                <div>{{tx.amount}} LSK</div>
+                <div>{{tx.timestamp}}</div>
+                <div class="sender">
+                  <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{tx.address}}?size=30"/></div>
+                  <div class="account">
+                    <div class="address">{{address}}</div>
+                    <div>- {{tx.amount}} LSK</div>
+                  </div>
+                </div>
               </div>
               <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
             </a>
           </div>
 
-          <div *ngIf="tx.moduleAssetId==='2:0' && tx.sendOrReceive===1" class="row receive">
+          <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 1" class="row receive">
             <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
               <div class="side-btn left"><ion-icon name="arrow-undo"></ion-icon></div>
               <div class="transaction">
-                <div class="id">{{tx.id}}</div>
-                <div><img src="https://lisk-avator.ysdev.work/{{tx.address}}?size=15"/>&nbsp;{{tx.address}}</div>
-                <div>{{tx.amount}} LSK</div>
+                <div>{{tx.timestamp}}</div>
+                <div class="recipient">
+                  <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{tx.address}}?size=30"/></div>
+                  <div class="account">
+                    <div class="address">{{address}}</div>
+                    <div>+ {{tx.amount}} LSK</div>
+                  </div>
+                </div>
               </div>
               <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
             </a>
           </div>
 
-          <div *ngIf="tx.moduleAssetId!=='2:0'" class="row other">
+          <div *ngIf="tx.moduleAssetId !== '2:0'" class="row other">
             <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
               <div class="side-btn left">
-                <ion-icon *ngIf="tx.moduleAssetId==='4:0'" name="key"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId==='5:0'" name="person-add"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId==='5:1'" name="star-half"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId==='5:2'" name="lock-open"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId==='5:3'" name="receipt"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId==='1000:0'" name="shield-checkmark"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId === '4:0'" name="key"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId === '5:0'" name="person-add"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId === '5:1'" name="star-half"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId === '5:2'" name="lock-open"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId === '5:3'" name="receipt"></ion-icon>
+                <ion-icon *ngIf="tx.moduleAssetId === '1000:0'" name="shield-checkmark"></ion-icon>
               </div>
               <div class="transaction">
-                <div class="id">{{tx.id}}</div>
-                <div>{{tx.moduleAssetName}}</div>
+                <div style="margin-bottom: 3px;">{{tx.timestamp}}</div>
+                <div class="text">{{tx.moduleAssetName}}</div>
               </div>
               <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
             </a>

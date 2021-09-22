@@ -9,7 +9,7 @@
 }
 
 .rows.transactions .side-btn {
-  height: 65px;
+  height: 70px;
 }
 
 .row .transaction {
@@ -17,10 +17,6 @@
   max-width: 500px;
   padding: 5px 10px;
   text-align: left;
-}
-
-.row .transaction .id {
-  font-size: 1rem;
 }
 
 .row .transaction div {
@@ -31,6 +27,11 @@
   color: #ffffff;
   vertical-align: middle;
 }
+
+.row .transaction div.text {
+  font-size: 1rem;
+}
+
 .row.receive {
   background-color: #009e5c;
 }
@@ -50,4 +51,24 @@
 }
 .row.other .side-btn.left {
   background-color: #525252;
+}
+
+.row .sender,
+.row .recipient {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.row .sender .account,
+.row .recipient .account {
+  width: calc(100vw - 160px);
+  max-width: 440px;
+}
+
+.row .sender .identicon,
+.row .recipient .identicon {
+  width: 30px;
+  margin-right: 10px;
 }

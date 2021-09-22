@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
-import { IonRefresher, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { transactions } from '@liskhq/lisk-client';
@@ -67,11 +67,14 @@ export class InfoPage {
     this.isMultisignature = signinAccount.isMultisignature;
 
     // set transactions
+    this.transactions = [];
     const network = await this.storageService.getNetwork();
     const txs = await getTransactions(network, this.address);
     if (txs) {
       for (const tx of txs) {
-        const row = new TransactionRow(tx.moduleAssetId, tx.moduleAssetName, tx.id);
+        const dt = new Date();
+        dt.setTime((+tx.block.timestamp) * 1000);
+        const row = new TransactionRow(tx.moduleAssetId, tx.moduleAssetName, tx.id, dt.toLocaleString());
         if (tx.moduleAssetId === "2:0") {
           row.amount = convertBeddowsToLSK(tx.asset.amount);
           if (tx.sender.address === this.address) {
