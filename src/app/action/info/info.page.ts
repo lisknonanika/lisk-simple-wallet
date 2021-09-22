@@ -9,6 +9,7 @@ const { convertBeddowsToLSK } = transactions;
 import { MembersPage } from '../../dialog/members/members.page';
 import { AccountEditPage } from '../../dialog/accountEdit/accountEdit.page';
 import { StorageService } from '../../service/storage.service';
+import { getExplorerURL } from '../../common/utils';
 
 @Component({
   selector: 'app-info',
@@ -17,6 +18,7 @@ import { StorageService } from '../../service/storage.service';
 })
 export class InfoPage {
   isView:boolean;
+  explorerUrl:string;
   address:string;
   balance:string;
   misc:string;
@@ -44,6 +46,10 @@ export class InfoPage {
       this.signOut();
       return;
     }
+    
+    // set explorer URL
+    const settings = await this.storageService.getSettings();
+    this.explorerUrl = getExplorerURL(settings.network, settings.explorer);
 
     // set fields
     this.address = signinAccount.address;

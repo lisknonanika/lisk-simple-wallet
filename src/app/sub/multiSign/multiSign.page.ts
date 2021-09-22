@@ -24,6 +24,7 @@ export class MultiSignPage {
   transaction: TRANSFER_JSON;
   network:number;
   networkId:string;
+  availableSendBtn:boolean;
   ref:number;
 
   constructor(private router: Router, private route: ActivatedRoute,
@@ -73,6 +74,8 @@ export class MultiSignPage {
       this.close();
       return;
     }
+
+    this.availableSendBtn = this.signedStatus.isFullSign;
 
     // set member status
     const senderAddress = this.signinAccount.address;

@@ -11,7 +11,7 @@
         <div cdkDropList [cdkDropListData]="accounts" (cdkDropListDropped)="drop($event)">
           <div cdkDrag *ngFor="let account of accounts">
             <div class="row">
-              <div class="setting" (click)="openAccountEdit(account.address)">
+              <div class="side-btn left" (click)="openAccountEdit(account.address)">
                 <ion-icon name="settings-outline"></ion-icon>
               </div>
               <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{account.address}}?size=30"/></div>

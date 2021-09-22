@@ -31,8 +31,20 @@
   max-width: 600px !important;
 }
 
-.sub-button {
-  font-size: 12px !important;
-  margin-bottom: 5px !important;
-  height: 30px !important;
+.multisgnature-status {
+  flex-direction: column;
+  background-color: rgba($color: #a1a1a1, $alpha: 0.3);
+  border: 1px solid #a1a1a1;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 5px 20px;
+}
+
+.multisgnature-status .text {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: calc(100vw - 80px);
+  max-width: 560px;
+  font-size: 0.8rem;
 }

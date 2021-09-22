@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>AccountEdit</ion-title>
+    <ion-title>Passphrase</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="close()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -15,7 +15,6 @@
     <div class="address">
       {{address}}
     </div>
-    <ion-button class="address-copy" fill="outline" color="medium" (click)="copy()"><ion-icon name="copy"></ion-icon>&nbsp;Copy address</ion-button>
     <div class="item-title">Passphrase</div>
     <ion-item class="input-item" lines="full">
       <ion-input type="password" value={{passphrase}} placeholder="Enter passphrase" clearInput="true" autocomplete="off" (ionChange)="setPassphrase($event.target.value)"></ion-input>

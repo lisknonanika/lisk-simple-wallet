@@ -14,7 +14,9 @@ export class SettingPage {
   }
 
   async ionViewWillEnter() {
-    this.model.network = (await this.storageService.getNetwork()).toString();
+    const setting = await this.storageService.getSettings();
+    this.model.network = setting.network.toString();
+    this.model.explorer = setting.explorer.toString();
   }
 
   async changeNetwork() {

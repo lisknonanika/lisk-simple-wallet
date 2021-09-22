@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Sign</ion-title>
+    <ion-title>Choose sign members</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="close()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -12,15 +12,29 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
-      <ion-button class="sub-button" fill="outline" color="medium" (click)="showTransaction()"><ion-icon name="reader-outline"></ion-icon>&nbsp;Show transaction</ion-button>
       <div class="rows">
+        <div class="item-title">Status (signed / required)</div>
+        <div class="row multisgnature-status">
+          <div class="text">Number of signatures: {{signedStatus.numberOfMandatorySigned + signedStatus.numberOfOptionalSigned}} / {{signedStatus.numberOfSignatures}}</div>
+          <div class="text">
+            mandatory: {{signedStatus.numberOfMandatorySigned}} / {{signedStatus.numberOfMandatory}}
+            &nbsp;&nbsp;
+            optional: {{signedStatus.numberOfOptionalSigned}} / {{signedStatus.numberOfOptional}}
+          </div>
+        </div>
+
+        <div class="row sub-btn" style="margin-bottom: 5px;" (click)="showTransaction()">
+          <div class="text"><ion-icon name="reader-outline"></ion-icon>&nbsp;Show Transaction</div>
+          <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+        </div>
+
         <div class="item-title">Sender</div>
         <div class="row" (click)="sign(senderStatus.address)">
           <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{senderStatus.address}}?size=30"/></div>
           <div class="account">
             <div *ngIf="senderStatus.status===0" class="notSigned"><ion-icon name="caret-forward"></ion-icon>&nbsp;Unsigned</div>
             <div *ngIf="senderStatus.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
-            <div *ngIf="senderStatus.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
+            <div *ngIf="senderStatus.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;{{senderStatus.isMember? "Can not sign": "Not member"}}</div>
             <div class="address">{{senderStatus.address}}</div>
             <div *ngIf="senderStatus.isMember">{{senderStatus.isMandatory? 'Mandatory': 'Optional'}}</div>
           </div>
@@ -35,7 +49,6 @@
               <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
               <div *ngIf="member.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
               <div class="address">{{member.address}}</div>
-              <div>{{member.isMandatory? 'Mandatory': 'Optional'}}</div>
             </div>
           </div>
         </div>
@@ -49,11 +62,14 @@
               <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
               <div *ngIf="member.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
               <div class="address">{{member.address}}</div>
-              <div>{{member.isMandatory? 'Mandatory': 'Optional'}}</div>
             </div>
           </div>
         </div>
-      </div><div style="margin-top: 20px;"><ion-button disabled="{{!signedStatus.isFullSign}}" (click)="send()">Send</ion-button></div>
+      </div>
     </div>
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-button disabled={{availableSendBtn}} (click)="send()">Send</ion-button>
+</ion-footer>

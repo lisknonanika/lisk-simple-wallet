@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastrService } from 'ngx-toastr';
 
 import { cryptography } from '@liskhq/lisk-client';
@@ -17,22 +16,13 @@ export class PassphrasePage {
   availableDelete:boolean;
 
   constructor(private modalController: ModalController, private navParams: NavParams,
-              private clipboard: Clipboard, private toastr: ToastrService) {
+              private toastr: ToastrService) {
     this.address = this.navParams.data.address;
     this.passphrase = "";
   }
 
   setPassphrase(val:string) {
     this.passphrase = val;
-  }
-
-  async copy() {
-    const result = await this.clipboard.copy(this.address);
-    if (result) {
-      this.toastr.info("copied.");
-    } else {
-      this.toastr.error("failed.");
-    }
   }
   
   async sign() {

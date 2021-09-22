@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Info</ion-title>
+    <ion-title>Account Info</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="signOut()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
@@ -14,22 +14,23 @@
     <div *ngIf="isView">
       <div class="rows">
         <div class="row">
-          <div class="setting" (click)="openAccountEdit(address)">
+          <div class="side-btn left" (click)="openAccountEdit(address)">
             <ion-icon name="settings-outline"></ion-icon>
           </div>
-          <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
-          <div class="account">
-            <div class="address">{{address}}</div>
-            <div>balance: {{balance}} LSK</div>
-            <div>misc: {{misc}}</div>
-          </div>
-          <div class="reload" (click)="reload()">
-            <ion-icon name="reload"></ion-icon>
-          </div>
+          <a class="row-btn" href="{{explorerUrl}}/account/{{address}}" target="_blank" rel="noopener noreferrer">
+            <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{address}}?size=30"/></div>
+            <div class="account">
+              <div class="address">{{address}}</div>
+              <div>balance: {{balance}} LSK</div>
+              <div>misc: {{misc}}</div>
+            </div>
+            <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
+          </a>
         </div>
-        <div *ngIf="isMultisignature" class="members" (click)="openMembers()">
-          <div class="icon"><ion-icon name="caret-forward"></ion-icon></div>
-          <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Display Multisgnature Members</div>
+
+        <div *ngIf="isMultisignature" class="row sub-btn" (click)="openMembers()">
+          <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>&nbsp;Display Multisgnature Members</div>
+          <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
         </div>
       </div>
       

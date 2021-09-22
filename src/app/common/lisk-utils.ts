@@ -71,7 +71,7 @@ export const getSignStatus = (signinAccount:SignInAccount, signatures:string[]):
   const signStatus = new SignStatus();
   signStatus.numberOfSignatures = signinAccount.numberOfSignatures;
   signStatus.numberOfMandatory = signinAccount.multisignatureMembers.filter((m) => {return m.isMandatory}).length;
-  signStatus.numberOfOptional = signinAccount.multisignatureMembers.length - signStatus.numberOfMandatory;
+  signStatus.numberOfOptional = signinAccount.numberOfSignatures - signStatus.numberOfMandatory;
   signStatus.numberOfMandatorySigned = 0;
   signStatus.numberOfOptionalSigned = 0;
   signStatus.signedAddress = [];
@@ -86,8 +86,8 @@ export const getSignStatus = (signinAccount:SignInAccount, signatures:string[]):
   }
   signStatus.numberOfMandatoryRemain = signStatus.numberOfMandatory - signStatus.numberOfMandatorySigned;
   signStatus.numberOfOptionalRemain = signStatus.numberOfOptional - signStatus.numberOfOptionalSigned;
-  signStatus.isFullSign = signStatus.numberOfMandatorySigned + signStatus.numberOfOptionalSigned === signStatus.numberOfSignatures;
-  signStatus.isOverSign = signStatus.numberOfMandatorySigned + signStatus.numberOfOptionalSigned > signStatus.numberOfSignatures;
+  signStatus.isFullSign = (signStatus.numberOfMandatorySigned + signStatus.numberOfOptionalSigned) === signStatus.numberOfSignatures;
+  signStatus.isOverSign = (signStatus.numberOfMandatorySigned + signStatus.numberOfOptionalSigned) > signStatus.numberOfSignatures;
 
   return signStatus;
 }

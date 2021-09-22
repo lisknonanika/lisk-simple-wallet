@@ -11,7 +11,7 @@ export const EXPLORER = [
   ],
   [
     "https://liskscan.com",
-    "https://testnet.liskscan.com/",
+    "https://testnet.liskscan.com",
   ]
 ];
 
