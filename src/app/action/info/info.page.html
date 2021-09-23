@@ -39,8 +39,8 @@
       
       <div class="content-title">- Latest 5 Transactions -</div>
       <div *ngIf="transactions.length === 0" style="margin-top: 5px;">No data</div>
-      <div *ngIf="transactions.length > 0" class="rows transactions">
-        <div *ngFor="let tx of transactions" style="height: 75px;">
+      <div *ngIf="transactions.length > 0" class="rows">
+        <div *ngFor="let tx of transactions">
 
           <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 0" class="row send">
             <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">

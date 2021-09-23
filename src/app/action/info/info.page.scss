@@ -28,6 +28,13 @@
   font-size: 1rem;
 }
 
+.row.receive,
+.row.send,
+.row.other {
+  margin: 0px !important;
+  margin-top: 5px !important;
+}
+
 .row.receive {
   background-color: #009e5c;
 }
