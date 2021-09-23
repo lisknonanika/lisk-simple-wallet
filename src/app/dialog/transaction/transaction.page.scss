@@ -1,12 +1,12 @@
 .row {
   width: calc(100vw - 80px) !important;
-  max-width: 540px !important;
+  max-width: 560px !important;
   height: initial !important;
 }
 
 .row .account {
   width: calc(100vw - 160px);
-  max-width: 460px;
+  max-width: 480px;
   padding: 0px;
 }
 
@@ -28,7 +28,7 @@
 
 .text {
   width: calc(100vw - 80px);
-  max-width: 540px;
+  max-width: 560px;
   text-align: left;
   word-break: break-all;
   margin-top: 5px;
