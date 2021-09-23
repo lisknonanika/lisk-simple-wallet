@@ -43,7 +43,7 @@
             </ion-item>
 
             <div class="fee">fee: {{fee}} LSK</div>
-            <div style="margin-top: 20px;"><ion-button (click)="continue()">Continue</ion-button></div>
+            <div style="margin-top: 20px;"><ion-button (click)="continue()">{{signinAccount.isMultisignature?"Continue":"Send"}}</ion-button></div>
           </div>
         </ion-card>
       </div>
