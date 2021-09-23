@@ -1,5 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header [translucent]="true" style="padding: 0px;">
+  <ion-toolbar style="padding: 0px;">
     <ion-title>Transaction</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="close()">
@@ -36,17 +36,17 @@
       </div>
 
       <div class="item-title">Amount</div>
-      <div class="row" style="background-color: initial;">
+      <div class="row" style="background-color: initial; color: initial;">
         <div class="data">{{amount}} LSK</div>
       </div>
 
       <div class="item-title">Fee</div>
-      <div class="row" style="background-color: initial;">
+      <div class="row" style="background-color: initial; color: initial;">
         <div class="data">{{fee}} LSK</div>
       </div>
 
       <div *ngIf="data" class="item-title">Data</div>
-      <div *ngIf="data" class="row" style="background-color: initial;">
+      <div *ngIf="data" class="row" style="background-color: initial; color: initial;">
         <div class="data">{{data}}</div>
       </div>
     </div>

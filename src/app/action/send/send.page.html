@@ -39,7 +39,7 @@
 
             <div class="item-title">Data (optional)</div>
             <ion-item class="input-item" lines="full">
-              <ion-input type="text" placeholder="Enter data (optional)" clearInput="true" autocomplete="off" [(ngModel)]="model.data" (ionChange)="computeFee()"></ion-input>
+              <ion-input type="text" maxlength="64" placeholder="Enter data (optional)" clearInput="true" autocomplete="off" [(ngModel)]="model.data" (ionChange)="computeFee()"></ion-input>
             </ion-item>
 
             <div class="fee">fee: {{fee}} LSK</div>

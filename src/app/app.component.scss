@@ -35,6 +35,7 @@
   align-items: center;
   justify-content: center;
   padding: 10px 0px;
+  padding-bottom: var(--ion-safe-area-bottom);
   background-color: var(--ion-background-color, #fff);
 }
 
@@ -80,6 +81,16 @@ ion-button.sub-btn .text {
   opacity: 0.6;
   width: calc(100vw - 80px) !important;
   max-width: 560px !important;
+}
+
+ion-item.input-item {
+  width: calc(100vw - 80px);
+  max-width: 560px;
+  margin-top: 5px;
+}
+
+ion-card ion-item.input-item {
+  --background: var(--ion-background-color, #fff);
 }
 
 // address row
@@ -179,15 +190,9 @@ ion-button.sub-btn .text {
   border-radius: 10px;
 }
 
-// ionic
-ion-item.input-item {
-  width: calc(100vw - 80px);
-  max-width: 560px;
-  margin-top: 5px;
-}
-
-ion-card ion-item.input-item {
-  --background: var(--ion-background-color, #fff);
+// toast
+::ng-deep .toast-container {
+  padding-top: var(--ion-safe-area-top);
 }
 
 // angular
