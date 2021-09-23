@@ -36,19 +36,13 @@
       </div>
 
       <div class="item-title">Amount</div>
-      <div class="row" style="background-color: initial; color: initial;">
-        <div class="data">{{amount}} LSK</div>
-      </div>
+      <div class="text">{{amount}} LSK</div>
 
       <div class="item-title">Fee</div>
-      <div class="row" style="background-color: initial; color: initial;">
-        <div class="data">{{fee}} LSK</div>
-      </div>
+      <div class="text">{{fee}} LSK</div>
 
       <div *ngIf="data" class="item-title">Data</div>
-      <div *ngIf="data" class="row" style="background-color: initial; color: initial;">
-        <div class="data">{{data}}</div>
-      </div>
+      <div *ngIf="data" class="text">{{data}}</div>
     </div>
   </div>
 </ion-content>

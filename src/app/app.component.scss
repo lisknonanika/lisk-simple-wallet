@@ -34,13 +34,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 0px;
-  padding-bottom: var(--ion-safe-area-bottom);
+  padding-bottom: var(--ion-safe-area-bottom, 10px);
   background-color: var(--ion-background-color, #fff);
 }
 
-#container ion-button,
-ion-footer ion-button {
+#container ion-button {
   font-size: 16px;
   height: 50px;
   width: calc(100vw - 80px);
@@ -49,8 +47,11 @@ ion-footer ion-button {
 }
 
 ion-footer ion-button {
-  width: calc(100vw - 40px) !important;
-  max-width: 600px !important;
+  font-size: 16px;
+  height: 50px;
+  width: calc(100vw - 40px);
+  max-width: 600px;
+  margin: 10px 0px 10px -1px;
 }
 
 ion-button.sub-btn {

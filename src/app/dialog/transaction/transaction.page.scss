@@ -16,11 +16,6 @@
   text-overflow: initial;
 }
 
-.row .data {
-  text-align: left;
-  word-break: break-all;
-}
-
 .row .side-btn {
   height: 50px;
 }
@@ -29,4 +24,12 @@
   font-size: 12px !important;
   margin-bottom: 5px !important;
   height: 30px !important;
+}
+
+.text {
+  width: calc(100vw - 80px);
+  max-width: 540px;
+  text-align: left;
+  word-break: break-all;
+  margin-top: 5px;
 }
