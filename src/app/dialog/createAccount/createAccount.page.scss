@@ -1,0 +1,31 @@
+#container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0px;
+  height: 100%;
+}
+
+.text {
+  font-size: 20px;
+  width: calc(100vw - 80px);
+  max-width: 560px;
+  text-align: left;
+}
+
+.note {
+  font-size: 1rem;
+  color: #db2e2e;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #db2e2e;
+  border-radius: 5px;
+}
+
+.account-copy {
+  font-size: 12px !important;
+  margin-top: 5px !important;
+  height: 30px !important;
+}

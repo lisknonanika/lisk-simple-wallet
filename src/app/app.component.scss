@@ -42,14 +42,36 @@
 ion-footer ion-button {
   font-size: 16px;
   height: 50px;
-  width: calc(100vw - 80px) !important;
-  max-width: 560px !important;
+  width: calc(100vw - 80px);
+  max-width: 560px;
   margin-left: -1px;
 }
 
 ion-footer ion-button {
   width: calc(100vw - 40px) !important;
   max-width: 600px !important;
+}
+
+ion-button.sub-btn {
+  display: flex;
+  align-items: center;
+  height: 30px !important;
+  width: calc(100vw - 40px) !important;
+  max-width: 600px !important;
+}
+
+ion-button.sub-btn .side-btn {
+  display: flex;
+  align-items: center;
+  height: 30px !important;
+}
+
+ion-button.sub-btn .text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100vw - 70px);
+  max-width: 570px;
 }
 
 .item-title {
@@ -143,26 +165,11 @@ ion-footer ion-button {
   color: #ffffff;
 }
 
-.row.sub-btn {
-  background-color: #7d2dbe;
-  border-radius: 5px;
-}
-
-.row.sub-btn .side-btn.right {
-  height: 30px;
-}
-
-.row.sub-btn .text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: calc(100vw - 70px);
-  max-width: 570px;
-}
-
 /* dialog */
-::ng-deep ion-backdrop {
-  background-color: #ffffff;
+@media (prefers-color-scheme: dark) {
+  ::ng-deep ion-backdrop {
+    background-color: #ffffff;
+  }
 }
 
 ::ng-deep .dialog-custom-class .modal-wrapper {
@@ -177,6 +184,9 @@ ion-item.input-item {
   width: calc(100vw - 80px);
   max-width: 560px;
   margin-top: 5px;
+}
+
+ion-card ion-item.input-item {
   --background: var(--ion-background-color, #fff);
 }
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { AccountEditPage } from './accountEdit.page';
+import { EditAccountPage } from './editAccount.page';
 
 
 @NgModule({
@@ -12,6 +12,6 @@ import { AccountEditPage } from './accountEdit.page';
     FormsModule,
     IonicModule
   ],
-  declarations: [AccountEditPage]
+  declarations: [EditAccountPage]
 })
 export class AccountEditPageModule {}

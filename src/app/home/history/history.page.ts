@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { StorageService } from '../../service/storage.service';
 import { Account } from '../../common/types';
 import * as liskUtils from '../../common/lisk-utils';
-import { AccountEditPage } from '../../dialog/accountEdit/accountEdit.page';
+import { EditAccountPage } from '../../dialog/editAccount/editAccount.page';
 
 @Component({
   selector: 'app-history',
@@ -86,7 +86,7 @@ export class HistoryPage {
 
   async openAccountEdit(address:string) {
     const modal = await this.modalController.create({
-      component: AccountEditPage,
+      component: EditAccountPage,
       cssClass: 'dialog-custom-class',
       componentProps: {
         address: address,

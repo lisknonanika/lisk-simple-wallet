@@ -31,16 +31,16 @@
           </a>
         </div>
 
-        <div *ngIf="isMultisignature" class="row sub-btn" (click)="openMembers()">
-          <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>&nbsp;Display Multisgnature Members</div>
+        <ion-button *ngIf="isMultisignature" class="sub-btn" fill="outline" color="tertiary" (click)="openMembers()">
+          <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>&nbsp;Show Members</div>
           <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
-        </div>
+        </ion-button>
       </div>
       
       <div class="content-title">- Latest 5 Transactions -</div>
       <div *ngIf="transactions.length === 0" style="margin-top: 5px;">No data</div>
-      <div *ngIf="transactions.length > 0" class="rows transactions" style="margin-top: 5px;">
-        <div cdkDrag *ngFor="let tx of transactions">
+      <div *ngIf="transactions.length > 0" class="rows transactions">
+        <div *ngFor="let tx of transactions" style="height: 75px;">
 
           <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 0" class="row send">
             <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">

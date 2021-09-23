@@ -23,10 +23,10 @@
           </div>
         </div>
 
-        <div class="row sub-btn" style="margin-bottom: 5px;" (click)="showTransaction()">
+        <ion-button class="sub-btn" fill="outline" color="tertiary" style="margin-bottom: 5px;" (click)="showTransaction()">
           <div class="text"><ion-icon name="reader-outline"></ion-icon>&nbsp;Show Transaction</div>
           <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
-        </div>
+        </ion-button>
 
         <div class="item-title">Sender</div>
         <div class="row" (click)="sign(senderStatus.address)">
@@ -49,6 +49,7 @@
               <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
               <div *ngIf="member.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
               <div class="address">{{member.address}}</div>
+              <div>Mandatory</div>
             </div>
           </div>
         </div>
@@ -62,6 +63,7 @@
               <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
               <div *ngIf="member.status===9" class="notAvailable"><ion-icon name="ban"></ion-icon>&nbsp;Can not sign</div>
               <div class="address">{{member.address}}</div>
+              <div>Optional</div>
             </div>
           </div>
         </div>

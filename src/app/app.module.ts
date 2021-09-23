@@ -12,7 +12,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeTabsComponent } from './tabas/homeTabs.component';
 import { ActionTabsComponent } from './tabas/actionTabs.component';
-import { AccountEditPage } from './dialog/accountEdit/accountEdit.page';
+import { CreateAccountPage } from './dialog/createAccount/createAccount.page';
+import { EditAccountPage } from './dialog/editAccount/editAccount.page';
 import { MembersPage } from './dialog/members/members.page';
 import { PassphrasePage } from './dialog/passphrase/passphrase.page';
 import { TransactionPage } from './dialog/transaction/transaction.page';
@@ -22,13 +23,15 @@ import { TransactionPage } from './dialog/transaction/transaction.page';
     AppComponent,
     HomeTabsComponent,
     ActionTabsComponent,
-    AccountEditPage,
+    CreateAccountPage,
+    EditAccountPage,
     MembersPage,
     PassphrasePage,
     TransactionPage
   ],
   entryComponents: [
-    AccountEditPage,
+    CreateAccountPage,
+    EditAccountPage,
     MembersPage,
     PassphrasePage,
     TransactionPage

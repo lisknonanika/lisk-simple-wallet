@@ -9,13 +9,16 @@
     <ion-card class="card">
       <div class="sub-title">{{network===0?"Mainnet":"Testnet"}}</div>
       <div class="title">Signin</div>
-      <div>
-        <div class="item-title">Passphrase</div>
-        <ion-item class="input-item" lines="full">
-          <ion-input type="password" placeholder="Enter Passphrase" clearInput="true" autocomplete="off" [(ngModel)]="model.passphrase"></ion-input>
-        </ion-item>
-        <div style="margin-top: 10px;"><ion-button (click)="signIn()">SingIn</ion-button></div>
-      </div>
+      <div class="item-title">Passphrase</div>
+      <ion-item class="input-item" lines="full">
+        <ion-input type="password" placeholder="Enter Passphrase" clearInput="true" autocomplete="off" [(ngModel)]="model.passphrase"></ion-input>
+      </ion-item>
+      <div style="margin-top: 10px;"><ion-button (click)="signIn()">SingIn</ion-button></div>
+
+      <ion-button class="sub-btn" fill="outline" color="tertiary" (click)="createNewAccount()">
+        <div class="text"><ion-icon name="person" style="margin-right: 5px;"></ion-icon>&nbsp;Create New Account</div>
+        <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+      </ion-button>
     </ion-card>
   </div>
 </ion-content>

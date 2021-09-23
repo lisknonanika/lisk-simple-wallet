@@ -6,17 +6,17 @@ import { ToastrService } from 'ngx-toastr';
 import { StorageService } from '../../service/storage.service';
 
 @Component({
-  selector: 'app-accountEdit',
-  templateUrl: 'accountEdit.page.html',
-  styleUrls: ['../../app.component.scss', './accountEdit.page.scss'],
+  selector: 'app-editAccount',
+  templateUrl: 'editAccount.page.html',
+  styleUrls: ['../../app.component.scss', './editAccount.page.scss'],
 })
-export class AccountEditPage {
+export class EditAccountPage {
   address:string;
   misc:string;
   availableDelete:boolean;
 
   constructor(private modalController: ModalController, private navParams: NavParams,
-              private clipboard: Clipboard,  private toastr: ToastrService,
+              private clipboard: Clipboard, private toastr: ToastrService,
               private storageService: StorageService) {
     this.address = this.navParams.data.address;
     this.availableDelete = this.navParams.data.availableDelete;

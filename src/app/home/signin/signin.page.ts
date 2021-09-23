@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
-import { LoadingController } from '@ionic/angular';
+import { ModalController, LoadingController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { cryptography, passphrase } from '@liskhq/lisk-client';
@@ -9,6 +9,7 @@ const { Mnemonic }  = passphrase;
 
 import { StorageService } from '../../service/storage.service';
 import { getNetworkId, createSignInAccount } from '../../common/lisk-utils';
+import { CreateAccountPage } from '../../dialog/createAccount/createAccount.page';
 
 @Component({
   selector: 'app-signin',
@@ -19,7 +20,7 @@ export class SignInPage {
   model:SignInModel;
   network:number;
   
-  constructor(private router: Router, private LoadingController: LoadingController,
+  constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
               private toastr: ToastrService, private storageService: StorageService) {
     this.model = new SignInModel("");
   }
@@ -80,6 +81,14 @@ export class SignInPage {
     } finally {
       await loading.dismiss();
     }
+  }
+
+  async createNewAccount() {
+    const modal = await this.modalController.create({
+      component: CreateAccountPage,
+      cssClass: 'dialog-custom-class'
+    });
+    await modal.present();
   }
 }
 

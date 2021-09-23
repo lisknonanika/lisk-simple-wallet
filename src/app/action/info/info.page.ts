@@ -7,7 +7,7 @@ import { transactions } from '@liskhq/lisk-client';
 const { convertBeddowsToLSK } = transactions;
 
 import { MembersPage } from '../../dialog/members/members.page';
-import { AccountEditPage } from '../../dialog/accountEdit/accountEdit.page';
+import { EditAccountPage } from '../../dialog/editAccount/editAccount.page';
 import { StorageService } from '../../service/storage.service';
 import { getExplorerURL } from '../../common/utils';
 import { getTransactions } from '../../common/lisk-utils';
@@ -99,7 +99,7 @@ export class InfoPage {
 
   async openAccountEdit(address:string) {
     const modal = await this.modalController.create({
-      component: AccountEditPage,
+      component: EditAccountPage,
       cssClass: 'dialog-custom-class',
       componentProps: { address: address, availableDelete: false }
     });

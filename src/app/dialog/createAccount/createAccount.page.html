@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>New Account</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <img src="https://lisk-avator.ysdev.work/{{account.address}}?size=130"/>
+    <div class="item-title">Address</div>
+    <div class="text">{{account.address}}</div>
+    <div class="item-title">Passphrase</div>
+    <div class="text">{{account.passphrase}}</div>
+    <div class="text note">
+      Passphrase is important for accessing the Lisk blockchain. Do not forget it or share it with others.
+    </div>
+    <ion-button class="account-copy" fill="outline" color="medium" (click)="copy()"><ion-icon name="copy"></ion-icon>&nbsp;Copy account</ion-button>
+  </div>
+</ion-content>
