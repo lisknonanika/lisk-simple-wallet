@@ -9,6 +9,7 @@ const { Mnemonic }  = passphrase;
 
 import { StorageService } from '../../service/storage.service';
 import { getNetworkId, createSignInAccount } from '../../common/lisk-utils';
+import { AboutPage } from '../../dialog/about/about.page';
 import { CreateAccountPage } from '../../dialog/createAccount/createAccount.page';
 
 @Component({
@@ -81,6 +82,14 @@ export class SignInPage {
     } finally {
       await loading.dismiss();
     }
+  }
+
+  async openAbout() {
+    const modal = await this.modalController.create({
+      component: AboutPage,
+      cssClass: 'dialog-custom-class'
+    });
+    await modal.present();
   }
 
   async createNewAccount() {

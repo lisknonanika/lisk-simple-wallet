@@ -1,0 +1,27 @@
+#container {
+  padding-bottom: 50px;
+}
+
+.text {
+  width: calc(100vw - 80px);
+  max-width: 560px;
+  text-align: left;
+  word-break: break-all;
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: rgba(125, 125, 125, 0.3);
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.text div,
+.text a {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.sub-text {
+  margin-top: 5px;
+  margin-left: 10px;
+}

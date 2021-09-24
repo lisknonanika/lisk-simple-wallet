@@ -30,7 +30,7 @@
 
         <div class="item-title">Sender</div>
         <div class="row" (click)="sign(senderStatus.address)">
-          <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{senderStatus.address}}?size=30"/></div>
+          <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{senderStatus.address}}?size=30"/></div>
           <div class="account">
             <div *ngIf="senderStatus.status===0" class="notSigned"><ion-icon name="caret-forward"></ion-icon>&nbsp;Unsigned</div>
             <div *ngIf="senderStatus.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
@@ -43,7 +43,7 @@
         <div *ngIf="mandatoryStatus.length > 0" class="item-title">Mandatory</div>
         <div *ngFor="let member of mandatoryStatus">
           <div class="row" (click)="sign(member.address)">
-            <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{member.address}}?size=30"/></div>
+            <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{member.address}}?size=30"/></div>
             <div class="account">
               <div *ngIf="member.status===0" class="notSigned"><ion-icon name="caret-forward"></ion-icon>&nbsp;Unsigned</div>
               <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>
@@ -57,7 +57,7 @@
         <div *ngIf="optionalStatus.length > 0" class="item-title">Optional</div>
         <div *ngFor="let member of optionalStatus">
           <div class="row" (click)="sign(member.address)">
-            <div class="identicon"><img src="https://lisk-avator.ysdev.work/{{member.address}}?size=30"/></div>
+            <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{member.address}}?size=30"/></div>
             <div class="account">
               <div *ngIf="member.status===0" class="notSigned"><ion-icon name="caret-forward"></ion-icon>&nbsp;Unsigned</div>
               <div *ngIf="member.status===1" class="signed"><ion-icon name="checkmark"></ion-icon>&nbsp;Signed</div>

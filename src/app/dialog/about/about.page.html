@@ -1,0 +1,107 @@
+<ion-header [translucent]="true" style="padding: 0px;">
+  <ion-toolbar style="padding: 0px;">
+    <ion-title>About</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <div class="item-title">Version & Source</div>
+    <div class="text">
+      <div>Lisk Simple Wallet - 0.1.0</div>
+      <div class="sub-text">
+        <a href="https://github.com/lisknonanika/lisk-simple-wallet" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="logo-github"></ion-icon>&nbsp;<div>GitHub</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="item-title">Contact</div>
+    <div class="text">
+      <div>lisknonanika</div>
+      <div class="sub-text">
+        <a href="https://github.com/lisknonanika" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="logo-github"></ion-icon>&nbsp;<div>GitHub</div>
+        </a>
+      </div>
+      <div style="margin-top: 5px;">ys_mdmg</div>
+      <div class="sub-text">
+        <a href="https://twitter.com/ys_mdmg" target="_blank" rel="noopener noreferrer" style="margin-right: 25px;">
+          <ion-icon name="logo-twitter"></ion-icon>&nbsp;<div>Twitter</div>
+        </a>
+        <a href="https://lisk.chat" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="logo-discord"></ion-icon>&nbsp;<div>Discord</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="item-title">Supporter</div>
+    <div class="text">
+      <div>Lisk Japan Delegate</div>
+      <div class="sub-text">
+        <a href="https://twitter.com/liskjapan_dlgt" target="_blank" rel="noopener noreferrer" style="margin-right: 25px;">
+          <ion-icon name="logo-twitter"></ion-icon>&nbsp;<div>Twitter</div>
+        </a>
+        <a href="https://liskjapandelegate.jp" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="link-outline"></ion-icon>&nbsp;<div>Site</div>
+        </a>
+      </div>
+      <div style="margin-top: 5px;">Lisk情報システム部(非公式)</div>
+      <div class="sub-text">
+        <ion-icon name="logo-twitter"></ion-icon>&nbsp;<div>Twitter</div>
+      </div>
+      <div style="margin-top: 5px;">日本語コミュニティ(非公式)</div>
+      <div class="sub-text">
+        <a href="https://discord.gg/35PRwM4" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="logo-discord"></ion-icon>&nbsp;<div>Discord</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="item-title">Other Link</div>
+    <div class="text">
+      <div>Lisk</div>
+      <div class="sub-text">
+        <a href="https://lisk.com" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="link-outline"></ion-icon>&nbsp;<div>Site</div>
+        </a>
+      </div>
+      <div style="margin-top: 5px;">Lisk Observer (by. Carbonara)</div>
+      <div class="sub-text">
+        <a href="https://lisk.observer/" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="link-outline"></ion-icon>&nbsp;<div>Site</div>
+        </a>
+      </div>
+      <div style="margin-top: 5px;">LiskScan (by. Moosty team)</div>
+      <div class="sub-text">
+        <a href="https://liskscan.com/" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="link-outline"></ion-icon>&nbsp;<div>Site</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="item-title">Donate to us</div>
+    <div class="text">
+      <div>Thank you for supporting us, always.</div>
+      <div style="margin-bottom: 10px;">Donations will be used for development costs.</div>
+      <div (click)="copy('lskysdevwuzkpjav7q8umak8nn68n5sd6xx5j7cys')">
+        <img src="https://lisk-avatar.ysdev.work/lskysdevwuzkpjav7q8umak8nn68n5sd6xx5j7cys?size=30" style="margin-right: 10px;"/>
+        lskysdevwuzkpjav7q8umak8nn68n5sd6xx5j7cys
+        <ion-icon name="Copy" style="margin-left: 10px;width: 20px;"></ion-icon>
+      </div>
+      <div class="sub-text">
+        <a href="https://lisk.observer/account/lskysdevwuzkpjav7q8umak8nn68n5sd6xx5j7cys" target="_blank" rel="noopener noreferrer" style="margin-right: 25px;">
+          <ion-icon name="link-outline"></ion-icon>&nbsp;<div>Lisk Observer</div>
+        </a>
+        <a href="https://liskscan.com/account/lskysdevwuzkpjav7q8umak8nn68n5sd6xx5j7cys" target="_blank" rel="noopener noreferrer">
+          <ion-icon name="link-outline"></ion-icon>&nbsp;<div>LiskScan</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</ion-content>
