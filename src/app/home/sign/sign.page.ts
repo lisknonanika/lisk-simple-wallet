@@ -38,7 +38,7 @@ export class SignPage {
     try {
       // loading
       loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
-      loading.present();
+      await loading.present();
       
       // check
       this.model.transaction = this.model.transaction.trim();

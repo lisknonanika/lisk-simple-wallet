@@ -98,21 +98,21 @@ export class MultiSignPage {
     
     const mandatories = multisignatureMembers.filter((m) => {return m.address !== senderAddress && m.isMandatory})||[];
     this.mandatoryStatus = mandatories.map((m) => {return new MemberStatus(m.address, m.publicKey, true, true, 0)})||[];
-    for (const status of this.mandatoryStatus) {
-      if (this.signedStatus.signedAddress.includes(status.address)) {
-        this.senderStatus.status = 1;
+    for (const mandatory of this.mandatoryStatus) {
+      if (this.signedStatus.signedAddress.includes(mandatory.address)) {
+        mandatory.status = 1;
       } else if (this.signedStatus.numberOfMandatoryRemain <= 0) {
-        this.senderStatus.status = 9;
+        mandatory.status = 9;
       }
     }
 
     const optionals = multisignatureMembers.filter((m) => {return m.address !== senderAddress && !m.isMandatory})||[];
     this.optionalStatus = optionals.map((m) => {return new MemberStatus(m.address, m.publicKey, true, false, 0)})||[];
-    for (const status of this.optionalStatus) {
-      if (this.signedStatus.signedAddress.includes(status.address)) {
-        this.senderStatus.status = 1;
+    for (const optional of this.optionalStatus) {
+      if (this.signedStatus.signedAddress.includes(optional.address)) {
+        optional.status = 1;
       } else if (this.signedStatus.numberOfOptionalRemain <= 0) {
-        this.senderStatus.status = 9;
+        optional.status = 9;
       }
     }
 
@@ -139,34 +139,40 @@ export class MultiSignPage {
   async sign(address:string) {
     if (this.signedStatus.signedAddress.includes(address)) return;
 
-    // validation
-    await this.reload();
-    const message = await transferValidation(this.signinAccount, this.transaction, true);
-    if (message) {
-      this.toastr.error(message);
-      return;
-    }
-
-    // create transaction
-    const tx:TransferTransaction = new TransferTransaction(this.transaction);
-    const transactionJSON = tx.toJSON();
-    await this.storageService.setTransaction(transactionJSON);
-
-    // open dialog
-    const modal = await this.modalController.create({
-      component: PassphrasePage,
-      cssClass: 'dialog-custom-class',
-      componentProps: { address: address }
-    });
-    await modal.present();
-    const { data } = await modal.onDidDismiss();
-    if (!data) return;
-    
     let loading:HTMLIonLoadingElement;
     try {
       // loading
       loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
-      loading.present();
+      await loading.present();
+      
+      // validation
+      await this.reload();
+      const message = await transferValidation(this.signinAccount, this.transaction, true);
+      if (message) {
+        this.toastr.error(message);
+        return;
+      }
+
+      // create transaction
+      const tx:TransferTransaction = new TransferTransaction(this.transaction);
+      const transactionJSON = tx.toJSON();
+      await this.storageService.setTransaction(transactionJSON);
+
+      // open dialog
+      const modal = await this.modalController.create({
+        component: PassphrasePage,
+        cssClass: 'dialog-custom-class',
+        componentProps: { address: address }
+      });
+      await loading.dismiss();
+      await modal.present();
+      const { data } = await modal.onDidDismiss();
+      if (!data) return;
+
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      await loading.present();
+
       // sign transaction
       const signedTransaction = sign(this.transaction, this.signinAccount, data, this.networkId);
       if (!signedTransaction) {
@@ -191,7 +197,7 @@ export class MultiSignPage {
     try {
       // loading
       loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
-      loading.present();
+      await loading.present();
       
       const tx = new TransferTransaction(this.transaction);
       const result = await sendTransferTransaction(this.network, tx.toJsObject());

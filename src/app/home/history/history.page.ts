@@ -56,7 +56,7 @@ export class HistoryPage {
     try {
       // loading
       loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
-      loading.present();
+      await loading.present();
       
       // set networkId
       const network = await this.storageService.getNetwork();

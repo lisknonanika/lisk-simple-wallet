@@ -151,7 +151,7 @@ export const transferValidation = (signinAccount: SignInAccount, transaction:TRA
   if (!amount) return "amount is required.";
 
   try {
-    if (BigInt(amount) <= 0) return "invalid amount." ;
+    if (BigInt(amount) <= 0 || BigInt(amount) > 9999999999999999) return "invalid amount." ;
   } catch(err) {
     return "invalid amount.";
   }

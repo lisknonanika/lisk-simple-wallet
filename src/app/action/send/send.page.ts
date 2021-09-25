@@ -120,7 +120,8 @@ export class SendPage {
     try {
       this.fee = "0";
       if (!this.model.recipient || !validateLisk32Address(this.model.recipient.trim().toLocaleLowerCase())) return;
-      if (this.model.amount === null || this.model.amount <= 0) return;
+      if (this.model.amount === null || this.model.amount <= 0 || this.model.amount > 99999999.99999999) return;
+      try { convertLSKToBeddows(this.model.amount.toString()); } catch(err) { return; }
       if (this.model.data.length > 64) return;
 
       const tx = this.createTransaction();
@@ -134,88 +135,96 @@ export class SendPage {
   }
 
   async continue() {
-    this.model.recipient = this.model.recipient.trim().toLowerCase();
-    this.model.data = this.model.data.trim();
-
-    if (!this.model.recipient) {
-      this.toastr.error("recipient address is required.");
-      return;
-    }
-
-    try {
-      if (!validateLisk32Address(this.model.recipient)) {
-        this.toastr.error("invalid recipient address.");
-        return;
-      }
-    } catch(err) {
-      this.toastr.error("invalid recipient address.");
-      return;
-    }
-
-    if (this.model.amount === null) {
-      this.toastr.error("amount is required.");
-      return;
-    }
-
-    await this.reload(true);
-    const tx = this.createTransaction();
-    const transactionJSON = tx.toJSON();
-
-    const message = transferValidation(this.signinAccount, tx.toJSON(), false);
-    if (message) {
-      this.toastr.error(message);
-      return;
-    }
-
-    // update transaction
-    await this.storageService.setTransaction(transactionJSON);
-
-    // not ultisignature -> send
-    if (!this.signinAccount.isMultisignature) {
-      const modal = await this.modalController.create({
-        component: PassphrasePage,
-        cssClass: 'dialog-custom-class',
-        componentProps: { address: this.address }
-      });
-      await modal.present();
-      const { data } = await modal.onDidDismiss();
-      if (!data) return;
-
-      const result = await this.send(transactionJSON, data);
-      if (!result) return;
-      
-      // update transaction
-      transactionJSON.id = result;
-      await this.storageService.setTransaction(transactionJSON);
-      this.router.navigateByUrl(`/sub/complete?ref=0`, {replaceUrl: true});
-      return;
-    }
-    this.router.navigateByUrl(`/sub/multiSign?ref=0`, {replaceUrl: true});
-  }
-
-  async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {
     let loading:HTMLIonLoadingElement;
     try {
       // loading
       loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
-      loading.present();
-    
-        const signedTransaction = sign(transaction, this.signinAccount, passphrase, this.networkId);
-      if (!signedTransaction) {
-        this.toastr.error("failed to sign.");
-        return "";
+      await loading.present();
+      
+      this.model.recipient = this.model.recipient.trim().toLowerCase();
+      this.model.data = this.model.data.trim();
+
+      if (!this.model.recipient) {
+        this.toastr.error("recipient address is required.");
+        return;
       }
 
-      const result = await sendTransferTransaction(this.network, signedTransaction);
-      if (!result) {
-        this.toastr.error("failed to send the transaction.");
-        return "";
+      try {
+        if (!validateLisk32Address(this.model.recipient)) {
+          this.toastr.error("invalid recipient address.");
+          return;
+        }
+      } catch(err) {
+        this.toastr.error("invalid recipient address.");
+        return;
       }
-      return result;
-    
+
+      if (this.model.amount === null) {
+        this.toastr.error("amount is required.");
+        return;
+      }
+
+      try {
+        convertLSKToBeddows(this.model.amount.toString());
+      } catch(err) {
+        this.toastr.error("invalid amount.");
+        return;
+      }
+
+      await this.reload(true);
+      const tx = this.createTransaction();
+      const transactionJSON = tx.toJSON();
+
+      const message = transferValidation(this.signinAccount, tx.toJSON(), false);
+      if (message) {
+        this.toastr.error(message);
+        return;
+      }
+
+      // update transaction
+      await this.storageService.setTransaction(transactionJSON);
+
+      // not ultisignature -> send
+      if (!this.signinAccount.isMultisignature) {
+        await loading.dismiss();
+        const modal = await this.modalController.create({
+          component: PassphrasePage,
+          cssClass: 'dialog-custom-class',
+          componentProps: { address: this.address }
+        });
+        await modal.present();
+        const { data } = await modal.onDidDismiss();
+        if (!data) return;
+
+        const result = await this.send(transactionJSON, data);
+        if (!result) return;
+        
+        // update transaction
+        transactionJSON.id = result;
+        await this.storageService.setTransaction(transactionJSON);
+        this.router.navigateByUrl(`/sub/complete?ref=0`, {replaceUrl: true});
+        return;
+      }
+      this.router.navigateByUrl(`/sub/multiSign?ref=0`, {replaceUrl: true});
+
     } finally {
       await loading.dismiss();
     }
+  }
+
+  async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {
+    const signedTransaction = sign(transaction, this.signinAccount, passphrase, this.networkId);
+    if (!signedTransaction) {
+      this.toastr.error("failed to sign.");
+      return "";
+    }
+
+    const result = await sendTransferTransaction(this.network, signedTransaction);
+    if (!result) {
+      this.toastr.error("failed to send the transaction.");
+      return "";
+    }
+    return result;
   }
 }
 
