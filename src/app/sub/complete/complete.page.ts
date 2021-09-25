@@ -39,6 +39,7 @@ export class CompletePage {
 
   async reload(cnt:number):Promise<boolean> {
     if (cnt === 5) return false;
+    await new Promise(resolve => {this.timeout = setTimeout(resolve, 3000)});
     const ret = await getSendTransaction(this.network, this.transaction.senderPublicKey, this.transaction.nonce);
     if (!ret) {
       await new Promise(resolve => {this.timeout = setTimeout(resolve, 3000)});

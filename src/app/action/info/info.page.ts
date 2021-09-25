@@ -10,7 +10,7 @@ import { MembersPage } from '../../dialog/members/members.page';
 import { EditAccountPage } from '../../dialog/editAccount/editAccount.page';
 import { StorageService } from '../../service/storage.service';
 import { getExplorerURL } from '../../common/utils';
-import { getTransactions } from '../../common/lisk-utils';
+import { getTransactions, createSignInAccount } from '../../common/lisk-utils';
 import { TransactionRow } from '../../common/types';
 
 @Component({
@@ -34,16 +34,16 @@ export class InfoPage {
   }
 
   async ionViewWillEnter() {
-    await this.reload();
+    await this.reload(true);
   }
 
   async reflesh(event) {
-    await this.reload();
+    await this.reload(true);
     event.target.complete();
   }
 
-  async reload() {
-    const signinAccount = await this.storageService.getSignInAccount();
+  async reload(isUpdate:boolean) {
+    let signinAccount = await this.storageService.getSignInAccount();
     if (!signinAccount) {
       this.signOut();
       return;
@@ -59,6 +59,12 @@ export class InfoPage {
     // set explorer URL
     const settings = await this.storageService.getSettings();
     this.explorerUrl = getExplorerURL(settings.network, settings.explorer);
+
+    // update signin account
+    if (isUpdate) {
+      signinAccount = await createSignInAccount(settings.network, signinAccount.address, signinAccount.publicKey);
+      await this.storageService.setSignInAccount(signinAccount);
+    }
 
     // set fields
     this.address = signinAccount.address;
@@ -105,7 +111,7 @@ export class InfoPage {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (data) await this.reload();
+    if (data) await this.reload(false);
   }
 
   async openMembers() {
