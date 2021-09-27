@@ -14,9 +14,14 @@
     <ion-card class="card">
       <div class="sub-title">{{network === 0? "Mainnet": "Testnet"}}</div>
       <div class="title">Signin</div>
-      <div class="item-title">Passphrase</div>
-      <ion-item class="input-item" lines="full">
-        <ion-input type="password" placeholder="Enter Passphrase" clearInput="true" autocomplete="off" [(ngModel)]="model.passphrase"></ion-input>
+      <div class="item-title eye" (click)="changeEye()">
+        <div>Passphrase<ion-icon name="{{eye? 'eye':'eye-off'}}"></ion-icon></div>
+      </div>
+      <ion-item *ngIf="!eye" class="input-item" lines="full">
+        <ion-input type="password" value={{passphrase}} placeholder="Enter Passphrase" clearInput="true" autocomplete="off" (ionChange)="setPassphrase($event.target.value)"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="eye" class="input-item" lines="full">
+        <ion-textarea value={{passphrase}} placeholder="Enter Passphrase" rows="2" autoGrow="true" wrap="soft" (ionChange)="setPassphrase($event.target.value)"></ion-textarea>
       </ion-item>
       <div style="margin-top: 10px;"><ion-button (click)="signIn()">SingIn</ion-button></div>
 

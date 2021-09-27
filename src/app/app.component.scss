@@ -84,6 +84,15 @@ ion-button.sub-btn .text {
   max-width: 560px !important;
 }
 
+.eye div {
+  display: flex;
+  align-items: center;
+}
+
+.eye div ion-icon {
+  margin-left: 5px;
+}
+
 ion-item.input-item {
   width: calc(100vw - 80px);
   max-width: 560px;

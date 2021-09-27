@@ -14,15 +14,17 @@ export class PassphrasePage {
   address:string;
   passphrase:string;
   availableDelete:boolean;
+  eye:boolean;
 
   constructor(private modalController: ModalController, private navParams: NavParams,
               private toastr: ToastrService) {
     this.address = this.navParams.data.address;
     this.passphrase = "";
+    this.eye = false;
   }
 
   setPassphrase(val:string) {
-    this.passphrase = val;
+    this.passphrase = val.replace(/\r/g, "").replace(/\n/g, " ").toLowerCase();
   }
   
   async sign() {
@@ -37,6 +39,10 @@ export class PassphrasePage {
       return;
     }
     this.modalController.dismiss(this.passphrase);
+  }
+
+  changeEye() {
+    this.eye = !this.eye;
   }
 
   close() {

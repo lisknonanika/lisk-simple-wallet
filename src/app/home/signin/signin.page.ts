@@ -18,12 +18,13 @@ import { CreateAccountPage } from '../../dialog/createAccount/createAccount.page
   styleUrls: ['../../app.component.scss', './signin.page.scss'],
 })
 export class SignInPage {
-  model:SignInModel;
   network:number;
+  passphrase:string;
+  eye:boolean;
   
   constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
               private toastr: ToastrService, private storageService: StorageService) {
-    this.model = new SignInModel("");
+    this.passphrase = "";
   }
 
   async ionViewWillEnter() {
@@ -31,10 +32,12 @@ export class SignInPage {
     await this.storageService.removeSignInAccount();
     await this.storageService.removeNetworkId();
     this.network = await this.storageService.getNetwork();
+    this.passphrase = "";
+    this.eye = false;
   }
 
   ionViewWillLeave() {
-    this.model.passphrase = "";
+    this.passphrase = "";
   }
 
   async signIn() {
@@ -45,17 +48,17 @@ export class SignInPage {
       await loading.present();
 
       // check
-      this.model.passphrase = this.model.passphrase.trim().toLowerCase();
-      if (!this.model.passphrase) {
+      this.passphrase = this.passphrase.trim().toLowerCase();
+      if (!this.passphrase) {
         this.toastr.error('passphrase is required.');
         return;
       }
-      if (!Mnemonic.validateMnemonic(this.model.passphrase)) {
+      if (!Mnemonic.validateMnemonic(this.passphrase)) {
         this.toastr.error('invalid passphrase.');
         return;
       }
-      const address = getLisk32AddressFromPassphrase(this.model.passphrase);
-      const publicKey = bufferToHex(getAddressAndPublicKeyFromPassphrase(this.model.passphrase).publicKey);
+      const address = getLisk32AddressFromPassphrase(this.passphrase);
+      const publicKey = bufferToHex(getAddressAndPublicKeyFromPassphrase(this.passphrase).publicKey);
 
       // set networkId
       const network = await this.storageService.getNetwork();
@@ -99,10 +102,12 @@ export class SignInPage {
     });
     await modal.present();
   }
-}
 
-export class SignInModel{
-  constructor(
-    public passphrase: string,
-  ){}
+  changeEye() {
+    this.eye = !this.eye;
+  }
+
+  setPassphrase(val:string) {
+    this.passphrase = val.replace(/\r/g, "").replace(/\n/g, " ").toLowerCase();
+  }
 }

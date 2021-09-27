@@ -13,9 +13,14 @@
   <div id="container">
     <img src="https://lisk-avatar.ysdev.work/{{address}}?size=130"/>
     <div class="address">{{address}}</div>
-    <div class="item-title">Passphrase</div>
-    <ion-item class="input-item" lines="full">
+    <div class="item-title eye" (click)="changeEye()">
+      <div>Passphrase<ion-icon name="{{eye? 'eye':'eye-off'}}"></ion-icon></div>
+    </div>
+    <ion-item *ngIf="!eye" class="input-item" lines="full">
       <ion-input type="password" value={{passphrase}} placeholder="Enter passphrase" clearInput="true" autocomplete="off" (ionChange)="setPassphrase($event.target.value)"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="eye" class="input-item" lines="full">
+      <ion-textarea value={{passphrase}} placeholder="Enter Passphrase" rows="2" autoGrow="true" wrap="soft" (ionChange)="setPassphrase($event.target.value)"></ion-textarea>
     </ion-item>
     <ion-button (click)="sign()" style="margin-top: 10px;">Sign</ion-button>
   </div>
