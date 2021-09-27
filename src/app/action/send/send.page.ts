@@ -196,6 +196,11 @@ export class SendPage {
         const { data } = await modal.onDidDismiss();
         if (!data) return;
 
+        // loading
+        loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+        await loading.present();
+
+        // send
         const result = await this.send(transactionJSON, data);
         if (!result) return;
         
