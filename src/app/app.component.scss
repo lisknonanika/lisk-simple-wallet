@@ -208,6 +208,10 @@ ion-card ion-item.input-item {
   border-radius: 10px;
 }
 
+::ng-deep .modal-wrapper .item-title {
+  opacity: 0.6 !important;
+}
+
 // toast
 ::ng-deep .toast-container {
   padding-top: var(--ion-safe-area-top);

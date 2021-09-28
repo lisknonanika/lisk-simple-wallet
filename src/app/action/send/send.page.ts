@@ -9,6 +9,7 @@ const { bufferToHex, getAddressFromLisk32Address, validateLisk32Address } = cryp
 
 import { StorageService } from '../../service/storage.service';
 import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
+import { EditAccountPage } from '../../dialog/editAccount/editAccount.page';
 import { BookmarkPage } from '../../dialog/bookmark/bookmark.page';
 import { getTransferAssetSchema } from '../../common/utils';
 import { createSignInAccount, sendTransferTransaction, transferValidation, sign } from '../../common/lisk-utils';
@@ -142,76 +143,41 @@ export class SendPage {
       loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
       await loading.present();
       
-      this.model.recipient = this.model.recipient.trim().toLowerCase();
-      this.model.data = this.model.data.trim();
-
-      if (!this.model.recipient) {
-        this.toastr.error("recipient address is required.");
-        return;
-      }
-
-      try {
-        if (!validateLisk32Address(this.model.recipient)) {
-          this.toastr.error("invalid recipient address.");
-          return;
-        }
-      } catch(err) {
-        this.toastr.error("invalid recipient address.");
-        return;
-      }
-
-      if (this.model.amount === null) {
-        this.toastr.error("amount is required.");
-        return;
-      }
-
-      try {
-        convertLSKToBeddows(this.model.amount.toString());
-      } catch(err) {
-        this.toastr.error("invalid amount.");
-        return;
-      }
-
+      // validation
+      if (!this.inputValidation()) return;
       await this.reload(true);
       const tx = this.createTransaction();
       const transactionJSON = tx.toJSON();
-
-      const message = transferValidation(this.signinAccount, tx.toJSON(), false);
+      const message = transferValidation(this.signinAccount, transactionJSON, false);
       if (message) {
         this.toastr.error(message);
         return;
       }
 
-      // update transaction
+      // set transaction
       await this.storageService.setTransaction(transactionJSON);
       
-      // add bookmark
-      if (this.model.addBookmark) await this.storageService.setBookmark(this.model.recipient);
+      // add bookmark & open edit bookmark
+      const bookmark = await this.storageService.getBookmark(this.model.recipient);
+      if (this.model.addBookmark && !bookmark) {
+        await this.storageService.setBookmark(this.model.recipient);
+        await loading.dismiss();
+        await this.openBookmarkEdit();
+        loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+        await loading.present();
+      }
 
       // not ultisignature -> send
       if (!this.signinAccount.isMultisignature) {
         await loading.dismiss();
-        const modal = await this.modalController.create({
-          component: PassphrasePage,
-          cssClass: 'dialog-custom-class',
-          componentProps: { address: this.address }
-        });
-        await modal.present();
-        const { data } = await modal.onDidDismiss();
+        const data = await this.openPassphrase();
+        console.log(data)
         if (!data) return;
-
-        // loading
         loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
         await loading.present();
 
         // send
-        const result = await this.send(transactionJSON, data);
-        if (!result) return;
-        
-        // update transaction
-        transactionJSON.id = result;
-        await this.storageService.setTransaction(transactionJSON);
-
+        if (!(await this.send(transactionJSON, data))) return;
         this.router.navigateByUrl(`/sub/complete?ref=0`, {replaceUrl: true});
         return;
       }
@@ -222,19 +188,59 @@ export class SendPage {
     }
   }
 
-  async send(transaction:TRANSFER_JSON, passphrase:string):Promise<string> {
+  inputValidation():boolean {
+    this.model.recipient = this.model.recipient.trim().toLowerCase();
+    this.model.data = this.model.data.trim();
+
+    if (!this.model.recipient) {
+      this.toastr.error("recipient address is required.");
+      return false;
+    }
+
+    try {
+      if (!validateLisk32Address(this.model.recipient)) {
+        this.toastr.error("invalid recipient address.");
+        return false;
+      }
+    } catch(err) {
+      this.toastr.error("invalid recipient address.");
+      return false;
+    }
+
+    if (this.model.amount === null) {
+      this.toastr.error("amount is required.");
+      return false;
+    }
+
+    try {
+      convertLSKToBeddows(this.model.amount.toString());
+    } catch(err) {
+      this.toastr.error("invalid amount.");
+      return false;
+    }
+    return true;
+  }
+
+  async send(transaction:TRANSFER_JSON, passphrase:string):Promise<boolean> {
+    // sign transaction
     const signedTransaction = sign(transaction, this.signinAccount, passphrase, this.networkId);
     if (!signedTransaction) {
       this.toastr.error("failed to sign.");
-      return "";
+      return false;
     }
 
+    // send transaction
     const result = await sendTransferTransaction(this.network, signedTransaction);
     if (!result) {
       this.toastr.error("failed to send the transaction.");
-      return "";
+      return false;
     }
-    return result;
+    
+    // update transaction
+    transaction.id = result;
+    await this.storageService.setTransaction(transaction);
+
+    return true;
   }
 
   async openBookmarks() {
@@ -247,6 +253,27 @@ export class SendPage {
     const { data } = await modal.onDidDismiss();
     if (!data) return;
     this.model.recipient = data;
+  }
+
+  async openBookmarkEdit() {
+    const modal = await this.modalController.create({
+      component: EditAccountPage,
+      cssClass: 'dialog-custom-class',
+      componentProps: { address: this.model.recipient, availableDelete: false, type: 1 }
+    });
+    await modal.present();
+    await modal.onDidDismiss();
+  }
+
+  async openPassphrase():Promise<any> {
+    const modal = await this.modalController.create({
+      component: PassphrasePage,
+      cssClass: 'dialog-custom-class',
+      componentProps: { address: this.address }
+    });
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    return data;
   }
 }
 

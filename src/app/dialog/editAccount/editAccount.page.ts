@@ -31,6 +31,7 @@ export class EditAccountPage {
     } else {
       const bookmark = await this.storageService?.getBookmark(this.address);
       this.misc = bookmark.misc||"";
+      if (!this.availableDelete) await this.storageService?.removeBookmark(this.address);
     }
   }
 
@@ -52,8 +53,7 @@ export class EditAccountPage {
       const account = await this.storageService?.getAccount(this.address);
       await this.storageService?.setAccount(account.address, account.publicKey, this.misc);
     } else {
-      const account = await this.storageService?.getBookmark(this.address);
-      await this.storageService?.setBookmark(account.address, this.misc);
+      await this.storageService?.setBookmark(this.address, this.misc);
     }
     this.toastr.info("saved.");
     this.modalController.dismiss(true);
