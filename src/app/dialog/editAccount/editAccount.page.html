@@ -1,6 +1,6 @@
 <ion-header [translucent]="true" style="padding: 0px;">
   <ion-toolbar style="padding: 0px;">
-    <ion-title>Edit Account</ion-title>
+    <ion-title>{{type===0? "Edit Account": "Edit Bookmark"}}</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="close()">
         <ion-icon slot="icon-only" name="close"></ion-icon>

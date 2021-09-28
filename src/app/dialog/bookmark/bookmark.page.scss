@@ -1,0 +1,13 @@
+.row {
+  width: calc(100vw - 80px);
+  max-width: 560px;
+}
+
+.row .account {
+  width: calc(100vw - 190px);
+  max-width: 450px;
+}
+
+.row .side-btn {
+  height: 50px;
+}

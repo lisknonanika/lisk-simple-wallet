@@ -9,6 +9,7 @@ const { bufferToHex, getAddressFromLisk32Address, validateLisk32Address } = cryp
 
 import { StorageService } from '../../service/storage.service';
 import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
+import { BookmarkPage } from '../../dialog/bookmark/bookmark.page';
 import { getTransferAssetSchema } from '../../common/utils';
 import { createSignInAccount, sendTransferTransaction, transferValidation, sign } from '../../common/lisk-utils';
 import { SignInAccount, TransferTransaction, TRANSFER_JSON } from '../../common/types';
@@ -32,7 +33,7 @@ export class SendPage {
   constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
               private toastr: ToastrService, private storageService: StorageService) {
     this.isView = false;
-    this.model = new SendModel("", null, "");
+    this.model = new SendModel("", null, "", true);
     this.fee = "0";
   }
 
@@ -183,6 +184,9 @@ export class SendPage {
 
       // update transaction
       await this.storageService.setTransaction(transactionJSON);
+      
+      // add bookmark
+      if (this.model.addBookmark) await this.storageService.setBookmark(this.model.recipient);
 
       // not ultisignature -> send
       if (!this.signinAccount.isMultisignature) {
@@ -207,6 +211,7 @@ export class SendPage {
         // update transaction
         transactionJSON.id = result;
         await this.storageService.setTransaction(transactionJSON);
+
         this.router.navigateByUrl(`/sub/complete?ref=0`, {replaceUrl: true});
         return;
       }
@@ -231,6 +236,18 @@ export class SendPage {
     }
     return result;
   }
+
+  async openBookmarks() {
+    const modal = await this.modalController.create({
+      component: BookmarkPage,
+      cssClass: 'dialog-custom-class',
+      componentProps: { type: 1 }
+    });
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (!data) return;
+    this.model.recipient = data;
+  }
 }
 
 export class SendModel{
@@ -238,5 +255,6 @@ export class SendModel{
     public recipient: string,
     public amount: number,
     public data: string,
+    public addBookmark: boolean
   ){}
 }

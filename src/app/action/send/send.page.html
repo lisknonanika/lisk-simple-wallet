@@ -27,9 +27,16 @@
         <ion-card class="card">
           <div class="title">Send Contents</div>
           <div>
-            <div class="item-title">Recipient address</div>
+            <div class="item-title bookmark" (click)="openBookmarks()">
+              <div>Recipient address<ion-icon name="bookmark"></ion-icon></div>
+            </div>
             <ion-item class="input-item" lines="full">
               <ion-input type="text" placeholder="Enter recipient address" clearInput="true" autocomplete="off" [(ngModel)]="model.recipient" (ionChange)="computeFee()"></ion-input>
+            </ion-item>
+
+            <ion-item class="input-item add-bookmark" lines="none">
+              <ion-checkbox slot="start" mode="ios" [(ngModel)]="model.addBookmark"></ion-checkbox>
+              <ion-label>Bookmark the recipient address.</ion-label>
             </ion-item>
 
             <div class="item-title">Amount</div>

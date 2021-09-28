@@ -3,6 +3,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -18,6 +19,8 @@ import { EditAccountPage } from './dialog/editAccount/editAccount.page';
 import { MembersPage } from './dialog/members/members.page';
 import { PassphrasePage } from './dialog/passphrase/passphrase.page';
 import { TransactionPage } from './dialog/transaction/transaction.page';
+import { BookmarkPage } from './dialog/bookmark/bookmark.page';
+import { ConfirmPage } from './dialog/confirm/confirm.page';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,9 @@ import { TransactionPage } from './dialog/transaction/transaction.page';
     EditAccountPage,
     MembersPage,
     PassphrasePage,
-    TransactionPage
+    TransactionPage,
+    BookmarkPage,
+    ConfirmPage
   ],
   entryComponents: [
     AboutPage,
@@ -37,12 +42,15 @@ import { TransactionPage } from './dialog/transaction/transaction.page';
     EditAccountPage,
     MembersPage,
     PassphrasePage,
-    TransactionPage
+    TransactionPage,
+    BookmarkPage,
+    ConfirmPage
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ClipboardModule,
+    DragDropModule,
     ToastrModule.forRoot({ timeOut: 3000, preventDuplicates: true }),
     IonicModule.forRoot(),
     AppRoutingModule,

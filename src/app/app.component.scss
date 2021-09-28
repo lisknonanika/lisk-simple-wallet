@@ -60,11 +60,15 @@ ion-button.sub-btn {
   height: 30px !important;
   width: calc(100vw - 40px) !important;
   max-width: 600px !important;
+  position: relative;
 }
 
 ion-button.sub-btn .side-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: -10px;
   height: 30px !important;
 }
 
@@ -72,14 +76,11 @@ ion-button.sub-btn .text {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(100vw - 70px);
-  max-width: 570px;
 }
 
 .item-title {
   margin-top: 10px;
   text-align: left;
-  opacity: 0.6;
   width: calc(100vw - 80px) !important;
   max-width: 560px !important;
 }
@@ -197,6 +198,13 @@ ion-card ion-item.input-item {
   width: calc(100vw - 40px);
   max-width: 600px;
   height: 520px;
+  border-radius: 10px;
+}
+
+::ng-deep .confirm-custom-class .modal-wrapper {
+  width: calc(100vw - 40px);
+  max-width: 600px;
+  height: 300px;
   border-radius: 10px;
 }
 

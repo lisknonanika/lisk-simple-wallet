@@ -75,3 +75,17 @@
   width: 30px;
   margin-right: 10px;
 }
+
+.sub-btns-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: calc(100vw - 40px) !important;
+  max-width: 600px !important;
+}

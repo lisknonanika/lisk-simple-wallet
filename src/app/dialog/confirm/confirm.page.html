@@ -1,0 +1,23 @@
+<ion-header [translucent]="true" style="padding: 0px;">
+  <ion-toolbar style="padding: 0px;">
+    <ion-title>Confirm</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <div class="msg-area">
+      <div *ngFor="let m of msg">
+        <div *ngIf="type===0">{{m}}</div>
+        <div *ngIf="type===1" class="alert">{{m}}</div>
+      </div>
+    </div>
+    <ion-button (click)="ok()" style="margin-top: 10px;">OK</ion-button>
+    <ion-button style="margin-top: 5px;" (click)="close()" color="danger">Cancel</ion-button>
+  </div>
+</ion-content>

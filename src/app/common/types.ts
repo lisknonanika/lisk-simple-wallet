@@ -28,6 +28,7 @@ export class SignInAccount {
     public multisignatureMembers: MultiSigMember[],
     public numberOfSignatures: number,
     public userName:string,
+    public rank:string
   ){}
 }
 

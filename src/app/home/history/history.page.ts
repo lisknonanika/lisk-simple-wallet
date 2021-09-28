@@ -35,11 +35,6 @@ export class HistoryPage {
     this.isView = true;
   }
   
-  async delete(address:string) {
-    await this.storageService?.removeAccount(address);
-    this.accounts = await this.storageService?.getAccounts();
-  }
-  
   async drop(event: CdkDragDrop<Account[]>) {
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     const accounts:Account[] = [];
@@ -88,10 +83,7 @@ export class HistoryPage {
     const modal = await this.modalController.create({
       component: EditAccountPage,
       cssClass: 'dialog-custom-class',
-      componentProps: {
-        address: address,
-        availableDelete: true
-      }
+      componentProps: { address: address, availableDelete: true, type: 0 }
     });
     await modal.present();
 

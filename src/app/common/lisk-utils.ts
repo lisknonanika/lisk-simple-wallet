@@ -7,7 +7,7 @@ import { SignInAccount, SignStatus, TransferTransaction ,TRANSFER_JSON, TRANSFER
 
 export const createSignInAccount = async(network:number, address:string, publicKey:string):Promise<SignInAccount> => {
   try {
-    const signInAccount = new SignInAccount("", "", "0", "0", false, [], 0, "");
+    const signInAccount = new SignInAccount("", "", "0", "0", false, [], 0, "", "");
 
     // set enter address
     signInAccount.address = address;
@@ -29,7 +29,10 @@ export const createSignInAccount = async(network:number, address:string, publicK
       }
       signInAccount.numberOfSignatures = account.keys.numberOfSignatures;
     }
-    if (account.summary.isDelegate) signInAccount.userName = account.dpos.delegate.username;
+    if (account.summary.isDelegate) {
+      signInAccount.userName = account.dpos.delegate.username;
+      signInAccount.rank = account.dpos.delegate.rank.toString();
+    }
     return signInAccount;
 
   } catch(err) {

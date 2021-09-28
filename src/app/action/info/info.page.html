@@ -25,16 +25,26 @@
             <div class="account">
               <div class="address">{{address}}</div>
               <div>balance: {{balance}} LSK</div>
+              <div *ngIf="rank">rank: {{rank}}</div>
               <div>misc: {{misc}}</div>
             </div>
             <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
           </a>
         </div>
+      </div>
 
-        <ion-button *ngIf="isMultisignature" class="sub-btn" fill="outline" color="tertiary" (click)="openMembers()">
-          <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>&nbsp;Show Members</div>
-          <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
-        </ion-button>
+      <div class="sub-btns-area">
+        <div class="sub-btns">
+          <ion-button *ngIf="hasBookmark" class="sub-btn" fill="outline" color="tertiary" (click)="openBookmarks()">
+            <div class="text"><ion-icon name="bookmark" style="margin-right: 5px;"></ion-icon>Bookmarks</div>
+            <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+          </ion-button>
+    
+          <ion-button *ngIf="isMultisignature" class="sub-btn" fill="outline" color="tertiary" (click)="openMembers()">
+            <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Members</div>
+            <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+          </ion-button>
+        </div>
       </div>
       
       <div class="content-title">- Latest 5 Transactions -</div>

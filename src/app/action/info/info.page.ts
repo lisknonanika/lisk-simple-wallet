@@ -8,6 +8,7 @@ const { convertBeddowsToLSK } = transactions;
 
 import { MembersPage } from '../../dialog/members/members.page';
 import { EditAccountPage } from '../../dialog/editAccount/editAccount.page';
+import { BookmarkPage } from '../../dialog/bookmark/bookmark.page';
 import { StorageService } from '../../service/storage.service';
 import { getExplorerURL } from '../../common/utils';
 import { getTransactions, createSignInAccount } from '../../common/lisk-utils';
@@ -23,8 +24,10 @@ export class InfoPage {
   explorerUrl:string;
   address:string;
   balance:string;
+  rank:string;
   misc:string;
   isMultisignature:boolean;
+  hasBookmark:boolean;
   transactions: TransactionRow[];
 
   constructor(private router: Router, private modalController: ModalController,
@@ -69,8 +72,10 @@ export class InfoPage {
     // set fields
     this.address = signinAccount.address;
     this.balance = convertBeddowsToLSK(signinAccount.balance||"0");
+    this.rank = signinAccount.rank;
     this.misc = storeAccount? storeAccount.misc: signinAccount.userName;
     this.isMultisignature = signinAccount.isMultisignature;
+    this.hasBookmark = (await this.storageService.getBookmarks()).length > 0;
 
     // set transactions
     this.transactions = [];
@@ -107,7 +112,7 @@ export class InfoPage {
     const modal = await this.modalController.create({
       component: EditAccountPage,
       cssClass: 'dialog-custom-class',
-      componentProps: { address: address, availableDelete: false }
+      componentProps: { address: address, availableDelete: false, type: 0 }
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
@@ -118,6 +123,15 @@ export class InfoPage {
     const modal = await this.modalController.create({
       component: MembersPage,
       cssClass: 'dialog-custom-class'
+    });
+    await modal.present();
+  }
+
+  async openBookmarks() {
+    const modal = await this.modalController.create({
+      component: BookmarkPage,
+      cssClass: 'dialog-custom-class',
+      componentProps: { type: 0 }
     });
     await modal.present();
   }
