@@ -12,7 +12,8 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
-      <div class="rows">
+      <div *ngIf="bookmarks.length === 0" style="margin-top: 5px;">No data</div>
+      <div *ngIf="bookmarks.length > 0" class="rows">
         <div cdkDropList [cdkDropListData]="bookmarks" (cdkDropListDropped)="drop($event)">
           <div cdkDrag *ngFor="let bookmark of bookmarks">
             <div class="row">
