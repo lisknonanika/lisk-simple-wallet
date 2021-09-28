@@ -27,9 +27,10 @@
         <ion-card class="card">
           <div class="title">Send Contents</div>
           <div>
-            <div class="item-title">Recipient address</div>
-            <ion-item class="input-item recipient" lines="full">
-              <ion-icon name="bookmark" slot="start" (click)="openBookmarks()"></ion-icon>
+            <div class="item-title bookmark" (click)="openBookmarks()">
+              <div>Recipient address<ion-icon name="bookmark"></ion-icon></div>
+            </div>
+            <ion-item class="input-item" lines="full">
               <ion-input type="text" placeholder="Enter recipient address" clearInput="true" autocomplete="off" [(ngModel)]="model.recipient" (ionChange)="computeFee()"></ion-input>
             </ion-item>
 
