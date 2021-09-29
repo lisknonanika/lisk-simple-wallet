@@ -1,3 +1,13 @@
+ion-content {
+  --background:linear-gradient(to bottom right, #F7F9FB, 90%, #DFE6F2);
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    --background:linear-gradient(to bottom right, #0C152E, 85%, #000);
+  }
+}
+
 #container {
   text-align: center;
   padding: 10px 20px 0px 20px;
