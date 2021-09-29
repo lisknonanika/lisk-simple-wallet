@@ -12,8 +12,7 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <img src="https://lisk-avatar.ysdev.work/{{address}}?size=130"/>
-    <div class="address">{{address}}</div>
-    <ion-button class="address-copy" fill="outline" color="medium" (click)="copy()"><ion-icon name="copy"></ion-icon>&nbsp;Copy address</ion-button>
+    <div class="address" (click)="copy()">{{address}}<ion-icon name="copy"></ion-icon></div>
     <div class="item-title">misc (optional)</div>
     <ion-item class="input-item" lines="full">
       <ion-input type="text" value={{misc}} placeholder="Enter misc (optional)" clearInput="true" autocomplete="off" (ionChange)="setMisc($event.target.value)"></ion-input>

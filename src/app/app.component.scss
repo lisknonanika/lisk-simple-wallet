@@ -46,6 +46,41 @@
   margin-left: -1px;
 }
 
+#signin-account {
+  padding: 0px;
+  padding-left: 20px;
+  font-weight: normal;
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  text-align: left;
+  width: calc(100vw - 80px);
+}
+
+.account-info .account div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100vw - 120px);
+}
+
+.account-info .address {
+  font-size: 1rem;
+}
+
+.account-info .balance {
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+
+.account-info .identicon {
+  margin-right: 10px;
+}
+
+
 ion-footer ion-button {
   font-size: 16px;
   height: 50px;
@@ -76,6 +111,12 @@ ion-button.sub-btn .text {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.content-title {
+  font-size: 18px;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .item-title {

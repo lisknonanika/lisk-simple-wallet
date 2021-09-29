@@ -1,6 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Send</ion-title>
+    <ion-title id="signin-account">
+      <div class="account-info" *ngIf="isView">
+        <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{address}}?size=30"/></div>
+        <div class="account">
+          <div class="address">{{address}}</div>
+          <div class="balance">{{balance}} LSK</div>
+        </div>
+      </div>
+    </ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="signOut()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
@@ -12,20 +20,9 @@
 <ion-content [fullscreen]="true">
   <div id="container">
     <div *ngIf="isView">
-      <div class="rows">
-        <div class="row">
-          <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{address}}?size=30"/></div>
-          <div class="account">
-            <div class="address">{{address}}</div>
-            <div>balance: {{balance}} LSK</div>
-            <div>misc: {{misc}}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="input-area">
+      <div class="content-title">- Send Contents -</div>
+      <div class="input-area" style="margin-top: 5px;">
         <ion-card class="card">
-          <div class="title">Send Contents</div>
           <div>
             <div class="item-title bookmark" (click)="openBookmarks()">
               <div>Recipient address<ion-icon name="bookmark"></ion-icon></div>

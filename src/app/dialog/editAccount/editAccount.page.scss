@@ -8,17 +8,13 @@
 }
 
 .address {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   font-size: 20px;
   width: calc(100vw - 80px);
   max-width: 560px;
   margin-top: 10px;
 }
 
-.address-copy {
-  font-size: 12px !important;
-  margin-top: 5px !important;
-  height: 30px !important;
+.address ion-icon {
+  font-size: 16px;
+  margin-left: 10px;
 }

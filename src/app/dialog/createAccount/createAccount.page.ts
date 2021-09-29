@@ -29,7 +29,9 @@ export class CreateAccountPage {
   }
 
   async copy() {
-    const result = await this.clipboard.copy(JSON.stringify(this.account, null, 2));
+    const result = await this.clipboard.copy(
+      `Address: ${this.account.address}\nPassphrase: ${this.account.passphrase}\nPublicKey: ${this.account.publicKey}`
+    );
     if (result) {
       this.toastr.info("copied.");
     } else {

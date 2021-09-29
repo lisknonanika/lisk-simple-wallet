@@ -28,7 +28,6 @@ export class SendPage {
   signinAccount:SignInAccount;
   address:string;
   balance:string;
-  misc:string;
   fee:string;
 
   constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
@@ -75,7 +74,6 @@ export class SendPage {
     // set fields
     this.address = this.signinAccount.address;
     this.balance = convertBeddowsToLSK(this.signinAccount.balance||"0");
-    this.misc = storeAccount? storeAccount.misc: this.signinAccount.userName;
 
     // compute fee
     await this.computeFee();

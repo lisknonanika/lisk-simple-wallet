@@ -3,6 +3,9 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { ModalController, LoadingController} from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
+import { transactions } from '@liskhq/lisk-client';
+const { convertBeddowsToLSK } = transactions;
+
 import { StorageService } from '../../service/storage.service';
 import { PassphrasePage } from '../../dialog/passphrase/passphrase.page';
 import { TransactionPage } from '../../dialog/transaction/transaction.page';
@@ -17,6 +20,8 @@ import { createSignInAccount, getSignStatus, transferValidation, sendTransferTra
 export class MultiSignPage {
   isView:boolean;
   signinAccount: SignInAccount;
+  address:string;
+  balance:string;
   signedStatus: SignStatus;
   senderStatus: MemberStatus;
   mandatoryStatus: MemberStatus[];
@@ -64,6 +69,10 @@ export class MultiSignPage {
     // update signin account
     this.signinAccount = await createSignInAccount(this.network, this.signinAccount.address, this.signinAccount.publicKey);
     await this.storageService.setSignInAccount(this.signinAccount);
+    
+    // set fields
+    this.address = this.signinAccount.address;
+    this.balance = convertBeddowsToLSK(this.signinAccount.balance||"0");
 
     // get signed status
     this.signedStatus = getSignStatus(this.signinAccount, this.transaction.signatures);

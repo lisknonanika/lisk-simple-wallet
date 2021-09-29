@@ -53,7 +53,8 @@ export type TRANSFER_JSON = {
     data:string
   },
   id: string
-};
+}
+
 export type TRANSFER_JS = {
   moduleID: number,
   assetID: number,
@@ -67,7 +68,7 @@ export type TRANSFER_JS = {
     data:string
   },
   id: Buffer
-};
+}
 
 export class TransferTransaction {
   public moduleID:number;

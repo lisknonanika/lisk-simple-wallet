@@ -1,6 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Account Info</ion-title>
+    <ion-title id="signin-account">
+      <div class="account-info" *ngIf="isView">
+        <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{address}}?size=30"/></div>
+        <div class="account">
+          <div class="address">{{address}}</div>
+          <div class="balance">{{balance}} LSK</div>
+        </div>
+      </div>
+    </ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="signOut()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
@@ -13,99 +21,152 @@
   <ion-refresher slot="fixed" (ionRefresh)="reflesh($event)">
     <ion-refresher-content pullingText="Pull to refresh" refreshingText="Refreshing..."></ion-refresher-content>
   </ion-refresher>
-  <div id="container">
-    <div *ngIf="isView">
-      <div class="rows">
-        <div class="row">
-          <div class="side-btn left" (click)="openAccountEdit(address)">
-            <ion-icon name="settings-outline"></ion-icon>
-          </div>
-          <a class="row-btn" href="{{explorerUrl}}/account/{{address}}" target="_blank" rel="noopener noreferrer">
-            <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{address}}?size=30"/></div>
-            <div class="account">
-              <div class="address">{{address}}</div>
-              <div>balance: {{balance}} LSK</div>
-              <div *ngIf="rank">rank: {{rank}}</div>
-              <div>misc: {{misc}}</div>
+  <ion-slides #slides pager="true" [options]="slideOpts" *ngIf="isView" (ionSlideDidChange)="changeSlide()">
+    <ion-slide>
+      <div class="info-area">
+        <div class="content-title">- Account Info -</div>
+        <ion-item lines="full" (click)="copy(address)">
+          <ion-label>
+            <div class="info-item">
+              <div class="info-item-title">Address&nbsp;<ion-icon name="copy"></ion-icon></div>
+              <div class="info-item-text">{{address}}</div>
             </div>
-            <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
-          </a>
-        </div>
-      </div>
+          </ion-label>
+        </ion-item>
 
-      <div class="sub-btns-area">
-        <div class="sub-btns">
-          <ion-button *ngIf="hasBookmark" class="sub-btn" fill="outline" color="tertiary" (click)="openBookmarks()">
-            <div class="text"><ion-icon name="bookmark" style="margin-right: 5px;"></ion-icon>Bookmarks</div>
-            <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
-          </ion-button>
+        <ion-item lines="full" (click)="copy(signinAccount.publicKey)">
+          <ion-label>
+            <div class="info-item">
+              <div class="info-item-title">Public Key&nbsp;<ion-icon name="copy"></ion-icon></div>
+              <div class="info-item-text">{{signinAccount.publicKey}}</div>
+            </div>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="full" (click)="openAccountEdit(address)">
+          <ion-label>
+            <div class="info-item">
+              <div class="info-item-title">Misc&nbsp;<ion-icon name="pencil"></ion-icon></div>
+              <div *ngIf="misc.length === 0" class="info-item-text">&nbsp;</div>
+              <div *ngIf="misc.length > 0" class="info-item-text">{{misc}}</div>
+            </div>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="full">
+          <ion-label>
+            <div class="info-item">
+              <div class="info-item-title">Nonce</div>
+              <div class="info-item-text">{{signinAccount.nonce}}</div>
+            </div>
+          </ion-label>
+        </ion-item>
+        
+        <ion-item lines="full">
+          <ion-label>
+            <div class="info-item">
+              <div class="info-item-title">Delegate registration</div>
+              <div *ngIf="signinAccount.rank.length === 0" class="info-item-text">Unregistered</div>
+              <div *ngIf="signinAccount.rank.length > 0" class="info-item-text">{{signinAccount.rank}} - {{signinAccount.userName}}</div>
+            </div>
+          </ion-label>
+        </ion-item>
+        
+        <ion-item lines="full">
+          <ion-label>
+            <div class="info-item">
+              <div class="info-item-title">Multisignature registration</div>
+              <div *ngIf="!signinAccount.isMultisignature" class="info-item-text">Unregistered</div>
+              <div *ngIf="signinAccount.isMultisignature" class="info-item-btn">
+                <ion-button class="sub-btn" fill="outline" color="tertiary" (click)="openMembers()">
+                  <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Show Members</div>
+                  <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+                </ion-button>
+              </div>
+            </div>
+          </ion-label>
+        </ion-item>
+        
+        <ion-item lines="full">
+          <ion-label>
+            <div class="info-item">
+              <div class="info-item-title">Bookmarks</div>
+              <div *ngIf="!hasBookmark" class="info-item-text">No Data</div>
+              <div *ngIf="hasBookmark" class="info-item-btn">
+                <ion-button class="sub-btn" fill="outline" color="tertiary" (click)="openBookmarks()">
+                  <div class="text"><ion-icon name="bookmark" style="margin-right: 5px;"></ion-icon>Show Bookmarks</div>
+                  <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+                </ion-button>
+              </div>
+            </div>
+          </ion-label>
+        </ion-item>
+      </div>
+    </ion-slide>
     
-          <ion-button *ngIf="isMultisignature" class="sub-btn" fill="outline" color="tertiary" (click)="openMembers()">
-            <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Members</div>
-            <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
-          </ion-button>
-        </div>
-      </div>
-      
-      <div class="content-title">- Latest 5 Transactions -</div>
-      <div *ngIf="transactions.length === 0" style="margin-top: 5px;">No data</div>
-      <div *ngIf="transactions.length > 0" class="rows">
-        <div *ngFor="let tx of transactions">
+    <!-- Transaction -->
+    <ion-slide>
+      <div class="transactions-area">
+        <div class="content-title">- Latest 50 Transactions -</div>
+        <div *ngIf="transactions.length === 0" style="margin-top: 5px;">No data</div>
+        <div *ngIf="transactions.length > 0" style="margin-top: 5px;">
+          <div *ngFor="let tx of transactions">
 
-          <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 0" class="row send">
-            <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
-              <div class="side-btn left"><ion-icon name="arrow-redo"></ion-icon></div>
-              <div class="transaction">
-                <div>{{tx.timestamp}}</div>
-                <div class="sender">
-                  <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{tx.address}}?size=30"/></div>
-                  <div class="account">
-                    <div class="address">{{tx.address}}</div>
-                    <div>- {{tx.amount}} LSK</div>
+            <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 0" class="row send">
+              <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
+                <div class="side-btn left"><ion-icon name="arrow-redo"></ion-icon></div>
+                <div class="transaction">
+                  <div>{{tx.timestamp}}</div>
+                  <div class="sender">
+                    <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{tx.address}}?size=30"/></div>
+                    <div class="account">
+                      <div class="address">{{tx.address}}</div>
+                      <div>- {{tx.amount}} LSK</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
-            </a>
-          </div>
+                <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
+              </a>
+            </div>
 
-          <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 1" class="row receive">
-            <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
-              <div class="side-btn left"><ion-icon name="arrow-undo"></ion-icon></div>
-              <div class="transaction">
-                <div>{{tx.timestamp}}</div>
-                <div class="recipient">
-                  <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{tx.address}}?size=30"/></div>
-                  <div class="account">
-                    <div class="address">{{tx.address}}</div>
-                    <div>+ {{tx.amount}} LSK</div>
+            <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 1" class="row receive">
+              <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
+                <div class="side-btn left"><ion-icon name="arrow-undo"></ion-icon></div>
+                <div class="transaction">
+                  <div>{{tx.timestamp}}</div>
+                  <div class="recipient">
+                    <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{tx.address}}?size=30"/></div>
+                    <div class="account">
+                      <div class="address">{{tx.address}}</div>
+                      <div>+ {{tx.amount}} LSK</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
-            </a>
-          </div>
+                <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
+              </a>
+            </div>
 
-          <div *ngIf="tx.moduleAssetId !== '2:0'" class="row other">
-            <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
-              <div class="side-btn left">
-                <ion-icon *ngIf="tx.moduleAssetId === '4:0'" name="key"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId === '5:0'" name="person-add"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId === '5:1'" name="star-half"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId === '5:2'" name="lock-open"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId === '5:3'" name="receipt"></ion-icon>
-                <ion-icon *ngIf="tx.moduleAssetId === '1000:0'" name="shield-checkmark"></ion-icon>
-              </div>
-              <div class="transaction">
-                <div style="margin-bottom: 3px;">{{tx.timestamp}}</div>
-                <div class="text">{{tx.moduleAssetName}}</div>
-              </div>
-              <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
-            </a>
-          </div>
+            <div *ngIf="tx.moduleAssetId !== '2:0'" class="row other">
+              <a class="row-btn" href="{{explorerUrl}}/transaction/{{tx.id}}" target="_blank" rel="noopener noreferrer">
+                <div class="side-btn left">
+                  <ion-icon *ngIf="tx.moduleAssetId === '4:0'" name="key"></ion-icon>
+                  <ion-icon *ngIf="tx.moduleAssetId === '5:0'" name="person-add"></ion-icon>
+                  <ion-icon *ngIf="tx.moduleAssetId === '5:1'" name="star-half"></ion-icon>
+                  <ion-icon *ngIf="tx.moduleAssetId === '5:2'" name="lock-open"></ion-icon>
+                  <ion-icon *ngIf="tx.moduleAssetId === '5:3'" name="receipt"></ion-icon>
+                  <ion-icon *ngIf="tx.moduleAssetId === '1000:0'" name="shield-checkmark"></ion-icon>
+                </div>
+                <div class="transaction">
+                  <div style="margin-bottom: 3px;">{{tx.timestamp}}</div>
+                  <div class="text">{{tx.moduleAssetName}}</div>
+                </div>
+                <div class="side-btn right"><ion-icon class="link" name="desktop-outline"></ion-icon></div>
+              </a>
+            </div>
 
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

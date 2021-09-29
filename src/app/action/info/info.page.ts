@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
-import { ModalController } from '@ionic/angular';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { ModalController, IonSlides } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { transactions } from '@liskhq/lisk-client';
@@ -12,7 +13,7 @@ import { BookmarkPage } from '../../dialog/bookmark/bookmark.page';
 import { StorageService } from '../../service/storage.service';
 import { getExplorerURL } from '../../common/utils';
 import { getTransactions, createSignInAccount } from '../../common/lisk-utils';
-import { TransactionRow } from '../../common/types';
+import { SignInAccount, TransactionRow } from '../../common/types';
 
 @Component({
   selector: 'app-info',
@@ -24,14 +25,19 @@ export class InfoPage {
   explorerUrl:string;
   address:string;
   balance:string;
-  rank:string;
+  signinAccount:SignInAccount;
   misc:string;
-  isMultisignature:boolean;
   hasBookmark:boolean;
   transactions: TransactionRow[];
+  slideOpts = {
+    initialSlide: 0,
+    speed: 400
+  }
+  @ViewChild("slides") slides: IonSlides;
 
   constructor(private router: Router, private modalController: ModalController,
-              private toastr: ToastrService, private storageService: StorageService) {
+              private clipboard: Clipboard, private toastr: ToastrService,
+              private storageService: StorageService) {
     this.isView = false;
     this.transactions = [];
   }
@@ -43,6 +49,10 @@ export class InfoPage {
   async reflesh(event) {
     await this.reload(true);
     event.target.complete();
+  }
+
+  async changeSlide() {
+    await this.reload(false);
   }
 
   async reload(isUpdate:boolean) {
@@ -70,37 +80,49 @@ export class InfoPage {
     }
 
     // set fields
+    this.signinAccount = signinAccount;
     this.address = signinAccount.address;
     this.balance = convertBeddowsToLSK(signinAccount.balance||"0");
-    this.rank = signinAccount.rank;
     this.misc = storeAccount? storeAccount.misc: signinAccount.userName;
-    this.isMultisignature = signinAccount.isMultisignature;
     this.hasBookmark = (await this.storageService.getBookmarks()).length > 0;
 
     // set transactions
-    this.transactions = [];
-    const network = await this.storageService.getNetwork();
-    const txs = await getTransactions(network, this.address);
-    if (txs) {
-      for (const tx of txs) {
-        const dt = new Date();
-        dt.setTime((+tx.block.timestamp) * 1000);
-        const row = new TransactionRow(tx.moduleAssetId, tx.moduleAssetName, tx.id, dt.toLocaleString());
-        if (tx.moduleAssetId === "2:0") {
-          row.amount = convertBeddowsToLSK(tx.asset.amount);
-          if (tx.sender.address === this.address) {
-            row.address = tx.asset.recipient.address;
-            row.sendOrReceive = 0;
-          } else {
-            row.address = tx.sender.address;
-            row.sendOrReceive = 1;
-          }
-        }
-        this.transactions.push(row);
-      }
-    }
+    this.setTransactions();
 
     this.isView = true;
+  }
+
+  async setTransactions() {
+    try {
+      const index = await this.slides?.getActiveIndex()||0;
+      if (index !== 1) return;
+
+      // get transactions
+      const newTransactions:TransactionRow[] = [];
+      const network = await this.storageService.getNetwork();
+      const txs = await getTransactions(network, this.address);
+      if (txs) {
+        for (const tx of txs) {
+          const dt = new Date();
+          dt.setTime((+tx.block.timestamp) * 1000);
+          const row = new TransactionRow(tx.moduleAssetId, tx.moduleAssetName, tx.id, dt.toLocaleString());
+          if (tx.moduleAssetId === "2:0") {
+            row.amount = convertBeddowsToLSK(tx.asset.amount);
+            if (tx.sender.address === this.address) {
+              row.address = tx.asset.recipient.address;
+              row.sendOrReceive = 0;
+            } else {
+              row.address = tx.sender.address;
+              row.sendOrReceive = 1;
+            }
+          }
+          newTransactions.push(row);
+        }
+      }
+      this.transactions = newTransactions;
+    } catch(err) {
+      this.transactions = [];
+    }
   }
 
   signOut() {
@@ -134,5 +156,14 @@ export class InfoPage {
       componentProps: { type: 0 }
     });
     await modal.present();
+  }
+
+  async copy(val) {
+    const result = await this.clipboard.copy(val);
+    if (result) {
+      this.toastr.info("copied.");
+    } else {
+      this.toastr.error("failed.");
+    }
   }
 }

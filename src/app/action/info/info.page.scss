@@ -1,8 +1,3 @@
-.content-title {
-  margin-top: 10px;
-  font-weight: bold;
-}
-
 .row .account {
   width: calc(100vw - 150px);
   max-width: 490px;
@@ -88,4 +83,75 @@
   justify-content: space-around;
   width: calc(100vw - 40px) !important;
   max-width: 600px !important;
+}
+
+.info-area,
+.transactions-area {
+  height: calc(100vh - 170px);
+  overflow-y: scroll;
+  padding-bottom: 20px;
+}
+
+// slide
+ion-slides {
+  height: 100%;
+  width: calc(100vw - 40px) !important;
+  max-width: 600px !important;
+  padding-top: 10px;
+}
+
+ion-slide {
+  display: block;
+}
+
+::ng-deep .swiper-pagination-bullet {
+  opacity: 1 !important;
+}
+
+ion-slides ion-item {
+  --padding-start: 0px;
+  --inner-padding-end: 0px;
+}
+
+ion-slides ion-label {
+  margin-right: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+ion-slides a {
+  text-decoration: none;
+}
+
+ion-slides .info-item {
+  text-align: left;
+  font-size: 1rem;
+  border-bottom: 1px solid --color;
+}
+
+ion-slides .info-item-title {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  margin-bottom: 3px;
+}
+
+ion-slides .info-item-text {
+  word-break: initial;
+  white-space: initial;
+  padding-left: 10px;
+}
+
+ion-slides .info-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-slides .sub-btn {
+  width: calc(100vw - 80px) !important;
+  max-width: 560px !important;
+  font-size: 1rem;
 }
