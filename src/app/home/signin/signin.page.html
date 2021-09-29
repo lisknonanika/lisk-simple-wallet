@@ -15,7 +15,13 @@
       <div class="sub-title">{{network === 0? "Mainnet": "Testnet"}}</div>
       <div class="title">Signin</div>
       <div class="item-title eye" (click)="changeEye()">
-        <div>Passphrase<ion-icon name="{{eye? 'eye':'eye-off'}}"></ion-icon></div>
+        <div>
+          Passphrase
+          <ion-button class="btn-mini" style="margin-left:10px;" fill="outline" color="medium">
+            <ion-icon name="{{eye? 'eye':'eye-off'}}" style="margin-right: 5px;" slot="start"></ion-icon>
+            {{eye? 'show':'hide'}}
+          </ion-button>
+        </div>
       </div>
       <ion-item *ngIf="!eye" class="input-item" lines="full">
         <ion-input type="password" value={{passphrase}} placeholder="Enter Passphrase" clearInput="true" autocomplete="off" (ionChange)="setPassphrase($event.target.value)"></ion-input>

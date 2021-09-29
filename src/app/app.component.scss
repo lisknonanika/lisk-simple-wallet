@@ -45,7 +45,7 @@ ion-content {
   align-items: center;
   justify-content: center;
   padding-bottom: var(--ion-safe-area-bottom, 10px);
-  background-color: var(--ion-background-color, #fff);
+  background: none;
 }
 
 #container ion-button {
@@ -135,13 +135,22 @@ ion-button.sub-btn .text {
   max-width: 560px !important;
 }
 
+ion-button.btn-mini {
+  display: flex;
+  align-items: center;
+  height: 1rem !important;
+  width: 100px !important;
+  font-size: 0.5rem !important;
+  margin: 0px;
+}
+
 .eye div {
   display: flex;
   align-items: center;
 }
 
-.eye div ion-icon {
-  margin-left: 5px;
+.eye ion-button.btn-mini {
+  width: 70px !important;
 }
 
 ion-item.input-item {
