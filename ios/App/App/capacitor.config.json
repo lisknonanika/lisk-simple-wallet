@@ -1,0 +1,6 @@
+{
+	"appId": "work.ysdev.lsw",
+	"appName": "Lisk Simple Wallet",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
