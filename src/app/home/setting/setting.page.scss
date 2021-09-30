@@ -22,14 +22,29 @@ ion-list-header ion-label {
   max-width: 600px;
 }
 
+::ng-deep ion-item.setting-btn {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --inner-padding-start: 0px;
+  --inner-padding-end: 0px;
+}
+
+::ng-deep ion-item.setting-btn div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100vw - 40px) !important;
+  max-width: 600px !important;
+  padding-top: 5px;
+}
+
+.setting-item ion-button {
+  width: calc(100vw - 80px) !important;
+  max-width: 560px !important;
+}
+
 .setting-text {
   text-align: left;
   font-size: 0.8rem;
   color: #f03c3c;
-}
-
-#container ion-button {
-  width: calc(100vw - 40px) !important;
-  max-width: 600px !important;
-  margin-top: 10px !important;
 }
