@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title id="signin-account">
+      <div class="account-info" *ngIf="isView">
+        <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{address}}?size=30"/></div>
+        <div class="account">
+          <div class="address">{{address}}</div>
+          <div class="balance">{{balance}} LSK</div>
+        </div>
+      </div>
+    </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="signOut()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="reflesh($event)">
+    <ion-refresher-content pullingText="Pull to refresh" refreshingText="Refreshing..."></ion-refresher-content>
+  </ion-refresher>
+  <ion-slides #slides pager="true" [options]="slideOpts" *ngIf="isView" (ionSlideDidChange)="changeSlide()">
+    <ion-slide>
+      <div class="info-area">
+        <div class="content-title">- Vote Info -</div>
+      </div>
+    </ion-slide>
+    
+    <!-- Delegates -->
+    <ion-slide>
+      <div class="delegates-area">
+        <div class="content-title">- Delegates -</div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+
+  <!-- Button -->
+  <div class="btn-area" *ngIf="isView">
+    <ion-button class="continue-btn" (click)="continue()">{{signinAccount.isMultisignature?"Continue":"Send"}}</ion-button>
+  </div>
+</ion-content>

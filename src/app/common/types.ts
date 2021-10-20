@@ -40,6 +40,33 @@ export class MultiSigMember {
   ){}
 }
 
+export class VoteInfo {
+  constructor(
+    public votes: Vote[],
+    public unlock:Unlock[]
+  ){}
+}
+
+export class Vote {
+  constructor(
+    public address:string,
+    public userName:string,
+    public amount:string
+  ){}
+}
+
+export class Unlock {
+  constructor(
+    public address:string,
+    public userName:string,
+    public amount:string,
+    public height: {
+      start:number,
+      end:number
+    }
+  ){}
+}
+
 export type TRANSFER_JSON = {
   moduleID: number,
   assetID: number,

@@ -3,7 +3,7 @@ const { signMultiSignatureTransaction, signTransaction, convertLSKToBeddows, get
 const { bufferToHex, hexToBuffer, getLisk32AddressFromAddress, validateLisk32Address } = cryptography;
 
 import { getApiURL, getTransferAssetSchema } from './utils';
-import { SignInAccount, SignStatus, TransferTransaction ,TRANSFER_JSON, TRANSFER_JS } from './types';
+import { SignInAccount, SignStatus, TransferTransaction ,TRANSFER_JSON, TRANSFER_JS, VoteInfo } from './types';
 
 export const createSignInAccount = async(network:number, address:string, publicKey:string):Promise<SignInAccount> => {
   try {
@@ -45,6 +45,43 @@ export const getAccount = async(network:number, address:string):Promise<any> => 
     const res = await fetch(`${getApiURL(network)}/v2/accounts?address=${address}`);
     const json = await res.json();
     return json.data[0];
+  } catch (err) {
+    return null;
+  }
+}
+
+export const getVoteInfo = async(network:number, address:string):Promise<VoteInfo> => {
+  try {
+    const res = await getAccount(network, address);
+    const voteInfo: VoteInfo = new VoteInfo([], []);
+    const names: { address:string, userName:string }[] = [];
+
+    const votes = res.dpos.sentVotes;
+    if (votes) {
+      for (const vote of votes) {
+        const userName = (await getAccount(network, vote.delegateAddress))?.dpos.delegate.username;
+        if (!userName) continue;
+        names.push({ address: vote.delegateAddress, userName: userName });
+        voteInfo.votes.push({ address: vote.delegateAddress, userName: userName, amount: vote.amount });
+      }
+    }
+
+    const unlocks = res.dpos.unlocking;
+    if (unlocks) {
+      for (const unlock of unlocks) {
+        const name = names.find((v) => { return v.address === unlock.delegateAddress });
+        let userName =  null;
+        if (name) {
+          userName = name.userName;
+        } else {
+          userName = (await getAccount(network, unlock.delegateAddress))?.dpos.delegate.username;
+          if (!userName) continue;
+          names.push({ address: unlock.delegateAddress, userName: userName });
+        }
+        voteInfo.unlock.push({ address: unlock.delegateAddress, userName: userName, amount: unlock.amount, height: unlock.height });
+      }
+    }
+    return voteInfo;
   } catch (err) {
     return null;
   }
