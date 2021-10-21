@@ -51,7 +51,8 @@ export class Vote {
   constructor(
     public address:string,
     public userName:string,
-    public amount:string
+    public amount:string,
+    public afterAmount:string
   ){}
 }
 

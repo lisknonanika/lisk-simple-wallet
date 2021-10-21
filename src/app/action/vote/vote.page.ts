@@ -73,6 +73,7 @@ export class VotePage {
 
     // set voteInfo
     this.voteInfo = await getVoteInfo(settings.network, signinAccount.address);
+    console.log(this.voteInfo)
     
     // set fields
     this.signinAccount = signinAccount;

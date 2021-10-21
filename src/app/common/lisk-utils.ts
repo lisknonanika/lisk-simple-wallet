@@ -1,5 +1,5 @@
 import { transactions, cryptography } from '@liskhq/lisk-client';
-const { signMultiSignatureTransaction, signTransaction, convertLSKToBeddows, getBytes } = transactions;
+const { signMultiSignatureTransaction, signTransaction, convertLSKToBeddows, convertBeddowsToLSK, getBytes } = transactions;
 const { bufferToHex, hexToBuffer, getLisk32AddressFromAddress, validateLisk32Address } = cryptography;
 
 import { getApiURL, getTransferAssetSchema } from './utils';
@@ -62,7 +62,12 @@ export const getVoteInfo = async(network:number, address:string):Promise<VoteInf
         const userName = (await getAccount(network, vote.delegateAddress))?.dpos.delegate.username;
         if (!userName) continue;
         names.push({ address: vote.delegateAddress, userName: userName });
-        voteInfo.votes.push({ address: vote.delegateAddress, userName: userName, amount: vote.amount });
+        voteInfo.votes.push({
+          address: vote.delegateAddress,
+          userName: userName,
+          amount: convertBeddowsToLSK(vote.amount),
+          afterAmount: convertBeddowsToLSK(vote.amount)
+        });
       }
     }
 
@@ -78,12 +83,16 @@ export const getVoteInfo = async(network:number, address:string):Promise<VoteInf
           if (!userName) continue;
           names.push({ address: unlock.delegateAddress, userName: userName });
         }
-        voteInfo.unlock.push({ address: unlock.delegateAddress, userName: userName, amount: unlock.amount, height: unlock.height });
+        voteInfo.unlock.push({
+          address: unlock.delegateAddress,
+          userName: userName,
+          amount: convertBeddowsToLSK(unlock.amount),
+          height: unlock.height });
       }
     }
     return voteInfo;
   } catch (err) {
-    return null;
+    return new VoteInfo([], []);
   }
 }
 

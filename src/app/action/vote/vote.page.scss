@@ -5,6 +5,16 @@
   padding-bottom: 20px;
 }
 
+.row .account {
+  width: calc(100vw - 110px);
+  max-width: calc(600px - 70px);
+}
+
+.row .account div.delegate-address {
+  font-size: 0.8rem;
+  color: #cee0ee;
+}
+
 .btn-area {
   display: flex;
   align-items: center;

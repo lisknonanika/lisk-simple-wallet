@@ -25,6 +25,23 @@
     <ion-slide>
       <div class="info-area">
         <div class="content-title">- Vote Info -</div>
+        <div *ngIf="voteInfo.votes.length === 0" style="margin-top: 5px;">No data</div>
+        <div *ngIf="voteInfo.votes.length > 0" style="margin-top: 5px;">
+          <div *ngFor="let vote of voteInfo.votes">
+
+            <div class="row send">
+              <div class="side-btn left"><ion-icon name="download"></ion-icon></div>
+              <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{vote.address}}?size=30"/></div>
+              <div class="account">
+                <div class="address">{{vote.userName}}</div>
+                <div class="address delegate-address">address: {{vote.address}}</div>
+                <div *ngIf="vote.amount === vote.afterAmount">vote: {{vote.amount}} LSK</div>
+                <div *ngIf="vote.amount !== vote.afterAmount">vote: {{vote.amount}} -> {{vote.afterAmount}} LSK</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </ion-slide>
     
