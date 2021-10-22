@@ -40,9 +40,9 @@ export const createSignInAccount = async(network:number, address:string, publicK
   }
 }
 
-export const getAccount = async(network:number, address:string):Promise<any> => {
+export const getAccount = async(network:number, address:string, option?:string):Promise<any> => {
   try {
-    const res = await fetch(`${getApiURL(network)}/v2/accounts?address=${address}`);
+    const res = await fetch(`${getApiURL(network)}/v2/accounts?address=${address}${option?option:""}`);
     const json = await res.json();
     return json.data[0];
   } catch (err) {
@@ -59,14 +59,16 @@ export const getVoteInfo = async(network:number, address:string):Promise<VoteInf
     const votes = res.dpos.sentVotes;
     if (votes) {
       for (const vote of votes) {
-        const userName = (await getAccount(network, vote.delegateAddress))?.dpos.delegate.username;
-        if (!userName) continue;
-        names.push({ address: vote.delegateAddress, userName: userName });
+        const account = (await getAccount(network, vote.delegateAddress, "&isDelegate=true"));
+        if (!account) continue;
+        names.push({ address: vote.delegateAddress, userName: account.dpos.delegate.username });
         voteInfo.votes.push({
           address: vote.delegateAddress,
-          userName: userName,
+          userName: account.dpos.delegate.username,
           amount: convertBeddowsToLSK(vote.amount),
-          afterAmount: convertBeddowsToLSK(vote.amount)
+          afterAmount: convertBeddowsToLSK(vote.amount),
+          status: account.dpos.delegate.status,
+          rank: account.dpos.delegate.rank
         });
       }
     }
@@ -79,8 +81,9 @@ export const getVoteInfo = async(network:number, address:string):Promise<VoteInf
         if (name) {
           userName = name.userName;
         } else {
-          userName = (await getAccount(network, unlock.delegateAddress))?.dpos.delegate.username;
-          if (!userName) continue;
+          const account = (await getAccount(network, unlock.delegateAddress, "&isDelegate=true"));
+          if (!account) continue;
+          userName = account.dpos.delegate.username;
           names.push({ address: unlock.delegateAddress, userName: userName });
         }
         voteInfo.unlock.push({

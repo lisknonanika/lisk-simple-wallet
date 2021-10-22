@@ -9,7 +9,7 @@ const { convertBeddowsToLSK } = transactions;
 
 import { StorageService } from '../../service/storage.service';
 import { createSignInAccount, getVoteInfo } from '../../common/lisk-utils';
-import { SignInAccount, VoteInfo } from '../../common/types';
+import { SignInAccount, Vote } from '../../common/types';
 
 @Component({
   selector: 'app-vote',
@@ -22,7 +22,11 @@ export class VotePage {
   address:string;
   balance:string;
   signinAccount:SignInAccount;
-  voteInfo:VoteInfo;
+  selfVote: Vote;
+  otherVote: Vote[];
+  newVote: Vote[];
+  unlockCount:number;
+  voteCount:number;
   slideOpts = {
     initialSlide: 0,
     speed: 400
@@ -72,8 +76,15 @@ export class VotePage {
     }
 
     // set voteInfo
-    this.voteInfo = await getVoteInfo(settings.network, signinAccount.address);
-    console.log(this.voteInfo)
+    const voteInfo = await getVoteInfo(settings.network, signinAccount.address);
+    this.selfVote = null;
+    this.otherVote = [];
+    for (const v of voteInfo.votes) {
+      if (v.address === signinAccount.address) this.selfVote = v;
+      else this.otherVote.push(v);
+    }
+    this.unlockCount = voteInfo.unlock.length;
+    this.voteCount = voteInfo.votes.length;
     
     // set fields
     this.signinAccount = signinAccount;

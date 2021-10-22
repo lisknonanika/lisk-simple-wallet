@@ -5,9 +5,30 @@
   padding-bottom: 20px;
 }
 
+.vote-status {
+  flex-direction: column;
+  background-color: rgba(125, 125, 125, 0.3);
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+}
+
+.vote-status .text {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: calc(100vw - 80px);
+  max-width: 560px;
+  font-size: 0.8rem;
+}
+
+.row .side-btn {
+  height: 50px;
+}
+
 .row .account {
-  width: calc(100vw - 110px);
-  max-width: calc(600px - 70px);
+  width: calc(100vw - 180px);
+  max-width: calc(600px - 140px);
 }
 
 .row .account div.delegate-address {
@@ -15,10 +36,53 @@
   color: #cee0ee;
 }
 
+.row div.delegate-status {
+  width: 60px;
+}
+
+.row div.delegate-status ion-icon {
+  font-size: 25px;
+} 
+
+.row div.delegate-status-text {
+  font-size: 0.7rem;
+  color: #cee0ee;
+}
+
+.active,
+.standby,
+.punished,
+.banned {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.active {
+  color: #38e739;
+}
+
+.standby {
+  color: #ffffff;
+}
+
+.punished {
+  color: #f0ee5a;
+}
+
+.banned {
+  color: #f05566;
+}
+
 .btn-area {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.item-title {
+  width: calc(100vw - 40px) !important;
+  max-width: 600px !important;
 }
 
 ion-button.continue-btn  {
@@ -33,8 +97,7 @@ ion-button.continue-btn  {
 // slide
 ion-slides {
   height: calc(100% - 100px);
-  width: calc(100vw - 40px) !important;
-  max-width: 600px !important;
+  width: 100vw !important;
   padding-top: 10px;
 }
 

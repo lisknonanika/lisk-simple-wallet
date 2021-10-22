@@ -52,7 +52,9 @@ export class Vote {
     public address:string,
     public userName:string,
     public amount:string,
-    public afterAmount:string
+    public afterAmount:string,
+    public status:string,
+    public rank: number
   ){}
 }
 

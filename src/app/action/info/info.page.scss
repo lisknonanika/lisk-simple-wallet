@@ -92,11 +92,23 @@
   padding-bottom: 20px;
 }
 
+.info-content,
+.transaction-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-content ion-item {
+  width: calc(100vw - 40px);
+  max-width: 600px;
+}
+
 // slide
 ion-slides {
   height: 100%;
-  width: calc(100vw - 40px) !important;
-  max-width: 600px !important;
+  width: 100vw !important;
   padding-top: 10px;
 }
 

@@ -25,82 +25,84 @@
     <ion-slide>
       <div class="info-area">
         <div class="content-title">- Account Info -</div>
-        <ion-item lines="full" (click)="copy(address)" style="margin-top: 5px;">
-          <ion-label>
-            <div class="info-item">
-              <div class="info-item-title">Address&nbsp;<ion-icon name="copy"></ion-icon></div>
-              <div class="info-item-text">{{address}}</div>
-            </div>
-          </ion-label>
-        </ion-item>
-
-        <ion-item lines="full" (click)="copy(signinAccount.publicKey)">
-          <ion-label>
-            <div class="info-item">
-              <div class="info-item-title">Public Key&nbsp;<ion-icon name="copy"></ion-icon></div>
-              <div class="info-item-text">{{signinAccount.publicKey}}</div>
-            </div>
-          </ion-label>
-        </ion-item>
-
-        <ion-item lines="full" (click)="openAccountEdit(address)">
-          <ion-label>
-            <div class="info-item">
-              <div class="info-item-title">Misc&nbsp;<ion-icon name="pencil"></ion-icon></div>
-              <div *ngIf="misc.length === 0" class="info-item-text">&nbsp;</div>
-              <div *ngIf="misc.length > 0" class="info-item-text">{{misc}}</div>
-            </div>
-          </ion-label>
-        </ion-item>
-
-        <ion-item lines="full">
-          <ion-label>
-            <div class="info-item">
-              <div class="info-item-title">Nonce</div>
-              <div class="info-item-text">{{signinAccount.nonce}}</div>
-            </div>
-          </ion-label>
-        </ion-item>
-        
-        <ion-item lines="full">
-          <ion-label>
-            <div class="info-item">
-              <div class="info-item-title">Delegate registration</div>
-              <div *ngIf="signinAccount.rank.length === 0" class="info-item-text">Unregistered</div>
-              <div *ngIf="signinAccount.rank.length > 0" class="info-item-text">{{signinAccount.rank}} - {{signinAccount.userName}}</div>
-            </div>
-          </ion-label>
-        </ion-item>
-        
-        <ion-item lines="full">
-          <ion-label>
-            <div class="info-item">
-              <div class="info-item-title">Multisignature registration</div>
-              <div *ngIf="!signinAccount.isMultisignature" class="info-item-text">Unregistered</div>
-              <div *ngIf="signinAccount.isMultisignature" class="info-item-btn">
-                <ion-button class="sub-btn" fill="outline" color="tertiary" (click)="openMembers()">
-                  <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Show Members</div>
-                  <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
-                </ion-button>
+        <div class="info-content">
+          <ion-item lines="full" (click)="copy(address)" style="margin-top: 5px;">
+            <ion-label>
+              <div class="info-item">
+                <div class="info-item-title">Address&nbsp;<ion-icon name="copy"></ion-icon></div>
+                <div class="info-item-text">{{address}}</div>
               </div>
-            </div>
-          </ion-label>
-        </ion-item>
-        
-        <ion-item lines="full">
-          <ion-label>
-            <div class="info-item">
-              <div class="info-item-title">Bookmarks</div>
-              <div *ngIf="!hasBookmark" class="info-item-text">No Data</div>
-              <div *ngIf="hasBookmark" class="info-item-btn">
-                <ion-button class="sub-btn" fill="outline" color="tertiary" (click)="openBookmarks()">
-                  <div class="text"><ion-icon name="bookmark" style="margin-right: 5px;"></ion-icon>Show Bookmarks</div>
-                  <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
-                </ion-button>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="full" (click)="copy(signinAccount.publicKey)">
+            <ion-label>
+              <div class="info-item">
+                <div class="info-item-title">Public Key&nbsp;<ion-icon name="copy"></ion-icon></div>
+                <div class="info-item-text">{{signinAccount.publicKey}}</div>
               </div>
-            </div>
-          </ion-label>
-        </ion-item>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="full" (click)="openAccountEdit(address)">
+            <ion-label>
+              <div class="info-item">
+                <div class="info-item-title">Misc&nbsp;<ion-icon name="pencil"></ion-icon></div>
+                <div *ngIf="misc.length === 0" class="info-item-text">&nbsp;</div>
+                <div *ngIf="misc.length > 0" class="info-item-text">{{misc}}</div>
+              </div>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="full">
+            <ion-label>
+              <div class="info-item">
+                <div class="info-item-title">Nonce</div>
+                <div class="info-item-text">{{signinAccount.nonce}}</div>
+              </div>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item lines="full">
+            <ion-label>
+              <div class="info-item">
+                <div class="info-item-title">Delegate registration</div>
+                <div *ngIf="signinAccount.rank.length === 0" class="info-item-text">Unregistered</div>
+                <div *ngIf="signinAccount.rank.length > 0" class="info-item-text">{{signinAccount.rank}} - {{signinAccount.userName}}</div>
+              </div>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item lines="full">
+            <ion-label>
+              <div class="info-item">
+                <div class="info-item-title">Multisignature registration</div>
+                <div *ngIf="!signinAccount.isMultisignature" class="info-item-text">Unregistered</div>
+                <div *ngIf="signinAccount.isMultisignature" class="info-item-btn">
+                  <ion-button class="sub-btn" fill="outline" color="tertiary" (click)="openMembers()">
+                    <div class="text"><ion-icon name="key" style="margin-right: 5px;"></ion-icon>Show Members</div>
+                    <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+                  </ion-button>
+                </div>
+              </div>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item lines="full">
+            <ion-label>
+              <div class="info-item">
+                <div class="info-item-title">Bookmarks</div>
+                <div *ngIf="!hasBookmark" class="info-item-text">No Data</div>
+                <div *ngIf="hasBookmark" class="info-item-btn">
+                  <ion-button class="sub-btn" fill="outline" color="tertiary" (click)="openBookmarks()">
+                    <div class="text"><ion-icon name="bookmark" style="margin-right: 5px;"></ion-icon>Show Bookmarks</div>
+                    <div class="side-btn right"><ion-icon name="chevron-forward"></ion-icon></div>
+                  </ion-button>
+                </div>
+              </div>
+            </ion-label>
+          </ion-item>
+        </div>
       </div>
     </ion-slide>
     
@@ -109,7 +111,7 @@
       <div class="transactions-area">
         <div class="content-title">- Latest 50 Transactions -</div>
         <div *ngIf="transactions.length === 0" style="margin-top: 5px;">No data</div>
-        <div *ngIf="transactions.length > 0" style="margin-top: 5px;">
+        <div *ngIf="transactions.length > 0" class="transaction-content" style="margin-top: 5px;">
           <div *ngFor="let tx of transactions">
 
             <div *ngIf="tx.moduleAssetId === '2:0' && tx.sendOrReceive === 0" class="row send">
