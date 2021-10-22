@@ -25,8 +25,8 @@
     <ion-slide>
       <div class="info-area">
         <div class="content-title">- Vote Info -</div>
-        <div *ngIf="selfVote === null && otherVote.length === 0" style="margin-top: 5px;">No data</div>
-        <div *ngIf="selfVote !== null || otherVote.length > 0" style="margin-top: 5px;">
+        <div *ngIf="selfVote === null && currentVote.length === 0 && newVote.length === 0" style="margin-top: 5px;">No data</div>
+        <div *ngIf="selfVote !== null || currentVote.length > 0 || newVote.length > 0" style="margin-top: 5px;">
           <div class="rows" style="margin-top: 5px;">
 
             <div class="item-title">Status (current / max)</div>
@@ -58,9 +58,9 @@
               </div>
             </div>
   
-            <div *ngIf="otherVote.length > 0">
-              <div class="item-title">Other Vote</div>
-              <div *ngFor="let vote of otherVote">
+            <div *ngIf="currentVote.length > 0">
+              <div class="item-title">Current Vote</div>
+              <div *ngFor="let vote of currentVote">
                 <div class="row">
                   <div class="side-btn left">
                     <ion-icon  *ngIf="vote.amount <= vote.afterAmount" name="happy-outline"></ion-icon>
@@ -71,6 +71,31 @@
                     <div class="address">{{vote.rank}}: {{vote.userName}}</div>
                     <div *ngIf="vote.amount === vote.afterAmount">{{vote.amount}} LSK</div>
                     <div *ngIf="vote.amount !== vote.afterAmount">{{vote.amount}} -> {{vote.afterAmount}} LSK</div>
+                  </div>
+                  <div class="delegate-status">
+                    <div *ngIf="vote.status === 'active'" class="active"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
+                    <div *ngIf="vote.status === 'standby'" class="standby"><ion-icon name="stop-circle-outline"></ion-icon></div>
+                    <div *ngIf="vote.status === 'punished'" class="punished"><ion-icon name="warning"></ion-icon></div>
+                    <div *ngIf="vote.status === 'banned'" class="banned"><ion-icon name="skull-outline"></ion-icon></div>
+                    <div class="delegate-status-text">{{vote.status}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div *ngIf="newVote.length > 0">
+              <div class="item-title">New Vote</div>
+              <div *ngFor="let vote of newVote">
+                <div class="row">
+                  <div class="side-btn left">
+                    <ion-icon  *ngIf="vote.amount <= vote.afterAmount" name="happy-outline"></ion-icon>
+                    <ion-icon  *ngIf="vote.amount > vote.afterAmount" name="sad-outline"></ion-icon>
+                  </div>
+                  <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{vote.address}}?size=30"/></div>
+                  <div class="account">
+                    <div class="address">{{vote.rank}}: {{vote.userName}}</div>
+                    <div *ngIf="vote.amount === vote.afterAmount">0 LSK</div>
+                    <div *ngIf="vote.amount !== vote.afterAmount">0 -> {{vote.afterAmount}} LSK</div>
                   </div>
                   <div class="delegate-status">
                     <div *ngIf="vote.status === 'active'" class="active"><ion-icon name="checkmark-circle-outline"></ion-icon></div>

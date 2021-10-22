@@ -23,7 +23,7 @@ export class VotePage {
   balance:string;
   signinAccount:SignInAccount;
   selfVote: Vote;
-  otherVote: Vote[];
+  currentVote: Vote[];
   newVote: Vote[];
   unlockCount:number;
   voteCount:number;
@@ -78,10 +78,10 @@ export class VotePage {
     // set voteInfo
     const voteInfo = await getVoteInfo(settings.network, signinAccount.address);
     this.selfVote = null;
-    this.otherVote = [];
+    this.currentVote = [];
     for (const v of voteInfo.votes) {
       if (v.address === signinAccount.address) this.selfVote = v;
-      else this.otherVote.push(v);
+      else this.currentVote.push(v);
     }
     this.unlockCount = voteInfo.unlock.length;
     this.voteCount = voteInfo.votes.length;
