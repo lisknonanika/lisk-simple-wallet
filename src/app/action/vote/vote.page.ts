@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
-import { Clipboard } from '@angular/cdk/clipboard';
 import { ModalController, LoadingController, IonSlides } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
@@ -10,6 +9,7 @@ const { convertBeddowsToLSK } = transactions;
 import { StorageService } from '../../service/storage.service';
 import { createSignInAccount, getVoteInfo } from '../../common/lisk-utils';
 import { SignInAccount, Vote } from '../../common/types';
+import { EditVotePage } from '../../dialog/editVote/editVote.page';
 
 @Component({
   selector: 'app-vote',
@@ -34,7 +34,7 @@ export class VotePage {
   @ViewChild("slides") slides: IonSlides;
 
   constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
-              private clipboard: Clipboard, private toastr: ToastrService,
+              private toastr: ToastrService,
               private storageService: StorageService) {
     this.isView = false;
   }
@@ -76,11 +76,14 @@ export class VotePage {
     }
 
     // set voteInfo
-    const voteInfo = await getVoteInfo(settings.network, signinAccount.address);
+    // const voteInfo = await getVoteInfo(settings.network, signinAccount.address);
+    const voteInfo = await getVoteInfo(settings.network, "lskbps7ge5n9y7f8nk4222c77zkqcntrj7jyhmkwp");
     this.selfVote = null;
+    this.newVote = [];
     this.currentVote = [];
     for (const v of voteInfo.votes) {
-      if (v.address === signinAccount.address) this.selfVote = v;
+      // if (v.address === signinAccount.address) this.selfVote = v;
+      if (v.address === "lskbps7ge5n9y7f8nk4222c77zkqcntrj7jyhmkwp") this.selfVote = v;
       else this.currentVote.push(v);
     }
     this.unlockCount = voteInfo.unlock.length;
@@ -122,12 +125,41 @@ export class VotePage {
     this.router.navigateByUrl('/home', {replaceUrl: true});
   }
 
-  async copy(val) {
-    const result = await this.clipboard.copy(val);
-    if (result) {
-      this.toastr.info("copied.");
-    } else {
-      this.toastr.error("failed.");
+  async openVote(address:string, type:number) {
+    let params:Vote = null;
+    if (type === 0) params = this.selfVote;
+    if (type === 1) params = this.currentVote.find((v) => { return v.address === address });
+    if (type === 2) params = this.newVote.find((v) => { return v.address === address });
+
+    const modal = await this.modalController.create({
+      component: EditVotePage,
+      cssClass: 'dialog-custom-class',
+      componentProps: { params: params }
+    });
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+
+    if (type === 0) {
+      this.selfVote.afterAmount = data;
+
+    } else if (type === 1) {
+      for (const vote of this.currentVote) {
+        if (vote.address !== address) continue;
+        vote.afterAmount = data;
+        break;
+      }
+    } else if (type === 2) {
+      const updatedNewVote:Vote[] = [];
+      for (const vote of this.newVote) {
+        if (vote.address !== address) {
+          updatedNewVote.push(vote);
+
+        } else if (+data > 0) {
+          vote.afterAmount = data;
+          updatedNewVote.push(vote);
+        }
+      }
+      this.newVote = updatedNewVote;
     }
   }
 }

@@ -1,0 +1,23 @@
+<ion-header [translucent]="true" style="padding: 0px;">
+  <ion-toolbar style="padding: 0px;">
+    <ion-title>Edit Vote</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <img src="https://lisk-avatar.ysdev.work/{{params.address}}?size=130"/>
+    <div class="userName">{{params.userName}}</div>
+    <div class="item-title">Vote amount <span class="currentAmount">(current: {{params.amount}} LSK)</span></div>
+    <ion-item class="input-item" lines="full">
+      <ion-input type="number" value={{afterAmount}} inputmode="numeric" min="0" max="99999990" step="10" pattern="^([1-9]\d*0|0)$" placeholder="Enter vote amount" clearInput="true" autocomplete="off" (ionChange)="setAmount($event.target.value)"></ion-input>
+    </ion-item>
+    <ion-button style="margin-top: 10px;" (click)="reset()" color="medium">Reset</ion-button>
+    <ion-button style="margin-top: 5px;" (click)="ok()">OK</ion-button>
+  </div>
+</ion-content>
