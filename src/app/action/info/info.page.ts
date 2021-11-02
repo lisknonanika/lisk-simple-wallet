@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ModalController, IonSlides } from '@ionic/angular';
+import { ModalController, LoadingController, IonSlides } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 
 import { transactions } from '@liskhq/lisk-client';
@@ -35,7 +35,7 @@ export class InfoPage {
   }
   @ViewChild("slides") slides: IonSlides;
 
-  constructor(private router: Router, private modalController: ModalController,
+  constructor(private router: Router, private modalController: ModalController, private LoadingController: LoadingController,
               private clipboard: Clipboard, private toastr: ToastrService,
               private storageService: StorageService) {
     this.isView = false;
@@ -93,9 +93,14 @@ export class InfoPage {
   }
 
   async setTransactions() {
+    let loading:HTMLIonLoadingElement;
     try {
       const index = await this.slides?.getActiveIndex()||0;
       if (index !== 1) return;
+
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      await loading.present();
 
       // get transactions
       const newTransactions:TransactionRow[] = [];
@@ -122,6 +127,8 @@ export class InfoPage {
       this.transactions = newTransactions;
     } catch(err) {
       this.transactions = [];
+    } finally {
+      if (loading) await loading.dismiss();
     }
   }
 

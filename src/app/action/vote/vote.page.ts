@@ -7,7 +7,7 @@ import { transactions } from '@liskhq/lisk-client';
 const { convertBeddowsToLSK } = transactions;
 
 import { StorageService } from '../../service/storage.service';
-import { createSignInAccount, getVoteInfo } from '../../common/lisk-utils';
+import { createSignInAccount, getVoteInfo, getDelegates } from '../../common/lisk-utils';
 import { SignInAccount, Vote } from '../../common/types';
 import { EditVotePage } from '../../dialog/editVote/editVote.page';
 
@@ -18,6 +18,7 @@ import { EditVotePage } from '../../dialog/editVote/editVote.page';
 })
 export class VotePage {
   isView:boolean;
+  network:number;
   explorerUrl:string;
   address:string;
   balance:string;
@@ -25,6 +26,7 @@ export class VotePage {
   selfVote: Vote;
   currentVote: Vote[];
   newVote: Vote[];
+  delegates: Vote[];
   unlockCount:number;
   voteCount:number;
   slideOpts = {
@@ -37,6 +39,9 @@ export class VotePage {
               private toastr: ToastrService,
               private storageService: StorageService) {
     this.isView = false;
+    this.currentVote = [];
+    this.newVote = [];
+    this.delegates = [];
   }
 
   async ionViewWillEnter() {
@@ -68,26 +73,24 @@ export class VotePage {
     
     // get settings
     const settings = await this.storageService.getSettings();
+    this.network = settings.network;
 
     // update signin account
     if (isUpdate) {
-      signinAccount = await createSignInAccount(settings.network, signinAccount.address, signinAccount.publicKey);
+      signinAccount = await createSignInAccount(this.network, signinAccount.address, signinAccount.publicKey);
       await this.storageService.setSignInAccount(signinAccount);
     }
 
     // set voteInfo
-    // const voteInfo = await getVoteInfo(settings.network, signinAccount.address);
-    const voteInfo = await getVoteInfo(settings.network, "lskbps7ge5n9y7f8nk4222c77zkqcntrj7jyhmkwp");
+    const voteInfo = await getVoteInfo(this.network, signinAccount.address);
     this.selfVote = null;
-    this.newVote = [];
     this.currentVote = [];
     for (const v of voteInfo.votes) {
-      // if (v.address === signinAccount.address) this.selfVote = v;
-      if (v.address === "lskbps7ge5n9y7f8nk4222c77zkqcntrj7jyhmkwp") this.selfVote = v;
+      if (v.address === signinAccount.address) this.selfVote = v;
       else this.currentVote.push(v);
     }
     this.unlockCount = voteInfo.unlock.length;
-    this.voteCount = voteInfo.votes.length;
+    this.voteCount = voteInfo.votes.length + this.newVote.length;
     
     // set fields
     this.signinAccount = signinAccount;
@@ -101,10 +104,36 @@ export class VotePage {
   }
 
   async setDelegates() {
+    let loading:HTMLIonLoadingElement;
     try {
       const index = await this.slides?.getActiveIndex()||0;
-      if (index !== 1) return;
+      if (index !== 1 || this.delegates.length > 0) return;
+
+      // loading
+      loading = await this.LoadingController.create({ spinner: 'dots', message: 'please wait ...' });
+      await loading.present();
+
+      // get delegates
+      const delegates = await getDelegates(this.network, 0);
+      for (const delegate of delegates) {
+
+        if (this.selfVote.address === delegate.summary.address) continue;
+        if (this.currentVote.find(v => {return v.address === delegate.summary.address})) continue;
+        if (this.newVote.find(v => {return v.address === delegate.summary.address})) continue;
+        
+        this.delegates.push({
+          address: delegate.summary.address,
+          userName: delegate.summary.username,
+          amount: "0",
+          afterAmount: "0",
+          status: delegate.dpos.delegate.status,
+          rank: delegate.dpos.delegate.rank
+        });
+      }
     } catch(err) {
+      this.delegates = [];
+    } finally {
+      if (loading) await loading.dismiss();
     }
   }
 
@@ -130,6 +159,7 @@ export class VotePage {
     if (type === 0) params = this.selfVote;
     if (type === 1) params = this.currentVote.find((v) => { return v.address === address });
     if (type === 2) params = this.newVote.find((v) => { return v.address === address });
+    if (type === 3) params = this.delegates.find((v) => { return v.address === address });
 
     const modal = await this.modalController.create({
       component: EditVotePage,
@@ -148,6 +178,7 @@ export class VotePage {
         vote.afterAmount = data;
         break;
       }
+
     } else if (type === 2) {
       const updatedNewVote:Vote[] = [];
       for (const vote of this.newVote) {
@@ -160,6 +191,18 @@ export class VotePage {
         }
       }
       this.newVote = updatedNewVote;
+
+    } else if (type === 3) {
+      const updateDelegates:Vote[] = [];
+      for (const vote of this.delegates) {
+        if (vote.address === address && +data > 0) {
+          vote.afterAmount = data;
+          this.newVote.push(vote);
+        } else {
+          updateDelegates.push(vote);
+        }
+      }
+      this.delegates = updateDelegates;
     }
   }
 }

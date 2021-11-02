@@ -99,6 +99,16 @@ export const getVoteInfo = async(network:number, address:string):Promise<VoteInf
   }
 }
 
+export const getDelegates = async(network:number, offset:number):Promise<any> => {
+  try {
+    const res = await fetch(`${getApiURL(network)}/v2/accounts?isDelegate=true&limit=100&offset=${offset}`);
+    const json = await res.json();
+    return json.data;
+  } catch (err) {
+    return null;
+  }
+}
+
 export const getNetworkId = async(network:number):Promise<string> => {
   try {
     const res = await fetch(`${getApiURL(network)}/status`);

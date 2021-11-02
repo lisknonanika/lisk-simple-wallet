@@ -117,6 +117,31 @@
     <ion-slide>
       <div class="delegates-area">
         <div class="content-title">- Delegates -</div>
+        <div *ngIf="delegates.length === 0" style="margin-top: 5px;">No data</div>
+        <div *ngIf="delegates.length > 0" style="margin-top: 5px;">
+          <div class="rows" style="margin-top: 5px;">
+  
+            <div *ngFor="let vote of delegates">
+              <div class="row" (click)="openVote(vote.address, 3)">
+                <div class="side-btn left">
+                  <ion-icon name="add-circle-outline"></ion-icon>
+                </div>
+                <div class="identicon"><img src="https://lisk-avatar.ysdev.work/{{vote.address}}?size=30"/></div>
+                <div class="account">
+                  <div class="address">{{vote.rank}}: {{vote.userName}}</div>
+                </div>
+                <div class="delegate-status">
+                  <div *ngIf="vote.status === 'active'" class="active"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
+                  <div *ngIf="vote.status === 'standby'" class="standby"><ion-icon name="stop-circle-outline"></ion-icon></div>
+                  <div *ngIf="vote.status === 'punished'" class="punished"><ion-icon name="warning"></ion-icon></div>
+                  <div *ngIf="vote.status === 'banned'" class="banned"><ion-icon name="skull-outline"></ion-icon></div>
+                  <div class="delegate-status-text">{{vote.status}}</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </ion-slide>
   </ion-slides>
