@@ -3,7 +3,7 @@ const { signMultiSignatureTransaction, signTransaction, convertLSKToBeddows, con
 const { bufferToHex, hexToBuffer, getLisk32AddressFromAddress, validateLisk32Address } = cryptography;
 
 import { getApiURL, getTransferAssetSchema } from './utils';
-import { SignInAccount, SignStatus, TransferTransaction ,TRANSFER_JSON, TRANSFER_JS, VoteInfo } from './types';
+import { SignInAccount, SignStatus, TransferTransaction ,TRANSFER_JSON, TRANSFER_JS } from './types';
 
 export const createSignInAccount = async(network:number, address:string, publicKey:string):Promise<SignInAccount> => {
   try {
@@ -47,55 +47,6 @@ export const getAccount = async(network:number, address:string, option?:string):
     return json.data[0];
   } catch (err) {
     return null;
-  }
-}
-
-export const getVoteInfo = async(network:number, address:string):Promise<VoteInfo> => {
-  try {
-    const res = await getAccount(network, address);
-    const voteInfo: VoteInfo = new VoteInfo([], []);
-    const names: { address:string, userName:string }[] = [];
-
-    const votes = res.dpos.sentVotes;
-    if (votes) {
-      for (const vote of votes) {
-        const account = (await getAccount(network, vote.delegateAddress, "&isDelegate=true"));
-        if (!account) continue;
-        names.push({ address: vote.delegateAddress, userName: account.dpos.delegate.username });
-        voteInfo.votes.push({
-          address: vote.delegateAddress,
-          userName: account.dpos.delegate.username,
-          amount: convertBeddowsToLSK(vote.amount),
-          afterAmount: convertBeddowsToLSK(vote.amount),
-          status: account.dpos.delegate.status,
-          rank: account.dpos.delegate.rank
-        });
-      }
-    }
-
-    const unlocks = res.dpos.unlocking;
-    if (unlocks) {
-      for (const unlock of unlocks) {
-        const name = names.find((v) => { return v.address === unlock.delegateAddress });
-        let userName =  null;
-        if (name) {
-          userName = name.userName;
-        } else {
-          const account = (await getAccount(network, unlock.delegateAddress, "&isDelegate=true"));
-          if (!account) continue;
-          userName = account.dpos.delegate.username;
-          names.push({ address: unlock.delegateAddress, userName: userName });
-        }
-        voteInfo.unlock.push({
-          address: unlock.delegateAddress,
-          userName: userName,
-          amount: convertBeddowsToLSK(unlock.amount),
-          height: unlock.height });
-      }
-    }
-    return voteInfo;
-  } catch (err) {
-    return new VoteInfo([], []);
   }
 }
 

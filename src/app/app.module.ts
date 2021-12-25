@@ -16,7 +16,6 @@ import { ActionTabsComponent } from './tabas/actionTabs.component';
 import { AboutPage } from './dialog/about/about.page';
 import { CreateAccountPage } from './dialog/createAccount/createAccount.page';
 import { EditAccountPage } from './dialog/editAccount/editAccount.page';
-import { EditVotePage } from './dialog/editVote/editVote.page';
 import { MembersPage } from './dialog/members/members.page';
 import { PassphrasePage } from './dialog/passphrase/passphrase.page';
 import { TransactionPage } from './dialog/transaction/transaction.page';
@@ -31,7 +30,6 @@ import { ConfirmPage } from './dialog/confirm/confirm.page';
     AboutPage,
     CreateAccountPage,
     EditAccountPage,
-    EditVotePage,
     MembersPage,
     PassphrasePage,
     TransactionPage,
@@ -42,7 +40,6 @@ import { ConfirmPage } from './dialog/confirm/confirm.page';
     AboutPage,
     CreateAccountPage,
     EditAccountPage,
-    EditVotePage,
     MembersPage,
     PassphrasePage,
     TransactionPage,

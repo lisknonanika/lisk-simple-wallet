@@ -40,24 +40,6 @@ export class MultiSigMember {
   ){}
 }
 
-export class VoteInfo {
-  constructor(
-    public votes: Vote[],
-    public unlock:Unlock[]
-  ){}
-}
-
-export class Vote {
-  constructor(
-    public address:string,
-    public userName:string,
-    public amount:string,
-    public afterAmount:string,
-    public status:string,
-    public rank: number
-  ){}
-}
-
 export class Unlock {
   constructor(
     public address:string,

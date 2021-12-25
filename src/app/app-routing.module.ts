@@ -21,7 +21,6 @@ const routes: Routes = [
     children: [
       {path: 'info', children: [{path: '', loadChildren: () => import('./action/info/info.module').then(m => m.InfoPageModule)}]},
       {path: 'send', children: [{path: '', loadChildren: () => import('./action/send/send.module').then(m => m.SendPageModule)}]},
-      {path: 'vote', children: [{path: '', loadChildren: () => import('./action/vote/vote.module').then(m => m.VotePageModule)}]},
       {path: '', pathMatch: 'full', redirectTo: 'info'}
     ]
   },
